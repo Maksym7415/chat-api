@@ -18,7 +18,7 @@ app.get('/', async (req, res) => {
   const result = await models.userTable.findAll({
     include: {
       model: models.userRoleTable,
-  }
+    }
   })
   console.log(result)
   res.send(result)
