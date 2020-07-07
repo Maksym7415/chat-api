@@ -1,38 +1,44 @@
 const db = require('.');
 
-const userTable = db.sequelize.define('User', {
-  id:{
-    type: db.Sequelize.INTEGER,
-    autoIncrement:true,
-    primaryKey: true,
-  },
-  login: {
-    type: db.Sequelize.STRING(45),
-    allowNull: false,
-  },
-  firstName: {
-      type: db.Sequelize.STRING(45),
+module.exports = (sequelize, DataType) => {
+  const userTable = sequelize.define('User', {
+    id:{
+      type: DataType.INTEGER,
+      autoIncrement:true,
+      primaryKey: true,
+    },
+    login: {
+      type: DataType.STRING(45),
       allowNull: false,
-  },
-  lastName: {
-    type: db.Sequelize.STRING(45),
-    allowNull: true,
-  },
-  tagName: {
-    type: db.Sequelize.STRING(45),
-    allowNull: true,
-  },
-  fullName: {
-    type: db.Sequelize.STRING(45),
-    allowNull: true,
-  },
-  status: {
-    type: db.Sequelize.STRING(45),
-    allowNull: false,
-  },
-},{
-  freezeTableName: true,
-  timestamps: false
-});
-
-module.exports = userTable;
+    },
+    firstName: {
+        type: DataType.STRING(45),
+        allowNull: false,
+    },
+    lastName: {
+      type: DataType.STRING(45),
+      allowNull: true,
+    },
+    tagName: {
+      type: DataType.STRING(45),
+      allowNull: true,
+    },
+    fullName: {
+      type: DataType.STRING(45),
+      allowNull: true,
+    },
+    status: {
+      type: DataType.STRING(45),
+      allowNull: false,
+    },
+  },{
+    freezeTableName: true,
+    timestamps: false
+  });
+  userTable.associate = function (models) {
+    userTable.hasMany(models.Device, { foreignKey: {name:'fkUserId', allowNull:false}, foreignKeyConstraint: true });
+    userTable.hasOne(models.Contact, { foreignKey: {name:'fkContactId', allowNull:false}, foreignKeyConstraint: true });
+    userTable.hasMany(models.UserRole, { foreignKey: {name:'fkUserId', allowNull:false}, foreignKeyConstraint: true });
+};
+return userTable
+}

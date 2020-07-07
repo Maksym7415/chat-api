@@ -1,21 +1,25 @@
 const db = require('.');
 
-const permissionTable = db.sequelize.define('Permission', {
-  id: {
-    type: db.Sequelize.INTEGER,
-    autoIncrement:true,
-    primaryKey: true,
-  },
-  name: {
-    type: db.Sequelize.STRING,
-    allowNull: false,
-  },
-  description: {
-    type: db.Sequelize.STRING,
-    allowNull: true,
-  }
-},{
-  freezeTableName: true,
-});
-
-module.exports = permissionTable;
+module.exports = (sequelize, DataType) => {
+  const permissionTable = sequelize.define('Permission', {
+    id: {
+      type: DataType.INTEGER,
+      autoIncrement:true,
+      primaryKey: true,
+    },
+    name: {
+      type: DataType.STRING,
+      allowNull: false,
+    },
+    description: {
+      type: DataType.STRING,
+      allowNull: true,
+    }
+  },{
+    freezeTableName: true,
+  });
+  permissionTable.associate = function (models) {
+    permissionTable.hasMany(models.ChatUser, { foreignKey: {name:'fkChatId', allowNull:false}, foreignKeyConstraint: true });
+};
+return permissionTable
+}
