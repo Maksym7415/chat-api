@@ -23,7 +23,8 @@
     "mysql2": "^2.1.0",
     "nodemon": "^2.0.4",
     "path": "^0.12.7",
-    "sequelize": "^6.3.0"
+    "sequelize": "^6.3.0",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "sequelize-cli": "^6.2.0"
