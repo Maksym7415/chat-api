@@ -10,19 +10,19 @@ module.exports = {
       },
       fkUserId: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
+        unique: "actions_unique",
         allowNull: false,
         references: {
           model: {
             tableName: 'User',
-            key: 'idUser',
+            key: 'id',
           },
         },
         allowNull: false,
       },
       fkChatId: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
+        unique: "actions_unique",
         references: {
           model: {
             tableName: 'Conversation',
@@ -33,7 +33,7 @@ module.exports = {
       },
       fkPermissionId: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
+        unique: "actions_unique",
         references: {
           model: {
             tableName: 'Permission',
@@ -42,7 +42,17 @@ module.exports = {
         },
         allowNull: false,
       },
+      
+    },
+    {
+        uniqueKeys: {
+        actions_unique: {
+            customIndex: true,
+            fields: ['fkUserId', 'fkChatId', 'fkPermissionId']
+        }
+      }
     });
+    
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('ChatUser');

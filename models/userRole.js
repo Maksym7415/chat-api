@@ -9,7 +9,6 @@ module.exports = (sequelize, DataType) => {
     },
     fkUserId: {
       allowNull: false,
-      primaryKey: true,
       type: DataType.INTEGER,
       references: {
         model: {
@@ -20,7 +19,6 @@ module.exports = (sequelize, DataType) => {
     },
     fkRoleId: {
       allowNull: false,
-      primaryKey: true,
       type: DataType.INTEGER,
       references: {
         model: {
@@ -31,7 +29,13 @@ module.exports = (sequelize, DataType) => {
     },
   },{
     freezeTableName: true,
-    timestamps: false
+    // indexes: [
+    //   {
+    //       unique: true,
+    //       fields: ['fkRoleId', 'fkUserId']
+    //   }
+    // ],
+  timestamps: false,
   });
   userRoleTable.associate = function (models) {
     userRoleTable.belongsTo(models.User, { foreignKey: {name:'fkUserId', allowNull:false}, foreignKeyConstraint: true });

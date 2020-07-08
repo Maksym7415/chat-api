@@ -9,19 +9,17 @@ module.exports = (sequelize, DataType) => {
     },
     fkUserId: {
       type: DataType.INTEGER,
-      primaryKey: true,
       allowNull: false,
       references: {
         model: {
           tableName: 'User',
-          key: 'idUser',
+          key: 'id',
         },
       },
       allowNull: false,
     },
     fkChatId: {
       type: DataType.INTEGER,
-      primaryKey: true,
       references: {
         model: {
           tableName: 'Conversation',
@@ -32,7 +30,6 @@ module.exports = (sequelize, DataType) => {
     },
     fkPermissionId: {
       type: DataType.INTEGER,
-      primaryKey: true,
       references: {
         model: {
           tableName: 'Permission',
@@ -43,10 +40,17 @@ module.exports = (sequelize, DataType) => {
     },
   },{
     freezeTableName: true,
+  //   indexes: [
+  //     {
+  //         unique: true,
+  //         fields: ['fkPermissionId', 'fkChatId', 'fkUserId']
+  //     }
+  // ]
   });
   chatUserTable.associate = function (models) {
-    chatUserTable.belongsTo(models.Permission, { foreignKey: {name:'fkChatId', allowNull:false}, foreignKeyConstraint: true });
+    chatUserTable.belongsTo(models.Permission, { foreignKey: {name:'fkPermissionId', allowNull:false}, foreignKeyConstraint: true });
     chatUserTable.belongsTo(models.Conversation, { foreignKey: {name:'fkChatId', allowNull:false}, foreignKeyConstraint: true });
+    chatUserTable.belongsTo(models.User, { foreignKey: {name:'fkUserId', allowNull:false}, foreignKeyConstraint: true });
 };
 return chatUserTable;
 }

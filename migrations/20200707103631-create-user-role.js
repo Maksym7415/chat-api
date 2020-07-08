@@ -9,8 +9,8 @@ module.exports = {
       },
       fkUserId: {
         allowNull: false,
-        primaryKey: true,
         type: Sequelize.INTEGER,
+        unique: "actions_unique",
         references: {
           model: {
             tableName: 'User',
@@ -20,14 +20,22 @@ module.exports = {
       },
       fkRoleId: {
         allowNull: false,
-        primaryKey: true,
         type: Sequelize.INTEGER,
+        unique: "actions_unique",
         references: {
           model: {
             tableName: 'Role',
             key: 'id',
           },
         },
+      },
+    },
+    {
+      uniqueKeys: {
+        actions_unique: {
+          customIndex: true,
+          fields: ['fkRoleId', 'fkUserId']
+        }
       },
     });
   },

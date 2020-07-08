@@ -10,7 +10,10 @@ app.get('/', async (req, res) => {
   try{
     const result = await db.User.findAll({
       include: {
-        model: db.UserRole,
+        model: db.Role,
+        through: {
+          attributes: []
+        }     
       },
       
     })

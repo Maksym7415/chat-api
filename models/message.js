@@ -30,6 +30,7 @@ module.exports = (sequelize, DataType) => {
   });
   messageTable.associate = function (models) {
     messageTable.hasMany(models.ChatMessage, { foreignKey: {name:'fkMessageId', allowNull:false}, foreignKeyConstraint: true });
+    messageTable.belongsToMany(models.Conversation, {foreignKey: {name:'fkMessageId', allowNull:false}, otherKey: {name: 'fkChatId', allowNull:false},  foreignKeyConstraint: true, through: models.ChatMessage})
 };
 return messageTable
 }

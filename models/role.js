@@ -20,6 +20,7 @@ module.exports = (sequelize, DataType) => {
   });
   roleTable.associate = function (models) {
     roleTable.hasMany(models.UserRole, { foreignKey: {name:'fkRoleId', allowNull:false}, foreignKeyConstraint: true });
+    roleTable.belongsToMany(models.User, {foreignKey: {name:'fkRoleId', allowNull:false}, otherKey: {name: 'fkUserId', allowNull:false},  foreignKeyConstraint: true, through: models.UserRole})
 };
 return roleTable
 }

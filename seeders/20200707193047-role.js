@@ -10,12 +10,6 @@ module.exports = {
       })
     }
     await queryInterface.bulkInsert('role', newArray, {})
-    // await queryInterface.bulkInsert('users', new Array(25).map((el) => ({
-    //   login: faker.internet.userName(),
-    //   password: faker.internet.password(),
-    //   created_at: new Date(),
-    //   updated_at: new Date(),
-    // })), {});
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('role', null, {});
