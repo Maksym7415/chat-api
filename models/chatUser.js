@@ -10,32 +10,14 @@ module.exports = (sequelize, DataType) => {
     fkUserId: {
       type: DataType.INTEGER,
       allowNull: false,
-      references: {
-        model: {
-          tableName: 'User',
-          key: 'id',
-        },
-      },
       allowNull: false,
     },
     fkChatId: {
       type: DataType.INTEGER,
-      references: {
-        model: {
-          tableName: 'Conversation',
-          key: 'id',
-        },
-      },
       allowNull: false,
     },
     fkPermissionId: {
       type: DataType.INTEGER,
-      references: {
-        model: {
-          tableName: 'Permission',
-          key: 'id',
-        },
-      },
       allowNull: false,
     },
   },{

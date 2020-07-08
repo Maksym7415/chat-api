@@ -8,12 +8,6 @@ module.exports = (sequelize, DataType) => {
     },
     fkChatId: {
       type: DataType.INTEGER,
-      references: {
-        model: {
-          tableName: 'Conversation',
-          key: 'id',
-        },
-      },
     },
     fkMessageId: {
       type: DataType.INTEGER,

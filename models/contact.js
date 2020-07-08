@@ -12,23 +12,11 @@ module.exports = (sequelize, DataType) => {
       type: DataType.INTEGER,
       primaryKey: true,
       allowNull: false,
-      references: {
-        model: {
-          tableName: 'User',
-          key: 'id',
-        },
-      },
     },
     fkContactId: {
       type: DataType.INTEGER,
       primaryKey: true,
       allowNull: false,
-      references: {
-        model: {
-          tableName: 'User',
-          key: 'id',
-        },
-      },
     },
     pseudonyme: {
       type: DataType.STRING

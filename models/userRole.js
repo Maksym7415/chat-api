@@ -10,22 +10,10 @@ module.exports = (sequelize, DataType) => {
     fkUserId: {
       allowNull: false,
       type: DataType.INTEGER,
-      references: {
-        model: {
-          tableName: 'User',
-          key: 'id',
-        },
-      },
     },
     fkRoleId: {
       allowNull: false,
       type: DataType.INTEGER,
-      references: {
-        model: {
-          tableName: 'Role',
-          key: 'id',
-        },
-      },
     },
   },{
     freezeTableName: true,

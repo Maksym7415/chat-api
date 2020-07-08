@@ -20,16 +20,24 @@
     <ul id="messages"></ul>
     <form id='form'  action="">
       <input id="m" autocomplete="off" /><button onclick="sendMessage()" type='button'>Send</button>
-    </form>
+		</form>
+		<div id='message'></div>
 	</body>
 	<script>
 		const form = document.getElementById('form');
 		const input = document.getElementById('m');
+		const message = document.getElementById('message');
+		message.innerText = '1234'
 		var socket = io()
 		function sendMessage() {
+			console.log(socket.on)
 			socket.emit('chat message', input.value);
 			input.value = '';
 			return false;
 		}
+		socket.on('chat message', (msg) => {
+			// console.log()
+    message.innerText = 'message: ' + msg;
+  });
   </script>
 </html>

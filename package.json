@@ -11,7 +11,8 @@
     "db:migrate:undo:all": "./node_modules/.bin/sequelize db:migrate:undo:all",
     "db:seed:all": "./node_modules/.bin/sequelize db:seed:all",
     "seed:generate": "./node_modules/.bin/sequelize seed:generate --name",
-    "seed:name": "./node_modules/.bin/sequelize db:seed --seed"
+    "seed:name": "./node_modules/.bin/sequelize db:seed --seed",
+    "db:seed:undo:all": "./node_modules/.bin/sequelize db:seed:undo:all"
   },
   "author": "",
   "license": "ISC",
