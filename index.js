@@ -1,19 +1,30 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const db = require('./models');
+
+const tokenMiddleware = (token, msg) => {
+  if(token.token)  return console.log(token, msg)
+  throw Error;
+}
+
+app.use(cors())
 
 app.use('/', (req, res, next) => {
   next();
 })
 
-app.get('/socket', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
+// app.get('/socket', (req, res) => {
+//   res.sendFile(__dirname + '/index.html');
+// });
 
   io.on('connection', (socket) => {
-    socket.on('chat message', (msg) => {
+    console.log('connection')
+    socket.on('test', (msg) => {
+      tokenMiddleware(socket.handshake.query, msg)
+     
       io.emit('chat message', msg);
     }); 
   });
