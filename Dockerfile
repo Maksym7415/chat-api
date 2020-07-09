@@ -15,4 +15,4 @@ RUN npm install
 COPY . .
 
 EXPOSE 8081
-CMD [ ./start.sh ]
+CMD [ "npm", "run", "start", "npm", "db:migrate" ]
