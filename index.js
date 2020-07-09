@@ -8,15 +8,22 @@ app.use('/', (req, res, next) => {
   next();
 })
 
+io.use((socket, next) => {
+  let token = socket.handshake.query.token;
+    console.log(token)
+    return next();
+});
+
 app.get('/socket', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-  io.on('connection', (socket) => {
-    socket.on('chat message', (msg) => {
-      io.emit('chat message', msg);
-    }); 
-  });
+io.on('connection', (socket) => {
+  socket.on('chat message', (msg) => {
+    io.emit('chat message', msg);
+  }); 
+});
+
 
 app.get('/', async (req, res) => {
   try{
