@@ -31,7 +31,7 @@ app.get('/', async (req, res) => {
     })
     res.send(result)
   }catch(e){
-    console.log({e})
+    res.send(e)
   }
   
 }) 
