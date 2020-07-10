@@ -1,10 +1,8 @@
-const db = require('.');
-
 module.exports = (sequelize, DataType) => {
   const userRoleTable = sequelize.define('UserRole', {
     id: {
       type: DataType.INTEGER,
-      autoIncrement:true,
+      autoIncrement: true,
       primaryKey: true,
     },
     fkUserId: {
@@ -15,7 +13,7 @@ module.exports = (sequelize, DataType) => {
       allowNull: false,
       type: DataType.INTEGER,
     },
-  },{
+  }, {
     freezeTableName: true,
     // indexes: [
     //   {
@@ -23,11 +21,11 @@ module.exports = (sequelize, DataType) => {
     //       fields: ['fkRoleId', 'fkUserId']
     //   }
     // ],
-  timestamps: false,
+    timestamps: false,
   });
-  userRoleTable.associate = function (models) {
-    userRoleTable.belongsTo(models.User, { foreignKey: {name:'fkUserId', allowNull:false}, foreignKeyConstraint: true });
-    userRoleTable.belongsTo(models.Role, { foreignKey: {name:'fkRoleId', allowNull:false}, foreignKeyConstraint: true });
+  userRoleTable.associate = (models) => {
+    userRoleTable.belongsTo(models.User, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
+    userRoleTable.belongsTo(models.Role, { foreignKey: { name: 'fkRoleId', allowNull: false }, foreignKeyConstraint: true });
+  };
+  return userRoleTable;
 };
-return userRoleTable
-}

@@ -1,10 +1,8 @@
-const db = require('.');
-
 module.exports = (sequelize, DataType) => {
   const userTable = sequelize.define('User', {
-    id:{
+    id: {
       type: DataType.INTEGER,
-      autoIncrement:true,
+      autoIncrement: true,
       primaryKey: true,
     },
     login: {
@@ -12,8 +10,8 @@ module.exports = (sequelize, DataType) => {
       allowNull: false,
     },
     firstName: {
-        type: DataType.STRING(45),
-        allowNull: false,
+      type: DataType.STRING(45),
+      allowNull: false,
     },
     lastName: {
       type: DataType.STRING(45),
@@ -31,17 +29,24 @@ module.exports = (sequelize, DataType) => {
       type: DataType.STRING(45),
       allowNull: false,
     },
-  },{
+  }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
   });
-  userTable.associate = function (models) {
-    userTable.hasMany(models.Device, { foreignKey: {name:'fkUserId', allowNull:false}, foreignKeyConstraint: true });
-    userTable.hasOne(models.Contact, { foreignKey: {name:'fkContactId', allowNull:false}, foreignKeyConstraint: true });
-    userTable.hasMany(models.UserRole, { foreignKey: {name:'fkUserId', allowNull:false}, foreignKeyConstraint: true });
-    userTable.hasMany(models.ChatUser, { foreignKey: {name:'fkUserId', allowNull:false}, foreignKeyConstraint: true });
-    userTable.belongsToMany(models.Conversation, {foreignKey: {name:'fkUserId', allowNull:false}, otherKey: {name: 'fkChatId', allowNull:false},  foreignKeyConstraint: true, through: models.ChatUser})
-    userTable.belongsToMany(models.Role, {foreignKey: {name:'fkUserId', allowNull:false}, otherKey: {name: 'fkRoleId', allowNull:false},  foreignKeyConstraint: true, through: models.UserRole})
+  userTable.associate = (models) => {
+    userTable.hasMany(models.Device, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
+    userTable.hasOne(models.Contact, { foreignKey: { name: 'fkContactId', allowNull: false }, foreignKeyConstraint: true });
+    userTable.hasMany(models.UserRole, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
+    userTable.hasMany(models.ChatUser, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
+    userTable.belongsToMany(models.Conversation, {
+      foreignKey: { name: 'fkUserId', allowNull: false }, otherKey: { name: 'fkChatId', allowNull: false }, foreignKeyConstraint: true, through: models.ChatUser,
+    });
+    userTable.belongsToMany(models.Role, {
+      foreignKey: { name: 'fkUserId', allowNull: false }, otherKey: { name: 'fkRoleId', allowNull: false }, foreignKeyConstraint: true, through: models.UserRole,
+    });
+    userTable.belongsToMany(models.Permission, {
+      foreignKey: { name: 'fkUserId', allowNull: false }, otherKey: { name: 'fkPermissionId', allowNull: false }, foreignKeyConstraint: true, through: models.ChatUser,
+    });
+  };
+  return userTable;
 };
-return userTable
-}

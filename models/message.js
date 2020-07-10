@@ -1,5 +1,3 @@
-const db = require('.');
-
 module.exports = (sequelize, DataType) => {
   const messageTable = sequelize.define('Message', {
     id: {
@@ -8,8 +6,8 @@ module.exports = (sequelize, DataType) => {
       primaryKey: true,
     },
     message: {
-        type: DataType.STRING(1000),
-        allowNull: true,
+      type: DataType.STRING(1000),
+      allowNull: true,
     },
     idSender: {
       type: DataType.INTEGER,
@@ -25,12 +23,14 @@ module.exports = (sequelize, DataType) => {
       type: DataType.STRING(45),
       allowNull: true,
     },
-  },{
+  }, {
     freezeTableName: true,
   });
-  messageTable.associate = function (models) {
-    messageTable.hasMany(models.ChatMessage, { foreignKey: {name:'fkMessageId', allowNull:false}, foreignKeyConstraint: true });
-    messageTable.belongsToMany(models.Conversation, {foreignKey: {name:'fkMessageId', allowNull:false}, otherKey: {name: 'fkChatId', allowNull:false},  foreignKeyConstraint: true, through: models.ChatMessage})
+  messageTable.associate = (models) => {
+    messageTable.hasMany(models.ChatMessage, { foreignKey: { name: 'fkMessageId', allowNull: false }, foreignKeyConstraint: true });
+    messageTable.belongsToMany(models.Conversation, {
+      foreignKey: { name: 'fkMessageId', allowNull: false }, otherKey: { name: 'fkChatId', allowNull: false }, foreignKeyConstraint: true, through: models.ChatMessage,
+    });
+  };
+  return messageTable;
 };
-return messageTable
-}

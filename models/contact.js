@@ -1,12 +1,10 @@
-const db = require('.');
-
 module.exports = (sequelize, DataType) => {
   const contactTable = sequelize.define('Contact', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: DataType.INTEGER
+      type: DataType.INTEGER,
     },
     fkUserId: {
       type: DataType.INTEGER,
@@ -19,17 +17,16 @@ module.exports = (sequelize, DataType) => {
       allowNull: false,
     },
     pseudonyme: {
-      type: DataType.STRING
+      type: DataType.STRING,
     },
     type: {
       type: DataType.STRING,
     },
-  },{
+  }, {
     freezeTableName: true,
   });
-  contactTable.associate = function (models) {
-    contactTable.belongsTo(models.User, { foreignKey: {name:'fkContactId', allowNull:false}, foreignKeyConstraint: true });
-
-  }
-  return contactTable
-}
+  contactTable.associate = (models) => {
+    contactTable.belongsTo(models.User, { foreignKey: { name: 'fkContactId', allowNull: false }, foreignKeyConstraint: true });
+  };
+  return contactTable;
+};

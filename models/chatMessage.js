@@ -1,4 +1,3 @@
-
 module.exports = (sequelize, DataType) => {
   const chatMessageTable = sequelize.define('ChatMessage', {
     id: {
@@ -11,19 +10,13 @@ module.exports = (sequelize, DataType) => {
     },
     fkMessageId: {
       type: DataType.INTEGER,
-      references: {
-        model: {
-          tableName: 'Message',
-          key: 'id',
-        },
-      },
     },
-  },{
+  }, {
     freezeTableName: true,
   });
-  chatMessageTable.associate = function (models) {
-    chatMessageTable.belongsTo(models.User, { foreignKey: {name:'fkUserId', allowNull:false}, foreignKeyConstraint: true });
+  chatMessageTable.associate = (models) => {
+    chatMessageTable.belongsTo(models.Conversation, { foreignKey: { name: 'fkChatId', allowNull: false }, foreignKeyConstraint: true });
+    chatMessageTable.belongsTo(models.Message, { foreignKey: { name: 'fkMessageId', allowNull: false }, foreignKeyConstraint: true });
+  };
+  return chatMessageTable;
 };
-return chatMessageTable
-}
-
