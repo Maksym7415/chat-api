@@ -1,19 +1,22 @@
 {
   "name": "chat-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Conversation app",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "./node_modules/.bin/nodemon index.js",
     "lint": "eslint ./src",
+    "test-dev": "env NODE_ENV=test jest --testTimeout=10000",
     "db:migrate": "./node_modules/.bin/sequelize db:migrate",
     "db:migrate:undo": "./node_modules/.bin/sequelize db:migrate:undo",
     "db:migrate:undo:all": "./node_modules/.bin/sequelize db:migrate:undo:all",
+    "migrate:reset": "./node_modules/.bin/sequelize db:migrate:undo:all && npm run db:migrate",
     "db:seed:all": "./node_modules/.bin/sequelize db:seed:all",
     "seed:generate": "./node_modules/.bin/sequelize seed:generate --name",
     "seed:name": "./node_modules/.bin/sequelize db:seed --seed",
-    "db:seed:undo:all": "./node_modules/.bin/sequelize db:seed:undo:all"
+    "db:seed:undo:all": "./node_modules/.bin/sequelize db:seed:undo:all",
+    "pretest": "env NODE_ENV=test npm run migrate:reset"
   },
   "author": "",
   "license": "ISC",
@@ -39,7 +42,15 @@
     "eslint-plugin-import": "^2.21.2",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-prettier": "^3.1.4",
+    "jest": "^26.1.0",
     "prettier": "^2.0.5",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.2.0",
+    "supertest": "^4.0.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }
