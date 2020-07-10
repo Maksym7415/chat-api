@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const handleSendEmail = require('./src/helpers/nodeMailer')
 
 const app = express();
 const cors = require('cors');
@@ -21,6 +22,7 @@ io.on('connection', (socket) => {
 
 app.get('/', async (req, res) => {
   try {
+    handleSendEmail('m.popov@telesens.ua', '0192');
     const result = await db.User.findAll({
       include: {
         model: db.Role,
