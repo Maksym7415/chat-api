@@ -1,9 +1,10 @@
 const router = require('express').Router();
 
 const {
-  signUp, SignIn, sendCheckCode,
-} = require('./users.controller');
+  signUp, signIn,
+} = require('./user.controller');
 
 router.post('/signUp', signUp);
-router.post('/SignIn', SignIn);
-router.post('/sendCheckCode', sendCheckCode);
+router.post('/signIn', signIn);
+// router.post('/sendCheckCode', sendCheckCode);
+module.exports = router;

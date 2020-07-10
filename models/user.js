@@ -29,6 +29,10 @@ module.exports = (sequelize, DataType) => {
       type: DataType.STRING(45),
       allowNull: false,
     },
+    verificationCode: {
+      type: DataType.STRING(45),
+      allowNull: true,
+    },
   }, {
     freezeTableName: true,
     timestamps: false,
