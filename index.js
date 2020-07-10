@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const handleSendEmail = require('./src/helpers/nodeMailer');
 
 const app = express();
 const cors = require('cors');
