@@ -1,48 +1,23 @@
 require('dotenv').config();
 const express = require('express');
-const handleSendEmail = require('./src/helpers/nodeMailer');
-require('dotenv').config();
 
 const app = express();
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-const db = require('./models');
+const routers = require('./src/api/routers');
 
 app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-console.log(process.env.NODE_ENV)
-
-app.use('/', (req, res, next) => {
-  next();
-});
+app.use('/api', routers.userRouters);
 
 io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
     io.emit('chat message', msg);
   });
 });
-
-app.get('/', async (req, res) => {
-  try {
-    handleSendEmail('m.popov@telesens.ua', '0192');
-    const result = await db.User.findAll({
-      include: {
-        model: db.Role,
-        through: {
-          attributes: [],
-        },
-      },
-
-    });
-    res.send('pass');
-  } catch (e) {
-    res.send(e);
-  }
-});
-
-app.get('/test', async (req, res) => {
-  res.json({message: 'pass!'})
-})
 
 module.exports = app;
