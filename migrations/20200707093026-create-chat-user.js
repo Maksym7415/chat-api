@@ -10,7 +10,7 @@ module.exports = {
       },
       fkUserId: {
         type: Sequelize.INTEGER,
-        unique: "actions_unique",
+        unique: "fkUserId_fkChatId_fkPermissionId_unique",
         allowNull: false,
         references: {
           model: {
@@ -22,7 +22,7 @@ module.exports = {
       },
       fkChatId: {
         type: Sequelize.INTEGER,
-        unique: "actions_unique",
+        unique: "fkUserId_fkChatId_fkPermissionId_unique",
         references: {
           model: {
             tableName: 'Conversation',
@@ -33,7 +33,7 @@ module.exports = {
       },
       fkPermissionId: {
         type: Sequelize.INTEGER,
-        unique: "actions_unique",
+        unique: "fkUserId_fkChatId_fkPermissionId_unique",
         references: {
           model: {
             tableName: 'Permission',
@@ -46,7 +46,7 @@ module.exports = {
     },
     {
         uniqueKeys: {
-        actions_unique: {
+          fkUserId_fkChatId_fkPermissionId_unique: {
             customIndex: true,
             fields: ['fkUserId', 'fkChatId', 'fkPermissionId']
         }

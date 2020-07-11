@@ -6,10 +6,10 @@ module.exports = (sequelize, DataType) => {
       primaryKey: true,
     },
     message: {
-      type: DataType.STRING(1000),
-      allowNull: true,
+      type: DataType.TEXT,
+      allowNull: false,
     },
-    idSender: {
+    fkSenderId: {
       type: DataType.INTEGER,
       references: {
         model: {
@@ -20,7 +20,7 @@ module.exports = (sequelize, DataType) => {
       allowNull: false,
     },
     file: {
-      type: DataType.STRING(45),
+      type: DataType.STRING(100),
       allowNull: true,
     },
   }, {
