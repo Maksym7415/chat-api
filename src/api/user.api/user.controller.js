@@ -1,4 +1,4 @@
-const models = require('../../../models');
+const {User} = require('../../../models');
 const handleSendEmail = require('../../helpers/nodeMailer');
 const tokenHelper = require('../../helpers/tokensGenerate');
 const jwt = require('jsonwebtoken');
@@ -7,13 +7,13 @@ module.exports = {
   signUp: async (req, res) => {
     try {
       const { firstName, lastName, login } = req.body;
-      const isUser = await models.User.findOne({ where: { login } });
+      const isUser = await User.findOne({ where: { login } });
       if (!isUser) {
-        const {login} = await models.User.create({
+        const user = await User.create({
           firstName, lastName, login, status: 'free',
           
         });
-        res.json({ data: { email: login }, status: 200, message: 'registration successful' });
+        res.json({ data: { email: user.login }, status: 200, message: 'registration successful' });
       }
       res.status(400).json({ status: 400, message: 'such login already used in the system' });
     } catch (e) {
@@ -25,7 +25,7 @@ module.exports = {
       const { login } = req.body;
 
       const verificationCode = Math.floor(Math.random() * 100000);
-      const [isUser] = await models.User.update({ verificationCode }, {
+      const [isUser] = await User.update({ verificationCode }, {
         where: { login },
       });
       if (isUser) {
@@ -45,9 +45,10 @@ module.exports = {
   checkVerificationCode: async (req, res) => {
     try {
       const { verificationCode, login } = req.body;
-      const isUser = await models.User.findOne({ where: { login, verificationCode } });
+      const browserIndenfication = req.get('User-Agent'); // Тут версия браузера
+      const isUser = await User.findOne({ where: { login, verificationCode } });
       if (isUser) {
-        const accessToken = await tokenHelper(login, 'user', 'chrome', isUser.id, );
+        const accessToken = await tokenHelper(login, 'user', 'moz', isUser.id, );
         return res.json({ status: 200, message: 'successful login', data: accessToken });
       }
       res.status(400).json({message: 'there is no such user in the system', status: 400})

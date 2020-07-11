@@ -11,12 +11,6 @@ module.exports = (sequelize, DataType) => {
     },
     fkSenderId: {
       type: DataType.INTEGER,
-      references: {
-        model: {
-          tableName: 'User',
-          key: 'id',
-        },
-      },
       allowNull: false,
     },
     file: {

@@ -4,7 +4,7 @@ const {Device, Session} = require('../../models')
 
 const tokenHelper = (login, role, userAgent, userId) => {
     try {
-      const accessToken = generateAccessToken(login, role, userAgent);
+      const accessToken = generateAccessToken(login, role, userAgent, userId);
       return updateAccessToken(userId, accessToken, userAgent)
         .then(() => ({
           accessToken,
@@ -14,11 +14,12 @@ const tokenHelper = (login, role, userAgent, userId) => {
     }
   };
 
-const generateAccessToken = (login, role, userAgent) => { 
+const generateAccessToken = (login, role, userAgent, userId) => { 
   const payload = {
     role,
     login,
     userAgent,
+    userId,
     type: tokens.access.type,
   };
   const options = { expiresIn: tokens.access.expiresIn };
@@ -29,7 +30,27 @@ return accessToken;
 
 const updateAccessToken = async (userId, accessToken, userAgent) => {
     try {
-     
+      const isNewDevice = await Device.findOne({ where: { fkUserId: userId, userAgent } });
+      if (!isNewDevice) {
+        const session = await Session.create({
+            accessToken,
+        });
+        await Device.create({
+            fkUserId: userId,
+            fkSessionId: session.id,
+            userAgent
+        })
+      } else {
+        await Session.update({
+            accessToken
+          },
+          {
+            where: { 
+              id: isNewDevice.fkSessionId 
+            }
+          }
+        )
+      }
     } catch (e) {
       return e;
     }
