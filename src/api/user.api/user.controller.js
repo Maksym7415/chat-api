@@ -50,9 +50,8 @@ module.exports = {
   checkVerificationCode: async (req, res, next) => {
     try {
       const { verificationCode, login } = req.body;
-      // const browserIndenfication = req.get('User-Agent'); // Тут версия браузера
+      const browserIndenfication = req.get('User-Agent'); // Тут версия браузера
       const isUser = await User.findOne({ where: { login, verificationCode } });
-      // const isSuccess = await models.User.findOne({ where: { login, verificationCode } });
       if (isUser) {
         const accessToken = await tokenHelper(login, 'user', 'moz', isUser.id );
         res.json({ message: 'successful login', data: accessToken });

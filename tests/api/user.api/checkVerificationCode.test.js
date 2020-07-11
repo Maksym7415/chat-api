@@ -7,7 +7,7 @@ describe('userController checkCode api', () => {
   it('it gets successfull login', async done => {
     const user = await models.User.findOne({ where: { login: 'popovmaksim7415@gmail.com' } });
     const response = await request
-      .post('/api/sendCheckCode')
+      .post('/api/checkVerificationCode')
       .send({
         verificationCode: user.dataValues.verificationCode,
         login: 'popovmaksim7415@gmail.com'
@@ -19,7 +19,7 @@ describe('userController checkCode api', () => {
 
   it('it returns error', async done => {
     const response = await request
-      .post('/api/sendCheckCode')
+      .post('/api/checkVerificationCode')
       .send({
         verificationCode: '1245',
         login: 'example@mail.co'
@@ -32,7 +32,7 @@ describe('userController checkCode api', () => {
 
   it('it returns sesrver error', async done => {
     const response = await request
-      .post('/api/sendCheckCode')
+      .post('/api/checkVerificationCode')
       .send({
         verificaonCode: '1245',
       })

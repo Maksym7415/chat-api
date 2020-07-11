@@ -10,7 +10,8 @@ describe('userController signUp api', () => {
       .send({
         firstName: 'Maks',
         lastName: 'Popov',
-        login: 'maks@gmail.com'
+        login: 'maks@gmail.com',
+        status: 'free'
       });
 
     await models.User.destroy({ where: { login: 'maks@gmail.com' } });

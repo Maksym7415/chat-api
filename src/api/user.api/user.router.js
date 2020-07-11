@@ -7,4 +7,5 @@ const {
 router.post('/signUp', signUp);
 router.post('/signIn', signIn);
 router.post('/checkVerificationCode', checkVerificationCode);
+
 module.exports = router;
