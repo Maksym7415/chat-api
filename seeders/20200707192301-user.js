@@ -3,8 +3,8 @@ let faker = require('faker');
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     let newArray = [{
-      login: 'example@mail.com',
-      firstName: 'Arnold',
+      login: 'popovmaksim7415@gmail.com',
+      firstName: 'Maksym',
       lastName: 'Bailey',
       tagName: 'Monte_Waelchi',
       fullName: 'Jeffry_Leuschke76',
