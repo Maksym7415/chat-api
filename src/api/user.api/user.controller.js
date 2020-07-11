@@ -1,5 +1,7 @@
 const models = require('../../../models');
 const handleSendEmail = require('../../helpers/nodeMailer');
+const tokenHelper = require('../../helpers/tokensGenerate');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
   signUp: async (req, res) => {
@@ -7,12 +9,13 @@ module.exports = {
       const { firstName, lastName, login } = req.body;
       const isUser = await models.User.findOne({ where: { login } });
       if (!isUser) {
-        const newUser = await models.User.create({
+        const {login} = await models.User.create({
           firstName, lastName, login, status: 'free',
+          
         });
-        res.json({ data: { email: newUser.login }, status: 200, message: 'registration successful' });
+        res.json({ data: { email: login }, status: 200, message: 'registration successful' });
       }
-      res.json({ status: 400, message: 'such login already used in the system' });
+      res.status(400).json({ status: 400, message: 'such login already used in the system' });
     } catch (e) {
       res.json({ status: 501, message: e });
     }
@@ -30,25 +33,26 @@ module.exports = {
           await handleSendEmail(login, `${verificationCode}`);
           res.json({ status: 200, message: 'send you your verification code' });
         } catch (e) {
-          res.json({ status: 400, message: 'some problems with code transfer' });
+          res.status(400).json({ status: 400, message: 'some problems with code transfer' });
         }
         res.json({ data: isUser, status: 200, message: 'checkEmail' });
       }
-      res.json({ status: 400, message: 'you need to registrate your account', code: 999 });
+      res.status(400).json({ status: 400, message: 'you need to registrate your account', code: 999 });
     } catch (e) {
       res.json({ status: 501, message: e });
     }
   },
-  sendCheckCode: async (req, res) => {
+  checkVerificationCode: async (req, res) => {
     try {
       const { verificationCode, login } = req.body;
-      const isSuccess = await models.User.findOne({ where: { login, verificationCode } });
-      if (isSuccess) {
-        return res.json({ status: 200, message: 'successful login' });
+      const isUser = await models.User.findOne({ where: { login, verificationCode } });
+      if (isUser) {
+        const accessToken = await tokenHelper(login, 'user', 'chrome', isUser.id, );
+        return res.json({ status: 200, message: 'successful login', data: accessToken });
       }
-      return res.json({ status: 400, message: 'there is no such user in the system' });
+      res.status(400).json({message: 'there is no such user in the system', status: 400})
     } catch (e) {
-      res.json({ status: 501, message: e });
+      res.status(501).json({message: e})
     }
   },
 };

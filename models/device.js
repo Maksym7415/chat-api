@@ -8,21 +8,10 @@ module.exports = (sequelize, DataType) => {
     },
     fkUserId: {
       type: DataType.INTEGER,
-      references: {
-        model: {
-          tableName: 'User',
-          key: 'id',
-        },
-      },
     },
     fkSesionId: {
       type: DataType.INTEGER,
-      references: {
-        model: {
-          tableName: 'Session',
-          key: 'id',
-        },
-      },
+
     },
     userAgent: {
       type: DataType.STRING(100),

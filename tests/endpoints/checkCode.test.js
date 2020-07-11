@@ -5,7 +5,7 @@ const request = supertest(app)
 describe('Post Endpoints', () => {
   it('it gets successfull login', async done => {
     const response = await request
-      .post('/api/sendCheckCode')
+      .post('/api/checkVerificationCode')
       .send({
         verificationCode: '12345',
         login: 'example@mail.com'
@@ -23,8 +23,8 @@ describe('Post Endpoints', () => {
         verificationCode: '1245',
         login: 'example@mail.co'
       })
-  
-    expect(response.status).toBe(200)
+      
+    expect(response.status).toBe(400)
     expect(response.body.message).toBe('there is no such user in the system')
     done()
   })
