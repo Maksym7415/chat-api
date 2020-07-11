@@ -9,7 +9,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       chatType: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
     });
   },

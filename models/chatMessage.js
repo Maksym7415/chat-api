@@ -13,6 +13,12 @@ module.exports = (sequelize, DataType) => {
     },
   }, {
     freezeTableName: true,
+    indexes: [
+      {
+          unique: true,
+          fields: ['fkChatId', 'fkMessageId']
+      }
+    ],
   });
   chatMessageTable.associate = (models) => {
     chatMessageTable.belongsTo(models.Conversation, { foreignKey: { name: 'fkChatId', allowNull: false }, foreignKeyConstraint: true });

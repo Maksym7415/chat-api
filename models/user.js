@@ -39,7 +39,8 @@ module.exports = (sequelize, DataType) => {
   });
   userTable.associate = (models) => {
     userTable.hasMany(models.Device, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
-    userTable.hasOne(models.Contact, { foreignKey: { name: 'fkContactId', allowNull: false }, foreignKeyConstraint: true });
+    userTable.hasMany(models.Contact, { foreignKey: { name: 'fkContactId', allowNull: false }, foreignKeyConstraint: true });
+    userTable.hasMany(models.Contact, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
     userTable.hasMany(models.UserRole, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
     userTable.hasMany(models.ChatUser, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
     userTable.belongsToMany(models.Conversation, {

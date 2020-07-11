@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "./node_modules/.bin/nodemon index.js",
+    "start_manual": "sequelize db:drop && sequelize db:create && sequelize db:migrate && nodemon index.js",
     "lint": "eslint ./src",
     "test-dev": "env NODE_ENV=test jest --testTimeout=10000",
     "db:migrate": "./node_modules/.bin/sequelize db:migrate",
