@@ -1,8 +1,9 @@
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer');
 
 async function handleSendEmail(to, text) {
+  console.log(to, text);
   let transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
+    host: 'smtp.ethereal.email',
     port: 587,
     secure: false,
     service: 'gmail',
@@ -12,12 +13,12 @@ async function handleSendEmail(to, text) {
     },
   });
 
-  let info = await transporter.sendMail({
+  await transporter.sendMail({
     from: 'Conversation APP',
     to,
-    subject: "Confirmation code",
-    text, 
+    subject: 'Confirmation code',
+    text,
   });
 }
 
-module.exports = handleSendEmail
+module.exports = handleSendEmail;
