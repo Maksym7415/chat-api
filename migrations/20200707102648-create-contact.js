@@ -10,7 +10,7 @@ module.exports = {
       },
       fkUserId: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
+        unique: "fkUserId_fkContactId_unique",
         allowNull: false,
         references: {
           model: {
@@ -21,7 +21,7 @@ module.exports = {
       },
       fkContactId: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
+        unique: "fkUserId_fkContactId_unique",
         allowNull: false,
         references: {
           model: {
@@ -31,10 +31,19 @@ module.exports = {
         },
       },
       pseudonyme: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: true,
       },
       type: {
         type: Sequelize.STRING,
+        allowNull: false,
+      },
+    },{
+      uniqueKeys: {
+        fkUserId_fkContactId_unique: {
+          customIndex: true,
+          fields: ['fkUserId', 'fkContactId']
+        }
       },
     });
   },
