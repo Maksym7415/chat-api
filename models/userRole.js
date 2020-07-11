@@ -15,12 +15,12 @@ module.exports = (sequelize, DataType) => {
     },
   }, {
     freezeTableName: true,
-    // indexes: [
-    //   {
-    //       unique: true,
-    //       fields: ['fkRoleId', 'fkUserId']
-    //   }
-    // ],
+    indexes: [
+      {
+          unique: true,
+          fields: ['fkRoleId', 'fkUserId']
+      }
+    ],
     timestamps: false,
   });
   userRoleTable.associate = (models) => {

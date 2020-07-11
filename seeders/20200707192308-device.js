@@ -4,7 +4,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const data = [{
       fkUserId: 1,
-      fkSesionId: 1,
+      fkSessionId: 1,
       userAgent: 'chrome'
     }]
     

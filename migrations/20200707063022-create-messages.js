@@ -7,7 +7,7 @@ module.exports = {
         autoIncrement:true,
         primaryKey: true,
       },
-      idSender: {
+      fkSenderId: {
         type: Sequelize.INTEGER,
         references: {
           model: {
@@ -18,11 +18,11 @@ module.exports = {
         allowNull: false,
       },
       message: {
-          type: Sequelize.STRING(1000),
-          allowNull: true,
+          type: Sequelize.TEXT,
+          allowNull: false,
       },
       file: {
-        type: Sequelize.STRING(45),
+        type: Sequelize.STRING(100),
         allowNull: true,
       },
     });

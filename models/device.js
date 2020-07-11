@@ -8,32 +8,28 @@ module.exports = (sequelize, DataType) => {
     },
     fkUserId: {
       type: DataType.INTEGER,
-      references: {
-        model: {
-          tableName: 'User',
-          key: 'id',
-        },
-      },
     },
-    fkSesionId: {
+    fkSessionId: {
       type: DataType.INTEGER,
-      references: {
-        model: {
-          tableName: 'Session',
-          key: 'id',
-        },
-      },
+
     },
     userAgent: {
-      type: DataType.STRING(100),
+      type: DataType.STRING(200),
       allowNull: false,
     },
   }, {
     freezeTableName: true,
+    timestamps: false,
+    indexes: [
+      {
+          unique: true,
+          fields: ['fkSessionId', 'fkUserId']
+      }
+    ],
   });
   deviceTable.associate = (models) => {
     deviceTable.belongsTo(models.User, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
-    deviceTable.hasMany(models.Session, { foreignKey: { name: 'fkSessionId', allowNull: false }, foreignKeyConstraint: true });
+    deviceTable.belongsTo(models.Session, { foreignKey: { name: 'fkSessionId', allowNull: false }, foreignKeyConstraint: true });
   };
   return deviceTable;
 };

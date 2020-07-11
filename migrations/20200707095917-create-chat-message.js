@@ -10,21 +10,32 @@ module.exports = {
       },
       fkChatId: {
         type: Sequelize.INTEGER,
+        unique: "fkChatId_fkMessageId_unique",
         references: {
           model: {
             tableName: 'Conversation',
             key: 'id',
           },
         },
+        allowNull: false,
       },
       fkMessageId: {
         type: Sequelize.INTEGER,
+        unique: "fkChatId_fkMessageId_unique",
         references: {
           model: {
             tableName: 'Message',
             key: 'id',
           },
         },
+        allowNull: false,
+      },
+    },{
+      uniqueKeys: {
+        fkChatId_fkMessageId_unique: {
+          customIndex: true,
+          fields: ['fkChatId', 'fkMessageId']
+        }
       },
     });
   },

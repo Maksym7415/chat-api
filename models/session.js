@@ -11,9 +11,10 @@ module.exports = (sequelize, DataType) => {
     },
   }, {
     freezeTableName: true,
+    timestamps: false
   });
   sessionTable.associate = (models) => {
-    sessionTable.belongsTo(models.Device, { foreignKey: { name: 'fkSessionId', allowNull: false }, foreignKeyConstraint: true });
+    sessionTable.hasMany(models.Device, { foreignKey: { name: 'fkSessionId', allowNull: false }, foreignKeyConstraint: true });
   };
   return sessionTable;
 };

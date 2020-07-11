@@ -10,26 +10,37 @@ module.exports = {
       },
       fkUserId: {
         type: Sequelize.INTEGER,
+        unique: "fkUserId_fkSessionId_unique",
         references: {
           model: {
             tableName: 'User',
             key: 'id',
           },
         },
+        allowNull: false,
       },
-      fkSesionId: {
+      fkSessionId: {
         type: Sequelize.INTEGER,
+        unique: "fkUserId_fkSessionId_unique",
         references: {
           model: {
             tableName: 'Session',
             key: 'id',
           },
         },
+        allowNull: false,
       },
       userAgent: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.STRING(200),
         allowNull: false
       }
+    },{
+      uniqueKeys: {
+        fkUserId_fkSessionId_unique: {
+          customIndex: true,
+          fields: ['fkSessionId', 'fkUserId']
+        }
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {

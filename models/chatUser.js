@@ -20,12 +20,12 @@ module.exports = (sequelize, DataType) => {
     },
   }, {
     freezeTableName: true,
-  //   indexes: [
-  //     {
-  //         unique: true,
-  //         fields: ['fkPermissionId', 'fkChatId', 'fkUserId']
-  //     }
-  // ]
+    indexes: [
+      {
+          unique: true,
+          fields: ['fkPermissionId', 'fkChatId', 'fkUserId']
+      }
+  ]
   });
   chatUserTable.associate = (models) => {
     chatUserTable.belongsTo(models.Permission, { foreignKey: { name: 'fkPermissionId', allowNull: false }, foreignKeyConstraint: true });
