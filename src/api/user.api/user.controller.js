@@ -25,7 +25,6 @@ module.exports = {
       const [isUser] = await models.User.update({ verificationCode }, {
         where: { login },
       });
-      console.log(login, verificationCode, isUser);
       if (isUser) {
         try {
           await handleSendEmail(login, `${verificationCode}`);
@@ -44,7 +43,6 @@ module.exports = {
     try {
       const { verificationCode, login } = req.body;
       const isSuccess = await models.User.findOne({ where: { login, verificationCode } });
-      console.log(isSuccess);
       if (isSuccess) {
         return res.json({ status: 200, message: 'successful login' });
       }
