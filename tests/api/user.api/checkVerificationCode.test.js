@@ -13,7 +13,7 @@ describe('userController checkCode api', () => {
         login: 'popovmaksim7415@gmail.com'
       });
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe('successful login');
+    expect(Object.keys(response.body)).toEqual(['message', 'data']);
     done();
   });
 
