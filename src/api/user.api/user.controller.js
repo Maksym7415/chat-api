@@ -31,6 +31,7 @@ module.exports = {
       const [isUser] = await User.update({ verificationCode }, {
         where: { login },
       });
+        console.log(isUser)
       if (isUser) {
         try {
           await handleSendEmail(login, `${verificationCode}`);

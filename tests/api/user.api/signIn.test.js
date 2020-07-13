@@ -17,11 +17,11 @@ describe('userController signIn api', () => {
     done();
   });
 
-  it('it return error by sending email', async (done) => {
+  it('it return error if user did not find', async done => {
     const response = await request
       .post('/api/signIn')
       .send({
-        login: 'popovmaksim7@gmail.com',
+        login: 'mail.com'
       });
 
     expect(response.status).toBe(400);
