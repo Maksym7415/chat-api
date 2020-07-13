@@ -3,8 +3,7 @@ const jwt = require('jsonwebtoken');
 const { secret } = require('../../../config/jwtConfig').jwt;
 const { User, Session } = require('../../../models');
 const handleSendEmail = require('../../helpers/nodeMailer');
-const {tokenHelper} = require('../../helpers/tokensGenerate');
-const jwt = require('jsonwebtoken');
+const { tokenHelper } = require('../../helpers/tokensGenerate');
 
 module.exports = {
   signUp: async (req, res, next) => {
@@ -32,7 +31,7 @@ module.exports = {
       const [isUser] = await User.update({ verificationCode }, {
         where: { login },
       });
-        console.log(isUser)
+      console.log(isUser);
       if (isUser) {
         try {
           await handleSendEmail(login, `${verificationCode}`);
