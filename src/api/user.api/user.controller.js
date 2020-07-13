@@ -1,7 +1,7 @@
 const createError = require('http-errors');
 const {User} = require('../../../models');
 const handleSendEmail = require('../../helpers/nodeMailer');
-const tokenHelper = require('../../helpers/tokensGenerate');
+const {tokenHelper} = require('../../helpers/tokensGenerate');
 const jwt = require('jsonwebtoken');
 
 module.exports = {

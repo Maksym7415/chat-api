@@ -14,7 +14,7 @@ const tokenHelper = (login, role, userAgent, userId) => {
     }
   };
 
-const generateAccessToken = (login, role, userAgent, userId) => { 
+const generateAccessToken = (login, role, userAgent, userId) => {
   const payload = {
     role,
     login,
@@ -56,4 +56,8 @@ const updateAccessToken = async (userId, accessToken, userAgent) => {
     }
   };
 
-module.exports = tokenHelper;
+module.exports = {
+  tokenHelper,
+  updateAccessToken,
+  generateAccessToken
+};
