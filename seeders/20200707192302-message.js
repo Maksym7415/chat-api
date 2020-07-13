@@ -1,12 +1,14 @@
 'use strict';
 
+const data = require('../DBdata/Message');
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const data = [{
-      message: 'hello',
-      fkSenderId: 1,
-      file: 'file'
-    }]
+    // const data = [{
+    //   message: 'hello',
+    //   fkSenderId: 1,
+    //   file: 'file'
+    // }]
     
     await queryInterface.bulkInsert('message', data, {})
   },

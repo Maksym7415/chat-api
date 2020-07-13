@@ -1,11 +1,13 @@
 'use strict';
 
+const data = require('../DBdata/Permission');
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const data = [{
-      name: 'admin',
-      description: 'description',
-    }]
+    // const data = [{
+    //   name: 'admin',
+    //   description: 'description',
+    // }]
     
     await queryInterface.bulkInsert('permission', data, {})
   },

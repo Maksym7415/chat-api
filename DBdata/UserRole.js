@@ -1,0 +1,10 @@
+module.exports = [{"id":1,"fkUserId":1,"fkRoleId":1},
+{"id":2,"fkUserId":2,"fkRoleId":2},
+{"id":3,"fkUserId":3,"fkRoleId":2},
+{"id":4,"fkUserId":4,"fkRoleId":2},
+{"id":5,"fkUserId":5,"fkRoleId":1},
+{"id":6,"fkUserId":6,"fkRoleId":1},
+{"id":7,"fkUserId":7,"fkRoleId":1},
+{"id":8,"fkUserId":8,"fkRoleId":1},
+{"id":9,"fkUserId":9,"fkRoleId":1},
+{"id":10,"fkUserId":10,"fkRoleId":1}]
