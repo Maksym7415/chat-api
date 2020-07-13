@@ -1,12 +1,13 @@
 module.exports = [
     {
         "id": 1,
-        "login": "cpellamonuten0@domainmarket.com",
-        "firstName": "Cross",
-        "lastName": "",
-        "tagName": "cpellamonuten0",
-        "fullName": "Cross",
-        "status": "Available"
+        "login": "popovmaksim7415@gmail.com",
+        "firstName": "Maksim",
+        "lastName": "Popov",
+        "tagName": "maksim228",
+        "fullName": "Maksim Popov",
+        "status": "Available",
+        "verificationCode": "12345"
     },
     {
         "id": 2,
