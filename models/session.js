@@ -9,11 +9,11 @@ module.exports = (sequelize, DataType) => {
       type: DataType.INTEGER,
     },
     accessToken: {
-      type: DataType.STRING(255),
+      type: DataType.STRING(300),
       allowNull: false,
     },
     refreshToken: {
-      type: DataType.STRING(255),
+      type: DataType.STRING(300),
       allowNull: false,
     },
     userAgent: {
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataType) => {
     },
   }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
   });
   sessionTable.associate = (models) => {
     sessionTable.belongsTo(models.User, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });

@@ -1,13 +1,18 @@
+/* eslint-disable no-use-before-define */
 const jwt = require('jsonwebtoken');
 const { secret, tokens } = require('../../config/jwtConfig').jwt;
-const { Device, Session } = require('../../models');
+const { Session } = require('../../models');
 
 const tokenHelper = (login, role, userAgent, userId) => {
   try {
     const accessToken = generateAccessToken(login, role, userAgent, userId);
-    return updateAccessToken(userId, accessToken, userAgent)
+    const refreshToken = generateRefreshToken(login, role, userAgent, userId);
+    return updateAccessToken({
+      userId, accessToken, userAgent, refreshToken,
+    })
       .then(() => ({
         accessToken,
+        refreshToken,
       }));
   } catch (e) {
     return e;
@@ -27,25 +32,40 @@ const generateAccessToken = (login, role, userAgent, userId) => {
   return accessToken;
 };
 
-const updateAccessToken = async (userId, accessToken, userAgent) => {
+const generateRefreshToken = (login, role, userAgent, userId) => {
+  const payload = {
+    login,
+    role,
+    userAgent,
+    userId,
+    type: tokens.refresh.type,
+  };
+  const options = { expiresIn: tokens.refresh.expiresIn };
+  const refreshToken = jwt.sign(payload, secret, options);
+  return refreshToken;
+};
+
+const updateAccessToken = async ({
+  userId, accessToken, userAgent, refreshToken,
+}) => {
   try {
-    const isNewDevice = await Device.findOne({ where: { fkUserId: userId, userAgent } });
-    if (!isNewDevice) {
-      const session = await Session.create({
+    const isNewSession = await Session.findOne({ where: { fkUserId: userId, userAgent } });
+    if (!isNewSession) {
+      await Session.create({
         accessToken,
-      });
-      await Device.create({
-        fkUserId: userId,
-        fkSessionId: session.id,
+        refreshToken,
         userAgent,
+        fkUserId: userId,
       });
     } else {
       await Session.update({
         accessToken,
+        refreshToken,
       },
       {
         where: {
-          id: isNewDevice.fkSessionId,
+          fkUserId: userId,
+          userAgent,
         },
       });
     }
