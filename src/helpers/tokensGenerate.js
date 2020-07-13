@@ -74,4 +74,9 @@ const updateAccessToken = async ({
   }
 };
 
-module.exports = tokenHelper;
+module.exports = {
+  tokenHelper,
+  updateAccessToken,
+  generateAccessToken,
+  generateRefreshToken,
+};

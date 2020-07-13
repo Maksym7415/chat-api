@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 const { secret } = require('../../../config/jwtConfig').jwt;
 const { User, Session } = require('../../../models');
 const handleSendEmail = require('../../helpers/nodeMailer');
-const tokenHelper = require('../../helpers/tokensGenerate');
+const {tokenHelper} = require('../../helpers/tokensGenerate');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
   signUp: async (req, res, next) => {
