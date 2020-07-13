@@ -5,16 +5,27 @@ module.exports = (sequelize, DataType) => {
       autoIncrement: true,
       primaryKey: true,
     },
+    fkUserId: {
+      type: DataType.INTEGER,
+    },
     accessToken: {
-      type: DataType.STRING(255),
+      type: DataType.STRING(300),
+      allowNull: false,
+    },
+    refreshToken: {
+      type: DataType.STRING(300),
+      allowNull: false,
+    },
+    userAgent: {
+      type: DataType.STRING(200),
       allowNull: false,
     },
   }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
   });
   sessionTable.associate = (models) => {
-    sessionTable.hasMany(models.Device, { foreignKey: { name: 'fkSessionId', allowNull: false }, foreignKeyConstraint: true });
+    sessionTable.belongsTo(models.User, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
   };
   return sessionTable;
 };

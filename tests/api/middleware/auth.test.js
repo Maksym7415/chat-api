@@ -27,17 +27,17 @@ describe('checkAuth', () => {
     expect(req.token).toEqual(token);
   });
 
-  test('should return 401 when header is not setted', async () => {
+  test('should return 400 when header is not setted', async () => {
     const req = mockRequest(null, 'agent');
     const res = mockResponse();
     await middleware(req, res, () => {});
-    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.status).toHaveBeenCalledWith(400);
   });
 
-  test('should return 401 by adding invalid token', async () => {
+  test('should return 400 by adding invalid token', async () => {
     const req = mockRequest('12345', 'agent');
     const res = mockResponse();
     await middleware(req, res, () => {});
-    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.status).toHaveBeenCalledWith(400);
   });
 });

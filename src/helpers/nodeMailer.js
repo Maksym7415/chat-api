@@ -11,8 +11,8 @@ async function handleSendEmail(to, text) {
       pass: 'aA123456!',
     },
     tls: {
-      rejectUnauthorized: false
-  }
+      rejectUnauthorized: false,
+    },
   });
 
   await transporter.sendMail({

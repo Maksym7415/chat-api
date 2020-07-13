@@ -1,0 +1,10 @@
+module.exports = [{"id":1,"chatType":"Dialog"},
+{"id":2,"chatType":"Dialog"},
+{"id":3,"chatType":"Dialog"},
+{"id":4,"chatType":"Dialog"},
+{"id":5,"chatType":"Dialog"},
+{"id":6,"chatType":"Dialog"},
+{"id":7,"chatType":"Chat"},
+{"id":8,"chatType":"Chat"},
+{"id":9,"chatType":"Chat"},
+{"id":10,"chatType":"Chat"}]
