@@ -30,13 +30,15 @@ module.exports = {
       const [isUser] = await User.update({ verificationCode }, {
         where: { login },
       });
+        console.log(isUser)
       if (isUser) {
         try {
           await handleSendEmail(login, `${verificationCode}`);
           res.json('send you your verification code');
         } catch (error) {
-          console.log(createError(400, 'some problems with code transfer'))
-          next(createError(400, 'some problems with code transfer'));
+          console.log('DDDDDDDDDD')
+          // console.log(createError(400, 'some problems with code transfer'))
+          next(createError(300, 'some problems with code transfer'));
         }
         res.json({ data: isUser, message: 'checkEmail' });
       }

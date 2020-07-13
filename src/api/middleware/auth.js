@@ -6,7 +6,7 @@ const jwtSecret = require('../../../config/jwtConfig').jwt.secret;
 module.exports = async (req, res, next) => {
   const authHeader = req.get('Authorization');
   const browserIndenfication = req.get('User-Agent');
-  if (!authHeader) res.status(401).json({ message: 'header is not correct' });
+  if (!authHeader) return res.status(401).json({ message: 'header is not correct' });
 
   const token = authHeader.replace('Bearer ', '');
   try {
@@ -27,9 +27,6 @@ module.exports = async (req, res, next) => {
   } catch (e) {
     if (e instanceof jwt.JsonWebTokenError) {
       res.status(401).json({ message: 'Token expired' });
-    }
-    if (e instanceof jwt.JsonWebTokenError) {
-      res.status(401).json({ message: 'Invalid token' });
     }
   }
   next();
