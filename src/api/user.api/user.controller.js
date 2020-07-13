@@ -52,16 +52,6 @@ module.exports = {
       const { verificationCode, login } = req.body;
       // const browserIndenfication = req.get('User-Agent'); // Тут версия браузера
       const isUser = await User.findOne({ where: { login, verificationCode } });
-      // const session = await Session.update({
-      //   accessToken: '21314234234345',
-      //   refreshToken: '2cbdf54',
-      // },
-      // {
-      //   where: {
-      //     fkUserId: 1,
-      //     userAgent: 'crome',
-      //   },
-      // });
 
       if (isUser) {
         const tokens = await tokenHelper(login, 'user', 'crome', isUser.id);
