@@ -55,7 +55,7 @@ module.exports = {
 
       if (isUser) {
         const tokens = await tokenHelper(login, 'user', 'crome', isUser.id);
-        res.json({ message: 'successful login', data: tokens });
+        return res.json({ message: 'successful login', data: tokens });
         // res.json({ message: 'successful login' });
       }
       res.status(400).json({ message: 'there is no such user in the system' });
@@ -63,26 +63,27 @@ module.exports = {
       next(createError(501, error));
     }
   },
-  generateNewTokens: async (req, res, next) => {
+  refreshToken: async (req, res, next) => {
     const { refreshToken } = req.body;
     // const browserIndenfication = req.get('User-Agent'); // Тут версия браузера
     let payload;
     try {
-      try {
-        payload = jwt.verify(refreshToken, secret);
-        if (payload.type !== 'refresh') {
-          next(createError(400, 'Invalid token!'));
-        }
-      } catch (e) {
-        if (e instanceof jwt.TokenExpiredError) {
-          res.status(400).json({ message: 'Refresh token expired!' });
-        } else if (e instanceof jwt.TokenExpiredError) {
-          next(createError(400, 'Invalid token!'));
-        }
+      payload = jwt.verify(refreshToken, secret);
+      if (payload.type !== 'refresh') {
+        return next(createError(400, 'Invalid token!'));
       }
+    } catch (e) {
+      if (e instanceof jwt.TokenExpiredError) {
+        return res.status(400).json({ message: 'Refresh token expired!' });
+      } if (e instanceof jwt.TokenExpiredError) {
+        return next(createError(400, 'Invalid token!'));
+      }
+    }
+
+    try {
       const token = await Session.findOne({ where: { refreshToken, fkUserId: payload.userId } });
       if (token === null) {
-        next(createError(400, 'No one token found'));
+        return next(createError(400, 'No one token found'));
       }
       const tokens = await tokenHelper(payload.login, payload.role, 'crome', token.userId);
       res.status(200).json({ data: tokens });
