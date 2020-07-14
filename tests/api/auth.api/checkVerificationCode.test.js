@@ -15,7 +15,7 @@ describe('userController checkCode api', () => {
         login: 'popovmaksim7415@gmail.com',
       });
     expect(response.status).toBe(200);
-    expect(Object.keys(response.body)).toEqual(['message', 'data']);
+    expect(Object.keys(response.body)).toEqual(['accessToken', 'refreshToken']);
     done();
   });
 

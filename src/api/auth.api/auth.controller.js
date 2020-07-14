@@ -55,7 +55,7 @@ module.exports = {
 
       if (isUser) {
         const tokens = await tokenHelper(login, 'user', 'crome', isUser.id);
-        return res.json({ message: 'successful login', data: tokens });
+        return res.json(tokens);
         // res.json({ message: 'successful login' });
       }
       res.status(400).json({ message: 'there is no such user in the system' });
