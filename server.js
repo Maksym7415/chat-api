@@ -12,7 +12,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/api', routers.userRouters);
+app.use('/api', routers.authRouters);
 
 io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {

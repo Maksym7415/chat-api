@@ -15,7 +15,7 @@ module.exports = {
           firstName, lastName, login, status: 'free',
 
         });
-        res.json({ data: { email: user.login }, message: 'registration successful' });
+        res.json({ email: user.login });
       }
       res.status(400).json({ message: 'such login already used in the system' });
     } catch (error) {
@@ -86,7 +86,7 @@ module.exports = {
         return next(createError(400, 'No one token found'));
       }
       const tokens = await tokenHelper(payload.login, payload.role, 'crome', token.userId);
-      res.status(200).json({ data: tokens });
+      res.status(200).json(tokens);
     } catch (e) {
       next(createError(501, 'other error!'));
     }
