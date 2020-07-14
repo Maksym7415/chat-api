@@ -17,8 +17,7 @@ describe('userController signUp api', () => {
     await models.User.destroy({ where: { login: 'maks@gmail.com' } });
   
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe('registration successful');
-    expect(response.body.data.email).toBe('maks@gmail.com');
+    expect(response.body).toEqual({email: 'maks@gmail.com'});
     done();
   });
 

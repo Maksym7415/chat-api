@@ -15,7 +15,7 @@ module.exports = {
           firstName, lastName, login, status: 'free',
 
         });
-        res.json({ data: { email: user.login }, message: 'registration successful' });
+        res.json({ email: user.login });
       }
       res.status(400).json({ message: 'such login already used in the system' });
     } catch (error) {
@@ -35,11 +35,10 @@ module.exports = {
       if (isUser) {
         try {
           await handleSendEmail(login, `${verificationCode}`);
-          res.json('send you your verification code');
+          return res.json('send you your verification code');
         } catch (error) {
           next(createError(400, 'some problems with code transfer'));
         }
-        res.json({ data: isUser, message: 'checkEmail' });
       }
       next(createError(400, 'you need to registrate your account', { code: 999 }));
     } catch (error) {
@@ -56,7 +55,7 @@ module.exports = {
 
       if (isUser) {
         const tokens = await tokenHelper(login, 'user', 'crome', isUser.id);
-        return res.json({ message: 'successful login', data: tokens });
+        return res.json(tokens);
         // res.json({ message: 'successful login' });
       }
       res.status(400).json({ message: 'there is no such user in the system' });
@@ -87,7 +86,7 @@ module.exports = {
         return next(createError(400, 'No one token found'));
       }
       const tokens = await tokenHelper(payload.login, payload.role, 'crome', token.userId);
-      res.status(200).json({ data: tokens });
+      res.status(200).json(tokens);
     } catch (e) {
       next(createError(501, 'other error!'));
     }
