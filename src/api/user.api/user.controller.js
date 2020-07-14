@@ -35,11 +35,10 @@ module.exports = {
       if (isUser) {
         try {
           await handleSendEmail(login, `${verificationCode}`);
-          res.json('send you your verification code');
+          return res.json('send you your verification code');
         } catch (error) {
           next(createError(400, 'some problems with code transfer'));
         }
-        res.json({ data: isUser, message: 'checkEmail' });
       }
       next(createError(400, 'you need to registrate your account', { code: 999 }));
     } catch (error) {
