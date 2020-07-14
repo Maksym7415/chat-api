@@ -8,7 +8,7 @@ module.exports = {
       },
       refresh: {
         type: 'refresh',
-        expiresIn: '10s',
+        expiresIn: '7200h',
       },
     },
   },
