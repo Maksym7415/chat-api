@@ -12,8 +12,8 @@ describe('check refreshToken api', () => {
         refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InBvcG92bWFrc2ltNzQxNUBnbWFpbC5jb20iLCJyb2xlIjoidXNlciIsInVzZXJBZ2VudCI6ImNyb21lIiwidXNlcklkIjoxLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTU5NDcxNzg4MywiZXhwIjoxNjIwNjM3ODgzfQ.pjpu-5Ox3VFhFC1FEa0udPrjOn6z68SiShx_fx2NY8E',
       });
     expect(responce.status).toBe(200);
-    expect(typeof responce.body.data).toBe('object');
-    expect(Object.keys(responce.body.data).length).toBe(2);
+    expect(typeof responce.body).toBe('object');
+    expect(Object.keys(responce.body).length).toBe(2);
     done();
   });
 
