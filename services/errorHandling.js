@@ -1,7 +1,7 @@
 module.exports = function errorHandling(error, req, res, next){
     console.log(error);
     res.status(error.status || 500);
-    if(error.details){
+    if(error.details && Array.isArray(error.details)){
         res.send({
             code: error.code || '999',
             message: error.message || 'Unhandled error',
@@ -16,7 +16,7 @@ module.exports = function errorHandling(error, req, res, next){
     }
 }
 
-/**TYPES OF ERROR RESPONE
+/**>>>TYPES OF ERROR RESPONE<<<
  * • Simple error response
  *      1. code - 000-999 code, set unique code of error
  *      2. message - text, that describes responsed error
@@ -30,7 +30,7 @@ module.exports = function errorHandling(error, req, res, next){
  *          3.2 cause - names what has caused detailed error
  *          3.3 message - text, that describes responsed detailed error
  * 
- * EXAMPLES
+ * >>>EXAMPLES<<<
  * • Simple error response
  * {
  *      code: 504,

@@ -17,7 +17,8 @@ module.exports = {
         });
         res.json({ email: user.login });
       }
-      res.status(400).json({ message: 'such login already used in the system' });
+      next(createError(400, {code: 403, message: "Login already used in the", details: "details"}))
+      // res.status(400).json({ message: 'such login already used in the system' });
     } catch (error) {
       next(createError(501, error));
     }
@@ -39,7 +40,7 @@ module.exports = {
           next(createError(400, 'some problems with code transfer'));
         }
       }
-      next(createError(400, { message: 'you need to registrate your account', code: 210, obj: {test: 'test'} }));
+      next(createError(400, { message: 'you need to registrate your account', code: 999, obj: {test: 'test'} }));
     } catch (error) {
       next(createError(501, error));
       // res.status(501).json(error);
