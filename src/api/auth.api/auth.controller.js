@@ -26,7 +26,6 @@ module.exports = {
   signIn: async (req, res, next) => {
     try {
       const { login } = req.body;
-
       const verificationCode = Math.floor(Math.random() * 100000);
       const [isUser] = await User.update({ verificationCode }, {
         where: { login },
@@ -40,7 +39,7 @@ module.exports = {
           next(createError(400, 'some problems with code transfer'));
         }
       }
-      next(createError(400, 'you need to registrate your account', { code: 999 }));
+      next(createError(400, { message: 'you need to registrate your account', code: 210, obj: {test: 'test'} }));
     } catch (error) {
       next(createError(501, error));
       // res.status(501).json(error);

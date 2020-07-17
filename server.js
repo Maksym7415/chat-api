@@ -1,6 +1,6 @@
 require('dotenv').config();
+const errorHandling = require('./services/errorHandling');
 const express = require('express');
-
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -13,6 +13,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api', routers.authRouters);
+
+app.use('*', (req, res) => {
+  res.status(404).send('Page not found!');
+});
+
+app.use(errorHandling);
 
 io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
