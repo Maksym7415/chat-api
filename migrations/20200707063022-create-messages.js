@@ -21,10 +21,15 @@ module.exports = {
           type: Sequelize.TEXT,
           allowNull: false,
       },
-      file: {
+      messageType: {
         type: Sequelize.STRING(100),
-        allowNull: true,
+        allowNull: false,
       },
+      sendDate: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+        allowNull: false,
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {

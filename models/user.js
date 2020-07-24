@@ -33,6 +33,19 @@ module.exports = (sequelize, DataType) => {
       type: DataType.STRING(45),
       allowNull: true,
     },
+    userCreationTime: {
+      type: DataType.DATE,
+      defaultValue: DataType.NOW,
+      allowNull: false,
+    },
+    userUpdateTime: {
+      type: DataType.DATE,
+      allowNull: true,
+    },
+    userLastTimeOnline: {
+      type: DataType.DATE,
+      allowNull: true,
+    },
   }, {
     freezeTableName: true,
     timestamps: false,
