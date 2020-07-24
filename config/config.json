@@ -4,14 +4,20 @@
     "password": "0000",
     "database": "messenger",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "define": {
+      "timestamps": false
+    }
   },
   "test": {
     "username": "root",
     "password": "0000",
     "database": "messenger_test",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "define": {
+      "timestamps": false
+    }
   },
   "production": {
     "username": "root",
