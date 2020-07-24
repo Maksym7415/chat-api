@@ -13,10 +13,15 @@ module.exports = (sequelize, DataType) => {
       type: DataType.INTEGER,
       allowNull: false,
     },
-    file: {
+    messageType: {
       type: DataType.STRING(100),
-      allowNull: true,
+      allowNull: false,
     },
+    sendDate: {
+      type: DataType.DATE,
+      defaultValue: DataType.NOW,
+      allowNull: false,
+    }
   }, {
     freezeTableName: true,
   });

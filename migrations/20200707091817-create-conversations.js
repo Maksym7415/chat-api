@@ -8,10 +8,19 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      chatType: {
+      conversationType: {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      conversationCreationDate: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+        allowNull: false,
+      },
+      conversationUpdateDate: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {

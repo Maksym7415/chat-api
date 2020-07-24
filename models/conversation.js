@@ -5,10 +5,19 @@ module.exports = (sequelize, DataType) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    chatType: {
+    conversationType: {
       type: DataType.STRING,
       allowNull: false,
     },
+    conversationCreationDate: {
+      type: DataType.DATE,
+      defaultValue: DataType.NOW,
+      allowNull: false,
+    },
+    conversationUpdateDate: {
+      type: DataType.DATE,
+      allowNull: true,
+    }
   }, {
     freezeTableName: true,
   });

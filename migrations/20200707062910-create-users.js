@@ -34,6 +34,19 @@ module.exports = {
         type: Sequelize.STRING(45),
         allowNull: true,
       },
+      userCreationTime: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('now'),
+        allowNull: false,
+      },
+      userUpdateTime: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
+      userLastTimeOnline: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
