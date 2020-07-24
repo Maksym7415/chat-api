@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const { Session } = require('../../../models');
 const jwtSecret = require('../../../config/jwtConfig').jwt.secret;
 
-
 module.exports = async (req, res, next) => {
   const authHeader = req.get('Authorization');
   const browserIndenfication = req.get('User-Agent');
@@ -15,10 +14,9 @@ module.exports = async (req, res, next) => {
       res.status(400).json({ message: 'Invalid token!' });
       return;
     }
-    const accessToken = await Session.findOne({where: { id: device.fkSessionId } }) // Чтобы нельзя было зайти под старым токеном
-    if (accessToken) {
+    const isSession = await Session.findOne({ where: { fkUserId: payload.userId, userAgent: browserIndenfication } }); // Чтобы нельзя было зайти под старым токеном
+    if (isSession) {
       req.token = payload;
-
     } else {
       res.status(400).json({ message: 'Invalid token!' });
       return;
