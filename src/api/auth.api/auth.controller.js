@@ -19,7 +19,7 @@ module.exports = {
         });
         res.json({ email: user.login });
       }
-      next(createError(formErrorObject(MAIN_ERROR_CODES.ELEMENT_IN_USE, 'Login already used in the')));
+      next(createError(formErrorObject(MAIN_ERROR_CODES.ELEMENT_IN_USE, 'Login already in use')));
       // res.status(400).json({ message: 'such login already used in the system' });
     } catch (error) {
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
@@ -74,6 +74,7 @@ module.exports = {
     let payload;
     try {
       payload = jwt.verify(refreshToken, secret);
+      console.log(payload);
       if (payload.type !== 'refresh') {
         next(createError(formErrorObject(MAIN_ERROR_CODES.FORBIDDEN, 'Refresh token is missed')));
         return;
