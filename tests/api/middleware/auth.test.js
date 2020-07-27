@@ -1,6 +1,6 @@
 const middleware = require('../../../src/api/middleware/auth');
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImxvZ2luIjoicG9wb3ZtYWtzaW03NDE1QGdtYWlsLmNvbSIsInVzZXJBZ2VudCI6ImNyb21lIiwidXNlcklkIjoxLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNTk0NjQzNDg5LCJleHAiOjE2MDc2MDM0ODl9.GxiTXjM-m9gY4EJmObxW1JSqcMONCAO41f-86Osb07w'
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImxvZ2luIjoicG9wb3ZtYWtzaW03NDE1QGdtYWlsLmNvbSIsInVzZXJBZ2VudCI6ImNyb21lIiwidXNlcklkIjoxLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNTk0NjQzNDg5LCJleHAiOjE2MDc2MDM0ODl9.GxiTXjM-m9gY4EJmObxW1JSqcMONCAO41f-86Osb07w';
 
 const mockResponse = () => {
   const res = {};
@@ -11,15 +11,14 @@ const mockResponse = () => {
 
 const mockRequest = (authHeader, authUserAgent, data) => ({
   get(name) {
-    if (name === 'Authorization') return authHeader
-    if (name === 'User-Agent') return authUserAgent
-    return null
+    if (name === 'Authorization') return authHeader;
+    if (name === 'User-Agent') return authUserAgent;
+    return null;
   },
-  token: data
+  token: data,
 });
 
 describe('checkAuth', () => {
-
   test('should set token.data if token is valid', async () => {
     const req = mockRequest(token, 'agent', token);
     const res = mockResponse();
