@@ -25,7 +25,7 @@ describe('userController signIn api', () => {
       });
 
     expect(response.status).toBe(400);
-    expect(response.body).toEqual({});
+    expect(response.body).toEqual({"code": 405, "message": "you need to registrate your account"});
     done();
   });
 
@@ -36,7 +36,7 @@ describe('userController signIn api', () => {
       });
 
     expect(response.status).toBe(501);
-    expect(response.body).toEqual({});
+    expect(response.body).toEqual({"code": 999, "message": "UNHANDLED ERROR"});
     done();
   });
 });

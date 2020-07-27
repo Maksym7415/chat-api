@@ -4,6 +4,8 @@ const { secret } = require('../../../config/jwtConfig').jwt;
 const { User, Session } = require('../../../models');
 const handleSendEmail = require('../../helpers/nodeMailer');
 const { tokenHelper } = require('../../helpers/tokensGenerate');
+const { formErrorObject, MAIN_ERROR_CODES } = require('../../../services/errorHandling'); 
+
 
 module.exports = {
   signUp: async (req, res, next) => {
@@ -17,10 +19,11 @@ module.exports = {
         });
         res.json({ email: user.login });
       }
-      next(createError(400, {code: 403, message: "Login already used in the", details: "details"}))
+      next(createError(formErrorObject(MAIN_ERROR_CODES.ELEMENT_IN_USE, 'Login already used in the')));
       // res.status(400).json({ message: 'such login already used in the system' });
     } catch (error) {
-      next(createError(501, error));
+      next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
+      // next(createError(501, error));
     }
   },
 
@@ -37,13 +40,13 @@ module.exports = {
           await handleSendEmail(login, `${verificationCode}`);
           return res.json('send you your verification code');
         } catch (error) {
-          next(createError(400, 'some problems with code transfer'));
+          next(createError(formErrorObject(MAIN_ERROR_CODES.BAD_REQUEST, 'Verification code was not transfered')));
+          // next(createError(400, 'some problems with code transfer'));
         }
       }
-      next(createError(400, { message: 'you need to registrate your account', code: 999, obj: {test: 'test'} }));
+      next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'you need to registrate your account')));
     } catch (error) {
-      next(createError(501, error));
-      // res.status(501).json(error);
+      next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
     }
   },
 
@@ -58,9 +61,11 @@ module.exports = {
         return res.json(tokens);
         // res.json({ message: 'successful login' });
       }
-      res.status(400).json({ message: 'there is no such user in the system' });
+      next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'User does not exist in system')));
+      // res.status(400).json({ message: 'there is no such user in the system' });
     } catch (error) {
-      next(createError(501, error));
+      next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
+      // next(createError(501, error));
     }
   },
   refreshToken: async (req, res, next) => {
@@ -70,25 +75,32 @@ module.exports = {
     try {
       payload = jwt.verify(refreshToken, secret);
       if (payload.type !== 'refresh') {
-        return next(createError(400, 'Invalid token!'));
+        next(createError(formErrorObject(MAIN_ERROR_CODES.FORBIDDEN, 'Refresh token is missed')));
+        return;
+        // return next(createError(400, 'Invalid token!'));
       }
     } catch (e) {
       if (e instanceof jwt.TokenExpiredError) {
-        return res.status(400).json({ message: 'Refresh token expired!' });
-      } if (e instanceof jwt.TokenExpiredError) {
-        return next(createError(400, 'Invalid token!'));
-      }
+        next(createError(formErrorObject(MAIN_ERROR_CODES.FORBIDDEN, 'Refresh token is expired')));
+        // return res.status(400).json({ message: 'Refresh token expired!' });
+      } 
+      // if (e instanceof jwt.TokenExpiredError) {
+      //   next(createError(formErrorObject(MAIN_ERROR_CODES.FORBIDDEN, 'Invalid token')));
+      //   // return next(createError(400, 'Invalid token!'));
+      // }
     }
 
     try {
       const token = await Session.findOne({ where: { refreshToken, fkUserId: payload.userId } });
       if (token === null) {
-        return next(createError(400, 'No one token found'));
+        next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'Tokens not found')));
+        // return next(createError(400, 'No one token found'));
       }
       const tokens = await tokenHelper(payload.login, payload.role, 'crome', token.userId);
       res.status(200).json(tokens);
     } catch (e) {
-      next(createError(501, 'other error!'));
+      next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
+      // next(createError(501, 'other error!'));
     }
   },
 };

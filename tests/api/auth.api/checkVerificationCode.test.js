@@ -28,7 +28,7 @@ describe('userController checkCode api', () => {
       });
 
     expect(response.status).toBe(400);
-    expect(response.body.message).toBe('there is no such user in the system');
+    expect(response.body.message).toBe('User does not exist in system');
     done();
   });
 
@@ -40,7 +40,7 @@ describe('userController checkCode api', () => {
       });
 
     expect(response.status).toBe(501);
-    expect(response.body).toEqual({});
+    expect(response.body).toEqual({"code": 999, "message": "UNHANDLED ERROR"});
     done();
   });
 });

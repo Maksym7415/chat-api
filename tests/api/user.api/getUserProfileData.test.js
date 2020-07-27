@@ -52,7 +52,7 @@ describe(' check getUserProfile data api', () => {
         user,
       });
     expect(response.status).toBe(400);
-    expect(response.body).toBe('no user found');
+    expect(response.body).toEqual({"code": 405, "message": "User not found"});
     done();
   });
 });
