@@ -3,7 +3,6 @@ const supertest = require('supertest');
 const app = require('../../../server');
 
 const request = supertest(app);
-const { User, Role } = require('../../../models');
 
 describe(' check getUserProfile data api', () => {
   it('successfully give user data profile with his roles', async (done) => {
