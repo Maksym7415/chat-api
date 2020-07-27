@@ -28,8 +28,8 @@ describe('userController signUp api', () => {
         login: 'popovmaksim7415@gmail.com'
       });
   
-    expect(response.status).toBe(400);
-    expect(response.body.message).toBe('such login already used in the system');
+    expect(response.status).toBe(406);
+    expect(response.body.message).toBe('Login already in use');
     done();
   });
 
@@ -40,7 +40,7 @@ describe('userController signUp api', () => {
       });
   
     expect(response.status).toBe(501);
-    expect(response.body).toEqual({});
+    expect(response.body).toEqual({"code": 999, message: "UNHANDLED ERROR"});
     done();
   });
 })

@@ -30,7 +30,7 @@ describe(' check getUserProfile data api', () => {
     const response = await request
       .get('/api/getUserProfileData/0');
     expect(response.status).toBe(400);
-    expect(response.body).toBe('no user found');
+    expect(response.body).toEqual({"code": 405, "message": "User not found"});
     done();
   });
 });
