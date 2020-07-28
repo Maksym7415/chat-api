@@ -12,7 +12,6 @@ const {
   formErrorObject,
   MAIN_ERROR_CODES
 } = require('../../../services/errorHandling');
-const { Op } = require("sequelize");
 
 module.exports = {
   getUserConversations: async (req, res, next) => {

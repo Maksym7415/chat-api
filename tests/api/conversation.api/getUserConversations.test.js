@@ -37,12 +37,12 @@ describe(' check getUserConversation data api', () => {
 
     expect(response.header).not.toHaveProperty('Authorization');
     expect(response.status).toBe(400);
-    expect(response.body.message).toBe('header is not correct');
+    expect(response.body.message).toBe('Header is not recognized');
 
     done();
   });
 
-  it('returns error if header  token is not correct', async (done) => {
+  it('returns error if header token is not correct', async (done) => {
     const response = await request
       .get('/api/getUserConversations')
       .set('Authorization', `${invalidToken}`)
@@ -50,7 +50,7 @@ describe(' check getUserConversation data api', () => {
 
     expect(response.header).not.toHaveProperty('Authorization');
     expect(response.status).toBe(400);
-    expect(response.body.message).toBe('Invalid token!');
+    expect(response.body.message).toBe('System does not recognized tis token');
 
     done();
   });

@@ -49,6 +49,11 @@ const MAIN_ERROR_CODES = {
         HTTP_CODE: 403,
         MESSAGE: 'FORBIDDEN'
     },
+    TOKEN_ERROR: {
+        ERROR_CODE: 406,
+        HTTP_CODE: 400,
+        MESSAGE: 'TOKEN ERROR'
+    },
     NOT_EXISTS: {
         ERROR_CODE: 405,
         HTTP_CODE: 400,
@@ -76,7 +81,7 @@ function formErrorObject(errorObj, message, details) {
 function errorHandling(error, req, res, next){
     if(!error.errorObj || !error.errorObj.ERROR_CODE || !error.errorObj.HTTP_CODE){
         res.status(500);
-        res.send({
+        res.json({
             code: '888',
             message: 'Undefined error',
         });
@@ -84,14 +89,14 @@ function errorHandling(error, req, res, next){
     else{
         res.status(error.errorObj.HTTP_CODE);
         if(error.errorObj.details && Array.isArray(error.errorObj.details)){
-            res.send({
+            res.json({
                 code: error.errorObj.ERROR_CODE,
                 message: error.message || error.errorObj.MESSAGE,
                 details: error.errorObj.details || [],
             });
         }
         else{
-            res.send({
+            res.json({
                 code: error.errorObj.ERROR_CODE,
                 message: error.message || error.errorObj.MESSAGE,
             });
