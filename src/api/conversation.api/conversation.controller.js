@@ -65,12 +65,12 @@ module.exports = {
     } = req.token;
     const conversationId = req.params.id;
     try {
-      const user = await User.findOne({ where: { id: userId } });
+      // const user = await User.findOne({ where: { id: userId } });
       const conversation = await Conversation.findOne({ where: { id: conversationId } });
-      if (!user) {
-        next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'User does not exist')));
-      }
-      else if (!conversation) {
+      // if (!user) {
+      //   next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'User does not exist')));
+      // }
+      if (!conversation) {
         next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'Conversation does not exist')));
       } 
       else {
@@ -100,7 +100,7 @@ module.exports = {
               }
             }
           });
-          res.json({data: conversationHistory});
+          res.json({data: conversationHistory, pagination: {allItems: 500, currentPage:1}});
         }
       }
     } catch (error) {
