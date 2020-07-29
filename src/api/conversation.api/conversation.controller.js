@@ -48,6 +48,7 @@ module.exports = {
           replacements: [userId],
         });
         res.json(userConversations);
+        return;
       }
       next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'User does not exist')));
       // res.status(400).json('wrong user id');
