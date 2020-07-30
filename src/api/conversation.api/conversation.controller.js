@@ -5,24 +5,24 @@ const {
   User,
   Conversation,
   ChatUser,
-  Message, 
-  ChatMessage
+  Message,
+  ChatMessage,
 } = require('../../../models');
 const {
   formErrorObject,
-  MAIN_ERROR_CODES
+  MAIN_ERROR_CODES,
 } = require('../../../services/errorHandling');
 
 module.exports = {
   getUserConversations: async (req, res, next) => {
     const {
-      userId
+      userId,
     } = req.token;
     try {
       const isUser = User.findOne({
         where: {
-          id: userId
-        }
+          id: userId,
+        },
       });
       if (isUser) {
         const queryString = `message.id as messageId,
@@ -47,7 +47,7 @@ module.exports = {
           type: sequelize.QueryTypes.SELECT,
           replacements: [userId],
         });
-        res.json(userConversations);
+        res.json({ data: userConversations });
       }
       next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'User does not exist')));
       // res.status(400).json('wrong user id');
@@ -60,7 +60,7 @@ module.exports = {
 
   conversationHistory: async (req, res, next) => {
     const {
-      userId
+      userId,
     } = req.token;
     const conversationId = req.params.id;
     try {
@@ -71,8 +71,7 @@ module.exports = {
       // }
       if (!conversation) {
         next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'Conversation does not exist')));
-      } 
-      else {
+      } else {
         const isUserConversation = await Conversation.findAll({
           where: {
             id: conversationId,
@@ -80,30 +79,30 @@ module.exports = {
           include: {
             model: User,
             through: {
-              model: ChatUser
+              model: ChatUser,
             },
             where: {
-              id: userId
-            }
-          }
+              id: userId,
+            },
+          },
         });
         if (!isUserConversation.length) {
           next(createError(formErrorObject(MAIN_ERROR_CODES.FORBIDDEN, 'User has not access to this conversation')));
         } else {
           const conversationHistory = await Message.findAll({
-            include:{
+            include: {
               model: Conversation,
               attributes: [],
               where: {
                 id: conversationId,
-              }
-            }
+              },
+            },
           });
-          res.json({data: conversationHistory, pagination: {allItems: 500, currentPage:1}});
+          res.json({ data: conversationHistory, pagination: { allItems: 500, currentPage: 1 } });
         }
       }
     } catch (error) {
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
     }
-  }
+  },
 };
