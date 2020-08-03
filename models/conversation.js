@@ -5,6 +5,10 @@ module.exports = (sequelize, DataType) => {
       autoIncrement: true,
       primaryKey: true,
     },
+    conversationName: {
+      type: DataType.STRING,
+      allowNull: true,
+    },
     conversationType: {
       type: DataType.STRING,
       allowNull: false,

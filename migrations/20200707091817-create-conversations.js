@@ -8,6 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      conversationName: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       conversationType: {
         type: Sequelize.STRING,
         allowNull: false,

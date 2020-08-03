@@ -6,12 +6,14 @@ const {
   Conversation,
   ChatUser,
   Message, 
-  ChatMessage
+  ChatMessage, 
+  Sequelize
 } = require('../../../models');
 const {
   formErrorObject,
   MAIN_ERROR_CODES
 } = require('../../../services/errorHandling');
+const Op = Sequelize.Op;
 
 module.exports = {
   getUserConversations: async (req, res, next) => {
@@ -25,27 +27,57 @@ module.exports = {
         }
       });
       if (isUser) {
-        const queryString = `message.id as messageId,
-            message.fkSenderId, message.message, 
-            message.messageType, message.sendDate, 
-            conversation.id as conversationId, 
-            conversation.conversationType, 
-            conversation.conversationCreationDate`;
+        // let userConversations = '';
+        // const queryString = `message.id as messageId,
+        //     message.fkSenderId, message.message, 
+        //     message.messageType, message.sendDate, 
+        //     conversation.id as conversationId, 
+        //     conversation.conversationName,
+        //     conversation.conversationType, 
+        //     conversation.conversationCreationDate`;
 
-        const userConversations = await sequelize.query(`
-        select ${queryString}
-            from message, conversation, chatmessage, user, chatuser
-            where 
-                message.id = chatmessage.fkMessageId and
-                conversation.id = chatmessage.fkChatID and
-                user.id = chatuser.fkUserId and
-                chatuser.fkChatId = conversation.id 
-                and user.id = ?
-                and message.id in
-                    (select max(message.id) from message, chatmessage where message.id = fkMessageId and sendDate in 
-                        (select max(sendDate) from message, chatmessage where message.id = fkMessageId group by chatmessage.fkChatId) group by chatMessage.fkChatId);`, {
-          type: sequelize.QueryTypes.SELECT,
-          replacements: [userId],
+        //  userConversations = await sequelize.query(`
+        // select ${queryString}
+        // from message, conversation, chatmessage, user, chatuser
+        // where message.id = chatmessage.fkMessageId and conversation.id = chatmessage.fkChatID and user.id = chatuser.fkUserId 
+        // and chatuser.fkChatId = conversation.id and user.id = 1 and sendDate in
+        // (select max(sendDate) from message, chatmessage where message.id = fkMessageId group by chatmessage.fkChatId) group by chatmessage.fkChatId;`, {
+        //   type: sequelize.QueryTypes.SELECT,
+        //   replacements: [userId],
+        // });
+
+        // [sequelize.fn('max', sequelize.col('sendDate')), 'sendDate']
+        const userConversations = await Conversation.findAll({
+          group:['id'],
+          include:[
+          {
+            model: User,
+            attributes: [],
+            through:{
+              model: ChatUser,
+              attributes: []
+            },
+            where: {
+              id: userId
+            }
+          },
+          {
+            model: Message,
+            attributes:['id','message','messageType','sendDate'],
+            where: {
+              sendDate: {
+                [Op.in]: sequelize.literal('(select max(sendDate) from message, chatmessage where message.id = fkMessageId group by chatmessage.fkChatId)'),
+              }
+            },
+            include:{
+              model: User,
+              attributes: ['id', 'firstName', 'lastName', 'fullName', 'tagName', 'status']
+            },
+            through:{
+              model: ChatMessage,
+              attributes:[],
+            },
+          }]
         });
         res.json(userConversations);
         return;

@@ -56,6 +56,7 @@ module.exports = (sequelize, DataType) => {
     userTable.hasMany(models.Contact, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
     userTable.hasMany(models.UserRole, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
     userTable.hasMany(models.ChatUser, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
+    userTable.hasMany(models.Message, { foreignKey: { name: 'fkSenderId', allowNull: false }, foreignKeyConstraint: true });
     userTable.belongsToMany(models.Conversation, {
       foreignKey: { name: 'fkUserId', allowNull: false }, otherKey: { name: 'fkChatId', allowNull: false }, foreignKeyConstraint: true, through: models.ChatUser,
     });
