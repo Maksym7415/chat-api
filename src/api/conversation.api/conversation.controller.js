@@ -27,28 +27,9 @@ module.exports = {
         },
       });
       if (isUser) {
-        // let userConversations = '';
-        // const queryString = `message.id as messageId,
-        //     message.fkSenderId, message.message, 
-        //     message.messageType, message.sendDate, 
-        //     conversation.id as conversationId, 
-        //     conversation.conversationName,
-        //     conversation.conversationType, 
-        //     conversation.conversationCreationDate`;
-
-        //  userConversations = await sequelize.query(`
-        // select ${queryString}
-        // from message, conversation, chatmessage, user, chatuser
-        // where message.id = chatmessage.fkMessageId and conversation.id = chatmessage.fkChatID and user.id = chatuser.fkUserId 
-        // and chatuser.fkChatId = conversation.id and user.id = 1 and sendDate in
-        // (select max(sendDate) from message, chatmessage where message.id = fkMessageId group by chatmessage.fkChatId) group by chatmessage.fkChatId;`, {
-        //   type: sequelize.QueryTypes.SELECT,
-        //   replacements: [userId],
-        // });
-
-        // [sequelize.fn('max', sequelize.col('sendDate')), 'sendDate']
         const userConversations = await Conversation.findAll({
           group:['id'],
+          attributes: [['id', 'conversationId'], 'conversationName', 'conversationType', 'conversationCreationDate'],
           include:[
           {
             model: User,
