@@ -5,15 +5,16 @@ const {
   User,
   Conversation,
   ChatUser,
-  Message, 
-  ChatMessage, 
-  Sequelize
+  Message,
+  ChatMessage,
+  Sequelize,
 } = require('../../../models');
 const {
   formErrorObject,
   MAIN_ERROR_CODES,
 } = require('../../../services/errorHandling');
-const Op = Sequelize.Op;
+
+const { Op } = Sequelize;
 
 module.exports = {
   getUserConversations: async (req, res, next) => {
@@ -28,37 +29,37 @@ module.exports = {
       });
       if (isUser) {
         const userConversations = await Conversation.findAll({
-          group:['id'],
+          group: ['id'],
           attributes: [['id', 'conversationId'], 'conversationName', 'conversationType', 'conversationCreationDate'],
-          include:[
-          {
-            model: User,
-            attributes: [],
-            through:{
-              model: ChatUser,
-              attributes: []
-            },
-            where: {
-              id: userId
-            }
-          },
-          {
-            model: Message,
-            attributes:['id','message','messageType','sendDate'],
-            where: {
-              sendDate: {
-                [Op.in]: sequelize.literal('(select max(sendDate) from message, chatmessage where message.id = fkMessageId group by chatmessage.fkChatId)'),
-              }
-            },
-            include:{
+          include: [
+            {
               model: User,
-              attributes: ['id', 'firstName', 'lastName', 'fullName', 'tagName', 'status']
+              attributes: [],
+              through: {
+                model: ChatUser,
+                attributes: [],
+              },
+              where: {
+                id: userId,
+              },
             },
-            through:{
-              model: ChatMessage,
-              attributes:[],
-            },
-          }]
+            {
+              model: Message,
+              attributes: ['id', 'message', 'messageType', 'sendDate'],
+              where: {
+                sendDate: {
+                  [Op.in]: sequelize.literal('(select max(sendDate) from message, chatmessage where message.id = fkMessageId group by chatmessage.fkChatId)'),
+                },
+              },
+              include: {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName', 'fullName', 'tagName', 'status'],
+              },
+              through: {
+                model: ChatMessage,
+                attributes: [],
+              },
+            }],
         });
         return res.json({ data: userConversations });
       }
