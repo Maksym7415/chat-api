@@ -8,4 +8,5 @@ module.exports =
 {"id":7,"conversationName":"chat1","conversationType":"Chat","conversationCreationDate": "2019-01-12 16:10:08"},
 {"id":8,"conversationName":"chat2","conversationType":"Chat","conversationCreationDate": "2019-07-02 22:36:50"},
 {"id":9,"conversationName":"superchat","conversationType":"Chat","conversationCreationDate": "2018-11-30 06:45:48"},
-{"id":10,"conversationName":"private chat","conversationType":"Chat","conversationCreationDate": "2019-03-26 08:08:49"}]
+{"id":10,"conversationName":"private chat","conversationType":"Chat","conversationCreationDate": "2019-03-26 08:08:49"},
+{"id":11,"conversationName":"test","conversationType":"dialog","conversationCreationDate": "2020-03-26 08:08:49"}]

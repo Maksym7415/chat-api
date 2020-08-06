@@ -1,8 +1,9 @@
 require('dotenv').config();
 const {
-  errorHandling
+  errorHandling,
 } = require('./services/errorHandling');
 const express = require('express');
+
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -15,7 +16,7 @@ const routers = require('./src/api/routers');
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-  extended: false
+  extended: false,
 }));
 
 app.use('/api', routers.authRouters, routers.userRouters, routers.converSationRouters);
@@ -27,8 +28,10 @@ app.use('*', (req, res) => {
 app.use(errorHandling);
 
 io.on('connection', (socket) => {
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
+  console.log('connection');
+  socket.on('chats', ({ userId, message }) => {
+    console.log(userId);
+    io.emit(`userIdChat${userId}`, message);
   });
 });
 

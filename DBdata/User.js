@@ -90,4 +90,14 @@ module.exports = [
     fullName: 'Cris',
     status: 'Available',
   },
+  {
+    id: 11,
+    login: 'vit91112@gmail.com',
+    firstName: 'vit9',
+    lastName: '',
+    tagName: 'vit9',
+    fullName: 'vit9',
+    status: 'Available',
+    verificationCode: '12345',
+  },
 ];
