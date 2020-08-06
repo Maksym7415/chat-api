@@ -27,16 +27,27 @@ module.exports = {
         },
       });
       if (isUser) {
+
+        // >>>DO NOT DELETE<<<
+        //
+        // select message.id as 'Message ID', message.message, conversation.id as 'Conv ID', 
+        // ifnull(conversationName, (select max(user.fullName) from user, chatuser where user.id = fkUserId and fkChatId = conversation.id and user.id != 1)) as 'Title', 
+        // conversationType, user.id as 'User ID', sendDate, fkSenderId
+        // from conversation left join chatmessage on chatmessage.fkChatId = conversation.id left join message on chatmessage.fkMessageId = message.id 
+        // left join chatuser on chatuser.fkChatId = conversation.id left join user on chatuser.fkUserId = user.id
+        // where user.id = 1 and (sendDate in
+        // (select max(sendDate) from message, chatmessage where message.id = fkMessageId group by chatmessage.fkChatId) or sendDate is null) group by chatmessage.fkChatId;
+
         const userConversations = await Conversation.findAll({
           group:['id'],
-          attributes: [['id', 'conversationId'], 'conversationName', 'conversationType', 'conversationCreationDate'],
+          attributes: [['id', 'conversationId'], [sequelize.fn('ifnull', sequelize.col('conversationName'), sequelize.literal(`(select max(user.fullName) from user, chatuser where user.id = fkUserId and fkChatId = conversation.id and user.id != ${userId})`)), 'conversationName'], 'conversationType', 'conversationCreationDate'],
           include:[
           {
             model: User,
             attributes: [],
             through:{
               model: ChatUser,
-              attributes: []
+              attributes: [],
             },
             where: {
               id: userId
@@ -45,6 +56,7 @@ module.exports = {
           {
             model: Message,
             attributes:['id','message','messageType','sendDate'],
+            required:false,
             where: {
               sendDate: {
                 [Op.in]: sequelize.literal('(select max(sendDate) from message, chatmessage where message.id = fkMessageId group by chatmessage.fkChatId)'),
@@ -52,7 +64,7 @@ module.exports = {
             },
             include:{
               model: User,
-              attributes: ['id', 'firstName', 'lastName', 'fullName', 'tagName', 'status']
+              attributes: ['id', 'firstName', 'lastName', 'fullName', 'tagName', 'status'],
             },
             through:{
               model: ChatMessage,
