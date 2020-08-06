@@ -5,15 +5,16 @@ const {
   User,
   Conversation,
   ChatUser,
-  Message, 
-  ChatMessage, 
-  Sequelize
+  Message,
+  ChatMessage,
+  Sequelize,
 } = require('../../../models');
 const {
   formErrorObject,
   MAIN_ERROR_CODES,
 } = require('../../../services/errorHandling');
-const Op = Sequelize.Op;
+
+const { Op } = Sequelize;
 
 module.exports = {
   getUserConversations: async (req, res, next) => {
@@ -69,8 +70,8 @@ module.exports = {
             through:{
               model: ChatMessage,
               attributes:[],
-            },
-          }]
+              },
+            }],
         });
         return res.json({ data: userConversations });
       }
