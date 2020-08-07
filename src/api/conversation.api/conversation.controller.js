@@ -76,11 +76,9 @@ module.exports = {
         return res.json({ data: userConversations });
       }
       next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'User does not exist')));
-      // res.status(400).json('wrong user id');
     } catch (error) {
       console.log(error);
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
-      // next(createError(501, error));
     }
   },
 
@@ -90,11 +88,7 @@ module.exports = {
     } = req.token;
     const conversationId = req.params.id;
     try {
-      // const user = await User.findOne({ where: { id: userId } });
       const conversation = await Conversation.findOne({ where: { id: conversationId } });
-      // if (!user) {
-      //   next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'User does not exist')));
-      // }
       if (!conversation) {
         next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'Conversation does not exist')));
       } else {

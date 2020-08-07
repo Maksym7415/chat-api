@@ -100,4 +100,14 @@ module.exports = [
     status: 'Available',
     verificationCode: '12345',
   },
+  {
+    id: 12,
+    login: 'kir221dol@gmail.com',
+    firstName: 'Kirill',
+    lastName: 'Dolhopolov',
+    tagName: 'x0r3k',
+    fullName: 'Kirill Dolhopolov',
+    status: 'Available',
+    verificationCode: '12345',
+  },
 ];

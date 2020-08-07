@@ -32,5 +32,16 @@ module.exports = [{"id":1,"fkUserId":1,"fkChatId":1,"fkPermissionId":3},
 {"id":32,"fkUserId":8,"fkChatId":10,"fkPermissionId":5},
 {"id":33,"fkUserId":9,"fkChatId":10,"fkPermissionId":1},
 {"id":34,"fkUserId":10,"fkChatId":10,"fkPermissionId":2},
+
 {"id":35,"fkUserId":1,"fkChatId":11,"fkPermissionId":1},
-{"id":36,"fkUserId":11,"fkChatId":11,"fkPermissionId":1}]
+{"id":36,"fkUserId":11,"fkChatId":11,"fkPermissionId":1},
+{"id":37,"fkUserId":12,"fkChatId":11,"fkPermissionId":1},
+
+{"id":38,"fkUserId":1,"fkChatId":12,"fkPermissionId":1},
+{"id":39,"fkUserId":11,"fkChatId":12,"fkPermissionId":1},
+
+{"id":40,"fkUserId":1,"fkChatId":13,"fkPermissionId":1},
+{"id":41,"fkUserId":12,"fkChatId":13,"fkPermissionId":1},
+
+{"id":42,"fkUserId":11,"fkChatId":14,"fkPermissionId":1},
+{"id":43,"fkUserId":12,"fkChatId":14,"fkPermissionId":1},]
