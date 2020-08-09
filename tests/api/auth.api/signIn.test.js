@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const supertest = require('supertest');
-const app = require('../../../server');
+const { app } = require('../../../server');
 
 const request = supertest(app);
 
@@ -17,15 +17,15 @@ describe('userController signIn api', () => {
     done();
   });
 
-  it('it return error if user did not find', async done => {
+  it('it return error if user did not find', async (done) => {
     const response = await request
       .post('/api/signIn')
       .send({
-        login: 'mail.com'
+        login: 'mail.com',
       });
 
     expect(response.status).toBe(400);
-    expect(response.body).toEqual({"code": 405, "message": "you need to registrate your account"});
+    expect(response.body).toEqual({ code: 405, message: 'you need to registrate your account' });
     done();
   });
 
@@ -36,7 +36,7 @@ describe('userController signIn api', () => {
       });
 
     expect(response.status).toBe(501);
-    expect(response.body).toEqual({"code": 999, "message": "UNHANDLED ERROR"});
+    expect(response.body).toEqual({ code: 999, message: 'UNHANDLED ERROR' });
     done();
   });
 });

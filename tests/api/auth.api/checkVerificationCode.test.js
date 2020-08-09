@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const supertest = require('supertest');
-const app = require('../../../server');
+const { app } = require('../../../server');
 
 const request = supertest(app);
 const models = require('../../../models');
@@ -40,7 +40,7 @@ describe('userController checkCode api', () => {
       });
 
     expect(response.status).toBe(501);
-    expect(response.body).toEqual({"code": 999, "message": "UNHANDLED ERROR"});
+    expect(response.body).toEqual({ code: 999, message: 'UNHANDLED ERROR' });
     done();
   });
 });
