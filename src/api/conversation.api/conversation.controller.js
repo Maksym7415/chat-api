@@ -27,49 +27,49 @@ module.exports = {
           id: userId,
         },
       });
-      if (isUser) {
 
+      if (isUser) {
         // >>>DO NOT DELETE<<<
         //
-        // select message.id as 'Message ID', message.message, conversation.id as 'Conv ID', 
-        // ifnull(conversationName, (select max(user.fullName) from user, chatuser where user.id = fkUserId and fkChatId = conversation.id and user.id != 1)) as 'Title', 
+        // select message.id as 'Message ID', message.message, conversation.id as 'Conv ID',
+        // ifnull(conversationName, (select max(user.fullName) from user, chatuser where user.id = fkUserId and fkChatId = conversation.id and user.id != 1)) as 'Title',
         // conversationType, user.id as 'User ID', sendDate, fkSenderId
-        // from conversation left join chatmessage on chatmessage.fkChatId = conversation.id left join message on chatmessage.fkMessageId = message.id 
+        // from conversation left join chatmessage on chatmessage.fkChatId = conversation.id left join message on chatmessage.fkMessageId = message.id
         // left join chatuser on chatuser.fkChatId = conversation.id left join user on chatuser.fkUserId = user.id
         // where user.id = 1 and (sendDate in
         // (select max(sendDate) from message, chatmessage where message.id = fkMessageId group by chatmessage.fkChatId) or sendDate is null) group by chatmessage.fkChatId;
 
         const userConversations = await Conversation.findAll({
-          group:['id'],
+          group: ['id'],
           attributes: [['id', 'conversationId'], [sequelize.fn('ifnull', sequelize.col('conversationName'), sequelize.literal(`(select max(user.fullName) from user, chatuser where user.id = fkUserId and fkChatId = conversation.id and user.id != ${userId})`)), 'conversationName'], 'conversationType', 'conversationCreationDate'],
-          include:[
-          {
-            model: User,
-            attributes: [],
-            through:{
-              model: ChatUser,
-              attributes: [],
-            },
-            where: {
-              id: userId
-            }
-          },
-          {
-            model: Message,
-            attributes:['id','message','messageType','sendDate'],
-            required:false,
-            where: {
-              sendDate: {
-                [Op.in]: sequelize.literal('(select max(sendDate) from message, chatmessage where message.id = fkMessageId group by chatmessage.fkChatId)'),
-              }
-            },
-            include:{
+          include: [
+            {
               model: User,
-              attributes: ['id', 'firstName', 'lastName', 'fullName', 'tagName', 'status'],
+              attributes: [],
+              through: {
+                model: ChatUser,
+                attributes: [],
+              },
+              where: {
+                id: userId,
+              },
             },
-            through:{
-              model: ChatMessage,
-              attributes:[],
+            {
+              model: Message,
+              attributes: ['id', 'message', 'messageType', 'sendDate'],
+              required: false,
+              where: {
+                sendDate: {
+                  [Op.in]: sequelize.literal('(select max(sendDate) from message, chatmessage where message.id = fkMessageId group by chatmessage.fkChatId)'),
+                },
+              },
+              include: {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName', 'fullName', 'tagName', 'status'],
+              },
+              through: {
+                model: ChatMessage,
+                attributes: [],
               },
             }],
         });

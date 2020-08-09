@@ -3,6 +3,9 @@ const {
   errorHandling,
 } = require('./services/errorHandling');
 const express = require('express');
+const {
+  ChatMessage, Message, Conversation, ChatUser, User,
+} = require('./models');
 
 const app = express();
 const cors = require('cors');
@@ -29,9 +32,32 @@ app.use(errorHandling);
 
 io.on('connection', (socket) => {
   console.log('connection');
-  socket.on('chats', ({ userId, message }) => {
-    console.log(userId);
-    io.emit(`userIdChat${userId}`, message);
+  socket.on('chats', async ({ conversationId, message, userId }) => {
+    const newMessage = await Message.create({
+      message: message.message,
+      sendDate: message.sendDate,
+      messageType: message.messageType,
+      fkSenderId: message.fkSenderId,
+    });
+    await ChatMessage.create({
+      fkChatId: conversationId,
+      fkMessageId: newMessage.id,
+    });
+
+    // const { Conversations: conversation } = await User.findOne(
+    //   {
+    //     where: {
+    //       id: userId,
+    //     },
+    //     include: {
+    //       model: Conversation,
+    //     },
+    //   },
+    // );
+    // conversation.forEach((el) => {
+    // io.emit(`userIdChat${el.id}`, message);
+    // });
+    io.emit(`userIdChat${conversationId}`, message);
   });
 });
 
