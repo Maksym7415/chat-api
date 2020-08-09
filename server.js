@@ -29,9 +29,10 @@ app.use(errorHandling);
 
 io.on('connection', (socket) => {
   console.log('connection');
-  socket.on('chats', ({ conversationId, message }) => {
+  socket.on('chats', ({ conversationId, message }, successCallback) => {
     console.log(conversationId);
     io.emit(`userIdChat${conversationId}`, message);
+    successCallback(true);
   });
 });
 
