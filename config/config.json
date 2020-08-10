@@ -22,7 +22,7 @@
   "production": {
     "username": "maks",
     "password": "QfAekkCnfrtH",
-    "database": "messenger",
+    "database": "maks",
     "host": "localhost",
     "dialect": "mysql"
   }
