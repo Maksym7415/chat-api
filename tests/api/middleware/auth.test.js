@@ -25,7 +25,9 @@ describe('checkAuth', () => {
     const req = mockRequest(token, 'agent', token);
     const res = mockResponse();
     await middleware(req, res, () => {});
-    expect(req.token).toEqual(token);
+    expect(req.token).toEqual({
+      exp: 1607603489, iat: 1594643489, login: 'popovmaksim7415@gmail.com', role: 'user', type: 'access', userAgent: 'crome', userId: 1,
+    });
   });
 
   test('should return 400 when header is not setted', async () => {
