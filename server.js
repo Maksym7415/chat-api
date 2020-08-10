@@ -22,13 +22,13 @@ app.use(bodyParser.urlencoded({
   extended: false,
 }));
 
-app.use('/api', routers.authRouters, routers.userRouters, routers.converSationRouters);
+app.use('/api', routers.authRouters, routers.userRouters, routers.converSationRouters, routers.filesRouter);
 
 app.use('*', (req, res) => {
   res.status(404).send('Page not found!');
 });
 
-app.use(errorHandling);
+// app.use(errorHandling);
 
 io.on('connection', (socket) => {
   console.log('connection');
