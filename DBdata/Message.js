@@ -52,4 +52,5 @@ module.exports = [{"id":1,"fkSenderId":2, "message":"dis parturient montes nasce
 {"id":51,"fkSenderId":11, "message":"test message for dialog 12","messageType":"Text","sendDate":"2020-08-01 14:44:36"},
 {"id":52,"fkSenderId":1, "message":"test message for dialog 13","messageType":"Text","sendDate":"2020-08-02 15:02:33"},
 {"id":53,"fkSenderId":12,"message":"test message for dialog 14","messageType":"Text","sendDate":"2020-08-03 08:42:54"},
+{"id":54,"fkSenderId":1,"message":"test message for chat 11","messageType":"Text","sendDate":"2020-08-04 08:42:54"},
 ]
