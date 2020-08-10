@@ -28,3 +28,28 @@ try {
   console.log(error);
   http.close();
 }
+
+// THIS CODE FOR SERVER
+
+// const fs = require('fs');
+
+// let subdomain = 'test'
+
+// let socketPath = `/home/asmer/node_hosts/${subdomain}` //путь к сокету
+
+// const {
+//   app,
+//   http,
+// } = require('./server');
+
+// require('dotenv').config();
+
+// try {
+//   http.listen(socketPath, () => {
+//     console.log(`Now listening on ${socketPath}`)
+//     fs.chmodSync(socketPath, '777'); //права доступа к файлу сокета
+//   });
+// } catch (error) {
+//   console.log(error);
+//   http.close();
+// }

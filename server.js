@@ -43,7 +43,13 @@ io.on('connection', (socket) => {
       fkChatId: conversationId,
       fkMessageId: newMessage.id,
     });
-
+    const user = await User.findOne(
+      {
+        where: {
+          id: userId,
+        },
+      },
+    );
     // const { Conversations: conversation } = await User.findOne(
     //   {
     //     where: {
@@ -57,7 +63,7 @@ io.on('connection', (socket) => {
     // conversation.forEach((el) => {
     // io.emit(`userIdChat${el.id}`, message);
     // });
-    io.emit(`userIdChat${conversationId}`, message);
+    io.emit(`userIdChat${conversationId}`, { ...message, User: user });
     successCallback(true);
   });
 });

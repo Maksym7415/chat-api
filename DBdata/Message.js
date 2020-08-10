@@ -47,4 +47,10 @@ module.exports = [{"id":1,"fkSenderId":2, "message":"dis parturient montes nasce
 {"id":47,"fkSenderId":5, "message":"feugiat non pretium quis lectus suspendisse potenti in eleifend quam","messageType":"Text","sendDate":"2020-06-09 01:28:03"},
 {"id":48,"fkSenderId":1, "message":"risus dapibus augue vel accumsan","messageType":"Text","sendDate":"2019-10-28 14:44:36"},
 {"id":49,"fkSenderId":2, "message":"platea dictumst maecenas ut massa quis augue luctus tincidunt nulla","messageType":"Text","sendDate":"2020-04-26 15:02:33"},
-{"id":50,"fkSenderId":10,"message":"quis augue luctus tincidunt nulla mollis molestie","messageType":"Text","sendDate":"2019-08-24 08:42:54"}]
+{"id":50,"fkSenderId":10,"message":"quis augue luctus tincidunt nulla mollis molestie","messageType":"Text","sendDate":"2019-08-24 08:42:54"},
+
+{"id":51,"fkSenderId":11, "message":"test message for dialog 12","messageType":"Text","sendDate":"2020-08-01 14:44:36"},
+{"id":52,"fkSenderId":1, "message":"test message for dialog 13","messageType":"Text","sendDate":"2020-08-02 15:02:33"},
+{"id":53,"fkSenderId":12,"message":"test message for dialog 14","messageType":"Text","sendDate":"2020-08-03 08:42:54"},
+{"id":54,"fkSenderId":1,"message":"test message for chat 11","messageType":"Text","sendDate":"2020-08-04 08:42:54"},
+]
