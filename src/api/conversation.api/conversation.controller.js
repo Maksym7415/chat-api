@@ -109,14 +109,19 @@ module.exports = {
           next(createError(formErrorObject(MAIN_ERROR_CODES.FORBIDDEN, 'User has not access to this conversation')));
         } else {
           const conversationHistory = await Message.findAll({
-            include: {
+            include: [{
               model: Conversation,
               attributes: [],
               where: {
                 id: conversationId,
               },
             },
+            {
+              model: User,
+            },
+            ],
           });
+          console.log(conversationHistory);
           res.json({ data: conversationHistory, pagination: { allItems: 500, currentPage: 1 } });
         }
       }
