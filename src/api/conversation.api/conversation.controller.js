@@ -121,7 +121,6 @@ module.exports = {
             },
             ],
           });
-          console.log(conversationHistory);
           res.json({ data: conversationHistory, pagination: { allItems: 500, currentPage: 1 } });
         }
       }

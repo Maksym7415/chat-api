@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
     cb(null, `${name}.jpg`);
   },
 });
-router.use('/', express.static(path.join(__dirname, '/uploads')));
+router.use('/', express.static(path.join(__dirname, '../../../uploads')));
 const upload = multer({ storage });
 router.post('/upload', upload.array('file', 5), addFiles);
 
