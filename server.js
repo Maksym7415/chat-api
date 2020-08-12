@@ -74,22 +74,23 @@ io.on('connection', (socket) => {
     io.emit(`userIdChat${conversationId}`, { ...message, User: user });
     successCallback(true);
   });
+  // socket.on('files', (file) => console.log(file));
   socket.on('files', ({
-    data, sendDate, messageType, fkSenderId, conversationId, fileSize, isUploaded,
+    data, sendDate, messageType, fkSenderId, conversationId, fileSize, isUploaded, uniqueName, fileName, fileExtension,
   }) => {
-    const id = uuid.v1();
-    fs.appendFile(`./uploads/${id}.jpg`, data, async (err) => {
+    // const id = uuid.v1();
+    fs.appendFile(`./uploads/${uniqueName}.${fileExtension}`, data, async (err) => {
       if (err) console.log(err);
-      const message = await Message.create({
-        message: id,
-        sendDate,
-        messageType,
-        fkSenderId,
-      });
-      await ChatMessage.create({
-        fkChatId: conversationId,
-        fkMessageId: message.id,
-      });
+      // const message = await Message.create({
+      //   message: id,
+      //   sendDate,
+      //   messageType,
+      //   fkSenderId,
+      // });
+      // await ChatMessage.create({
+      //   fkChatId: conversationId,
+      //   fkMessageId: message.id,
+      // });
     });
   });
 });
