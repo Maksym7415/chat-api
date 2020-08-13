@@ -81,11 +81,7 @@ module.exports = {
     }
   },
 
-  conversationHistory: async (req, res, next) => {
-    const {
-      userId,
-    } = req.token;
-    const conversationId = req.params.id;
+  conversationHistory: async ({ token: { userId }, params: { id: conversationId }, query: { offset } }, res, next) => {
     try {
       const conversation = await Conversation.findOne({ where: { id: conversationId } });
       if (!conversation) {
@@ -109,6 +105,11 @@ module.exports = {
           next(createError(formErrorObject(MAIN_ERROR_CODES.FORBIDDEN, 'User has not access to this conversation')));
         } else {
           const conversationHistory = await Message.findAll({
+            limit: 15,
+            offset: +offset,
+            order: [
+              ['sendDate', 'DESC'],
+            ],
             include: [{
               model: Conversation,
               attributes: [],
@@ -121,7 +122,7 @@ module.exports = {
             },
             ],
           });
-          res.json({ data: conversationHistory, pagination: { allItems: 500, currentPage: 1 } });
+          res.json({ data: conversationHistory.reverse(), pagination: { allItems: 500, currentPage: +offset } });
         }
       }
     } catch (error) {
