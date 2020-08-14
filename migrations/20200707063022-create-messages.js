@@ -21,13 +21,14 @@ module.exports = {
           type: Sequelize.TEXT,
           allowNull: false,
       },
-      messageType: {
-        type: Sequelize.STRING(100),
-        allowNull: false,
-      },
       sendDate: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
+        allowNull: false,
+      },
+      sendDateMs: {
+        type: Sequelize.BIGINT,
+        defaultValue: new Date().getTime(),
         allowNull: false,
       }
     });
