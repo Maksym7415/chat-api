@@ -77,17 +77,14 @@ io.on('connection', (socket) => {
     io.emit(`userIdChat${conversationId}`, { ...message, User: user });
     successCallback(true);
   });
-  // socket.on('files', (file) => console.log(file));
   socket.on('files', ({
-    data, sendDate, messageType, fkSenderId, conversationId, fileSize, isUploaded, uniqueName, fileName, fileExtension, iterations,
-  }) => {
+    data, sendDate, messageType, userId, conversationId, fileSize, isUploaded, uniqueName, fileName, fileExtension, iterations,
+  }, successCallback) => {
     fs.appendFile(`./uploads/${uniqueName}.${fileExtension}`, data, async (err) => {
       if (err) return;
       if (!fileIterationsCount[uniqueName]) {
         fileIterationsCount[uniqueName] = 1;
       } else fileIterationsCount[uniqueName]++;
-      console.log(fileIterationsCount[uniqueName], iterations);
-
       if (iterations === fileIterationsCount[uniqueName]) { // checking if it's the last portion of file
         const internalFileSize = getFilesizeInBytes(`./uploads/${uniqueName}.${fileExtension}`);
         if (internalFileSize === fileSize) { // if we get not whole file we deleting it in other case we savin it in db
@@ -101,10 +98,11 @@ io.on('connection', (socket) => {
           //   fkChatId: conversationId,
           //   fkMessageId: message.id,
           // });
+          io.emit(`userIdChat${conversationId}`, { ...message, User: user });
+          successCallback(true);
         } else {
           fs.unlink(`./uploads/${uniqueName}.${fileExtension}`, (err) => {
             if (err) return;
-            console.log('File deleted!');
           });
         }
       }
