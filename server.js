@@ -33,7 +33,7 @@ app.use('*', (req, res) => {
   res.status(404).send('Page not found!');
 });
 
-// app.use(errorHandling);
+app.use(errorHandling);
 let file = null;
 io.on('connection', (socket) => {
   console.log('connection');
