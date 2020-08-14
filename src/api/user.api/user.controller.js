@@ -8,6 +8,9 @@ module.exports = {
       const { id } = req.params;
       const user = await User.findOne({
         where: { id },
+        attributes: {
+          exclude: ['verificationCode'],
+        },
         include: {
           model: Role,
           through: {
