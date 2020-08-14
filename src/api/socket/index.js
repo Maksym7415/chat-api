@@ -1,4 +1,10 @@
-module.exports = function initSocket(fs, io, Message, ChatMessage, User) {
+const fs = require('fs');
+const {
+  ChatMessage, Message, User,
+} = require('../../../models');
+const getFilesizeInBytes = require('../../helpers/checkFileSize');
+
+module.exports = function initSocket(io) {
   io.on('connection', (socket) => {
     let fileIterationsCount = {}; // creating object for counter of filePortion iterations
     console.log('connection');
