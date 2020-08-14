@@ -1,10 +1,10 @@
+/* eslint-disable no-plusplus */
 require('dotenv').config();
 const {
   errorHandling,
 } = require('./services/errorHandling');
 const express = require('express');
 const fs = require('fs');
-const uuid = require('uuid');
 const path = require('path');
 
 const app = express();
@@ -14,10 +14,12 @@ const http = require('http').createServer(app);
 // const https = require('https');
 // const io = require('socket.io')(https);
 const io = require('socket.io')(http);
+const getFileSize = require('./src/helpers/checkFileSize');
 const {
   ChatMessage, Message, User,
 } = require('./models');
 const routers = require('./src/api/routers');
+const getFilesizeInBytes = require('./src/helpers/checkFileSize');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -36,6 +38,7 @@ app.use('*', (req, res) => {
 app.use(errorHandling);
 let file = null;
 io.on('connection', (socket) => {
+  let fileIterationsCount = {}; // creating object for counter of filePortion iterations
   console.log('connection');
   socket.on('chats', async ({ conversationId, message, userId }, successCallback) => { // successCallback to inform client about sucessfull sending of message
     // if(message.type === 'file') {
@@ -76,21 +79,35 @@ io.on('connection', (socket) => {
   });
   // socket.on('files', (file) => console.log(file));
   socket.on('files', ({
-    data, sendDate, messageType, fkSenderId, conversationId, fileSize, isUploaded, uniqueName, fileName, fileExtension,
+    data, sendDate, messageType, fkSenderId, conversationId, fileSize, isUploaded, uniqueName, fileName, fileExtension, iterations,
   }) => {
-    // const id = uuid.v1();
     fs.appendFile(`./uploads/${uniqueName}.${fileExtension}`, data, async (err) => {
-      if (err) console.log(err);
-      // const message = await Message.create({
-      //   message: id,
-      //   sendDate,
-      //   messageType,
-      //   fkSenderId,
-      // });
-      // await ChatMessage.create({
-      //   fkChatId: conversationId,
-      //   fkMessageId: message.id,
-      // });
+      if (err) return;
+      if (!fileIterationsCount[uniqueName]) {
+        fileIterationsCount[uniqueName] = 1;
+      } else fileIterationsCount[uniqueName]++;
+      console.log(fileIterationsCount[uniqueName], iterations);
+
+      if (iterations === fileIterationsCount[uniqueName]) { // checking if it's the last portion of file
+        const internalFileSize = getFilesizeInBytes(`./uploads/${uniqueName}.${fileExtension}`);
+        if (internalFileSize === fileSize) { // if we get not whole file we deleting it in other case we savin it in db
+          // const message = await Message.create({
+          //   message: id,
+          //   sendDate,
+          //   messageType,
+          //   fkSenderId,
+          // });
+          // await ChatMessage.create({
+          //   fkChatId: conversationId,
+          //   fkMessageId: message.id,
+          // });
+        } else {
+          fs.unlink(`./uploads/${uniqueName}.${fileExtension}`, (err) => {
+            if (err) return;
+            console.log('File deleted!');
+          });
+        }
+      }
     });
   });
 });
