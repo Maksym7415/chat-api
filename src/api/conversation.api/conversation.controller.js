@@ -55,7 +55,7 @@ module.exports = {
             },
             {
               model: Message,
-              attributes: ['id', 'message', 'messageType', 'sendDate'],
+              attributes: ['id', 'message', 'sendDate'],
               required: false,
               where: {
                 sendDate: {
@@ -105,11 +105,10 @@ module.exports = {
           next(createError(formErrorObject(MAIN_ERROR_CODES.FORBIDDEN, 'User has not access to this conversation')));
         } else {
           const conversationHistory = await Message.findAll({
-            // limit: 15,
-            // offset: +offset,
-            // order: [
-            //   ['sendDate', 'DESC'],
-            // ],
+            limit: 10,
+            order: [
+              ['sendDate', 'DESC'],
+            ],
             include: [{
               model: Conversation,
               attributes: [],
@@ -122,8 +121,8 @@ module.exports = {
             },
             ],
           });
-          res.json({ data: conversationHistory, pagination: { allItems: 500, currentPage: 1 } });
-          // res.json({ data: conversationHistory.reverse(), pagination: { allItems: 500, currentPage: +offset } });
+          // res.json({ data: conversationHistory, pagination: { allItems: 500, currentPage: 1 } });
+          res.json({ data: conversationHistory.reverse(), pagination: { allItems: 500, currentPage: +offset } });
         }
       }
     } catch (error) {
