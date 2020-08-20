@@ -17,7 +17,6 @@ describe(' check getUserProfile data api', () => {
       'tagName',
       'fullName',
       'status',
-      'verificationCode',
       'userCreationTime',
       'userUpdateTime',
       'userLastTimeOnline',

@@ -10,8 +10,8 @@ const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsI
 describe('checkout of "ConversationHistory" API', () => {
   it('Get conversation history successfully', async (done) => {
     const response = await request
-      .get('/api/conversationHistory/1')
-      //.get('/api/conversationHistory/1?offset=15')
+      // .get('/api/conversationHistory/1')
+      .get('/api/conversationHistory/1?offset=15')
       .set('Authorization', token)
       .set('User-Agent', 'Crome');
     expect(response.status).toBe(200);

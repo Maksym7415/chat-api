@@ -55,7 +55,7 @@ module.exports = {
             },
             {
               model: Message,
-              attributes: ['id', 'message', 'messageType', 'sendDate'],
+              attributes: ['id', 'message', 'sendDate'],
               required: false,
               where: {
                 sendDate: {
@@ -107,6 +107,7 @@ module.exports = {
           const conversationHistory = await Message.findAll({
             limit: 15,
             offset: +offset,
+
             order: [
               ['sendDate', 'DESC'],
             ],

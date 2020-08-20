@@ -13,19 +13,21 @@ module.exports = (sequelize, DataType) => {
       type: DataType.INTEGER,
       allowNull: false,
     },
-    messageType: {
-      type: DataType.STRING(100),
-      allowNull: false,
-    },
     sendDate: {
       type: DataType.DATE,
       defaultValue: DataType.NOW,
       allowNull: false,
+    },
+    sendDateMs: {
+      type: DataType.BIGINT,
+      defaultValue: new Date().getTime(),
+      allowNull: false
     }
   }, {
     freezeTableName: true,
   });
   messageTable.associate = (models) => {
+    messageTable.hasMany(models.File, { foreignKey: { name: 'fkMessageId', allowNull: false}, foreignKeyConstraint: true });
     messageTable.hasMany(models.ChatMessage, { foreignKey: { name: 'fkMessageId', allowNull: false }, foreignKeyConstraint: true });
     messageTable.belongsTo(models.User, { foreignKey: { name: 'fkSenderId', allowNull: false }, foreignKeyConstraint: true });
     messageTable.belongsToMany(models.Conversation, {
