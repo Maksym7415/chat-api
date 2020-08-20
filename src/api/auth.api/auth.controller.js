@@ -4,8 +4,7 @@ const { secret } = require('../../../config/jwtConfig').jwt;
 const { User, Session } = require('../../../models');
 const handleSendEmail = require('../../helpers/nodeMailer');
 const { tokenHelper } = require('../../helpers/tokensGenerate');
-const { formErrorObject, MAIN_ERROR_CODES } = require('../../../services/errorHandling'); 
-
+const { formErrorObject, MAIN_ERROR_CODES } = require('../../../services/errorHandling');
 
 module.exports = {
   signUp: async (req, res, next) => {
@@ -55,9 +54,8 @@ module.exports = {
       const { verificationCode, login } = req.body;
       // const browserIndenfication = req.get('User-Agent'); // Тут версия браузера
       const isUser = await User.findOne({ where: { login, verificationCode } });
-
       if (isUser) {
-        const tokens = await tokenHelper(login, 'user', 'crome', isUser.id);
+        const tokens = await tokenHelper(login, 'user', 'crome', isUser.id, isUser.firstName);
         return res.json(tokens);
         // res.json({ message: 'successful login' });
       }
@@ -84,7 +82,7 @@ module.exports = {
       if (e instanceof jwt.TokenExpiredError) {
         next(createError(formErrorObject(MAIN_ERROR_CODES.FORBIDDEN, 'Refresh token is expired')));
         // return res.status(400).json({ message: 'Refresh token expired!' });
-      } 
+      }
       // if (e instanceof jwt.TokenExpiredError) {
       //   next(createError(formErrorObject(MAIN_ERROR_CODES.FORBIDDEN, 'Invalid token')));
       //   // return next(createError(400, 'Invalid token!'));
@@ -97,7 +95,7 @@ module.exports = {
         next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'Tokens not found')));
         // return next(createError(400, 'No one token found'));
       }
-      const tokens = await tokenHelper(payload.login, payload.role, 'crome', token.userId);
+      const tokens = await tokenHelper(payload.login, payload.role, 'crome', token.userId, payload.firstName);
       res.status(200).json(tokens);
     } catch (e) {
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
