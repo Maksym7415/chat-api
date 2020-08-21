@@ -104,6 +104,14 @@ module.exports = {
         if (!isUserConversation.length) {
           next(createError(formErrorObject(MAIN_ERROR_CODES.FORBIDDEN, 'User has not access to this conversation')));
         } else {
+
+          // >>>DO NOT DELETE<<<
+          //
+          // select * from 
+          // (select message.id as 'm_id', user.id as 'u_id', sendDate from message, user where message.fkSenderId = user.id order by sendDate desc limit 10) 
+          // as Message_Limit
+          // order by sendDate asc;
+
           const conversationHistory = await Message.findAll({
             limit: 10,
             order: [
