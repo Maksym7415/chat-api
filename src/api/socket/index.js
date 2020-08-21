@@ -95,5 +95,8 @@ module.exports = function initSocket(io) {
         }
       });
     });
+    socket.on('typingState', (user, conversationId) => {
+      io.emit(`typingStateId${conversationId}`, user);
+    });
   });
 };

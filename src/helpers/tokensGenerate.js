@@ -3,10 +3,10 @@ const jwt = require('jsonwebtoken');
 const { secret, tokens } = require('../../config/jwtConfig').jwt;
 const { Session } = require('../../models');
 
-const tokenHelper = (login, role, userAgent, userId) => {
+const tokenHelper = (login, role, userAgent, userId, firstName) => {
   try {
-    const accessToken = generateAccessToken(login, role, userAgent, userId);
-    const refreshToken = generateRefreshToken(login, role, userAgent, userId);
+    const accessToken = generateAccessToken(login, role, userAgent, userId, firstName);
+    const refreshToken = generateRefreshToken(login, role, userAgent, userId, firstName);
     return updateAccessToken({
       userId, accessToken, userAgent, refreshToken,
     })
@@ -19,12 +19,13 @@ const tokenHelper = (login, role, userAgent, userId) => {
   }
 };
 
-const generateAccessToken = (login, role, userAgent, userId) => {
+const generateAccessToken = (login, role, userAgent, userId, firstName) => {
   const payload = {
     role,
     login,
     userAgent,
     userId,
+    firstName,
     type: tokens.access.type,
   };
   const options = { expiresIn: tokens.access.expiresIn };
@@ -32,12 +33,13 @@ const generateAccessToken = (login, role, userAgent, userId) => {
   return accessToken;
 };
 
-const generateRefreshToken = (login, role, userAgent, userId) => {
+const generateRefreshToken = (login, role, userAgent, userId, firstName) => {
   const payload = {
     login,
     role,
     userAgent,
     userId,
+    firstName,
     type: tokens.refresh.type,
   };
   const options = { expiresIn: tokens.refresh.expiresIn };

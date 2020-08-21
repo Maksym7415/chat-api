@@ -113,7 +113,9 @@ module.exports = {
           // order by sendDate asc;
 
           const conversationHistory = await Message.findAll({
-            limit: 10,
+            limit: 15,
+            offset: +offset,
+
             order: [
               ['sendDate', 'DESC'],
             ],
