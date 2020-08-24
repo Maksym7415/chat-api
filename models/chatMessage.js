@@ -15,9 +15,9 @@ module.exports = (sequelize, DataType) => {
     freezeTableName: true,
     indexes: [
       {
-          unique: true,
-          fields: ['fkChatId', 'fkMessageId']
-      }
+        unique: true,
+        fields: ['fkChatId', 'fkMessageId'],
+      },
     ],
   });
   chatMessageTable.associate = (models) => {

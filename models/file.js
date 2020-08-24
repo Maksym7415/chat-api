@@ -7,19 +7,19 @@ module.exports = (sequelize, DataType) => {
     },
     fileStorageName: {
       type: DataType.STRING(200),
-      allowNull: false
+      allowNull: false,
     },
     fileUserName: {
       type: DataType.STRING(200),
-      allowNull: false
+      allowNull: false,
     },
     size: {
       type: DataType.INTEGER,
-      allowNull: true
+      allowNull: true,
     },
     extension: {
       type: DataType.STRING(20),
-      allowNull: false
+      allowNull: false,
     },
     fkMessageId: {
       type: DataType.INTEGER,
@@ -29,11 +29,9 @@ module.exports = (sequelize, DataType) => {
     freezeTableName: true,
   });
 
-
   fileTable.associate = (models) => {
     fileTable.belongsTo(models.Message, { foreignKey: { name: 'fkMessageId', allowNull: false }, foreignKeyConstraint: true });
   };
-
 
   return fileTable;
 };

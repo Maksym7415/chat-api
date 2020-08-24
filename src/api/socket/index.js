@@ -1,6 +1,6 @@
 const fs = require('fs');
 const {
-  ChatMessage, Message, User,
+  ChatMessage, Message, User, File,
 } = require('../../../models');
 const getFilesizeInBytes = require('../../helpers/checkFileSize');
 
@@ -12,6 +12,7 @@ module.exports = function initSocket(io) {
       // if(message.type === 'file') {
 
       // }
+      console.log(message);
       const newMessage = await Message.create({
         message: message.message,
         sendDate: message.sendDate,
@@ -29,24 +30,11 @@ module.exports = function initSocket(io) {
           },
         },
       );
-      // const { Conversations: conversation } = await User.findOne(
-      //   {
-      //     where: {
-      //       id: userId,
-      //     },
-      //     include: {
-      //       model: Conversation,
-      //     },
-      //   },
-      // );
-      // conversation.forEach((el) => {
-      // io.emit(`userIdChat${el.id}`, message);
-      // });
       io.emit(`userIdChat${conversationId}`, { ...message, User: user });
       successCallback(true);
     });
     socket.on('files', ({
-      data, sendDate, messageType, userId, conversationId, fileSize, isUploaded, uniqueName, fileName, fileExtension, iterations,
+      data, sendDate, messageType, conversationId, fileSize, isUploaded, uniqueName, fileName, fileExtension, iterations, message, userId, isImage,
     }, successCallback) => {
       fs.appendFile(`./uploads/${uniqueName}.${fileExtension}`, data, async (err) => {
         if (err) return;
@@ -56,37 +44,45 @@ module.exports = function initSocket(io) {
         if (iterations === fileIterationsCount[uniqueName]) { // checking if it's the last portion of file
           const internalFileSize = getFilesizeInBytes(`./uploads/${uniqueName}.${fileExtension}`);
           if (internalFileSize === fileSize) { // if we get not whole file we deleting it in other case we savin it in db
-            // const message = await Message.create({
-            //   message: id,
-            //   sendDate,
-            //   messageType,
-            //   fkSenderId,
-            // });
-            // await ChatMessage.create({
-            //   fkChatId: conversationId,
-            //   fkMessageId: message.id,
-            // });
-
             // creating message
-            // const newMessage = await Message.create({
-            //   message: message.message,
-            //   sendDate: message.sendDate,
-            //   messageType: message.messageType,
-            //   fkSenderId: message.fkSenderId,
-            // });
-            // await ChatMessage.create({
-            //   fkChatId: conversationId,
-            //   fkMessageId: newMessage.id,
-            // });
-            // const user = await User.findOne(
-            //   {
-            //     where: {
-            //       id: userId,
-            //     },
-            //   },
-            // );
-            // io.emit(`userIdChat${conversationId}`, { ...message, User: user });
-            successCallback(true);
+            try {
+              const newMessage = await Message.create({
+                message: message.message,
+                sendDate: message.sendDate,
+                messageType: message.messageType,
+                fkSenderId: message.fkSenderId,
+              });
+              await ChatMessage.create({
+                fkChatId: conversationId,
+                fkMessageId: newMessage.id,
+              });
+              const user = await User.findOne(
+                {
+                  where: {
+                    id: userId,
+                  },
+                },
+              );
+              await File.create({
+                fileStorageName: uniqueName,
+                fileUserName: fileName,
+                size: fileSize,
+                extension: fileExtension,
+                fkMessageId: newMessage.id,
+              });
+
+              fs.readFile(`./uploads/${uniqueName}.${fileExtension}`, (err, file) => {
+                if (err) return;
+                const fileData = {
+                  file,
+                  isImage,
+                  fileName,
+                };
+                io.emit(`userIdChat${conversationId}`, { ...message, fileData, User: user.dataValues });
+              });
+            } catch (error) {
+              console.log(error);
+            }
           } else {
             fs.unlink(`./uploads/${uniqueName}.${fileExtension}`, (err) => {
               if (err) return;
@@ -94,9 +90,6 @@ module.exports = function initSocket(io) {
           }
         }
       });
-    });
-    socket.on('typingState', (user, conversationId) => {
-      io.emit(`typingStateId${conversationId}`, user);
     });
   });
 };
