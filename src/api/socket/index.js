@@ -7,6 +7,7 @@ const getFilesizeInBytes = require('../../helpers/checkFileSize');
 module.exports = function initSocket(io) {
   io.on('connection', (socket) => {
     let fileIterationsCount = {}; // creating object for counter of filePortion iterations
+    let filesAmount = 0; // files count from one message
     console.log('connection');
     socket.on('chats', async ({ conversationId, message, userId }, successCallback) => { // successCallback to inform client about sucessfull sending of message
       // if(message.type === 'file') {
@@ -34,7 +35,7 @@ module.exports = function initSocket(io) {
       successCallback(true);
     });
     socket.on('files', ({
-      data, sendDate, messageType, conversationId, fileSize, isUploaded, uniqueName, fileName, fileExtension, iterations, message, userId, isImage,
+      data, sendDate, messageType, conversationId, fileSize, isUploaded, uniqueName, fileName, fileExtension, iterations, message, userId, isImage, filesCount,
     }, successCallback) => {
       fs.appendFile(`./uploads/${uniqueName}.${fileExtension}`, data, async (err) => {
         if (err) return;
@@ -42,6 +43,7 @@ module.exports = function initSocket(io) {
           fileIterationsCount[uniqueName] = 1;
         } else fileIterationsCount[uniqueName]++;
         if (iterations === fileIterationsCount[uniqueName]) { // checking if it's the last portion of file
+          filesAmount += 1;
           const internalFileSize = getFilesizeInBytes(`./uploads/${uniqueName}.${fileExtension}`);
           if (internalFileSize === fileSize) { // if we get not whole file we deleting it in other case we savin it in db
             // creating message
@@ -78,10 +80,14 @@ module.exports = function initSocket(io) {
                   isImage,
                   fileName,
                 };
-                io.emit(`userIdChat${conversationId}`, { ...message, fileData, User: user.dataValues });
+                if (filesAmount === filesCount) {
+                  filesAmount = 0;
+                  successCallback(true);
+                  io.emit(`userIdChat${conversationId}`, { ...message, fileData, User: user.dataValues });
+                }
               });
             } catch (error) {
-              console.log(error);
+              successCallback(false);
             }
           } else {
             fs.unlink(`./uploads/${uniqueName}.${fileExtension}`, (err) => {
