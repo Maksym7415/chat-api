@@ -99,6 +99,7 @@ module.exports = function initSocket(io) {
             successCallback('file added');
           } catch (error) {
             successCallback(error);
+            fs.unlink(`./uploads/${uniqueName}.${fileExtension}`, data, (err) => console.log(err));
           }
         });
       }
