@@ -30,7 +30,7 @@ module.exports = function initSocket(io) {
           },
         );
         io.emit(`userIdChat${conversationId}`, {
-          ...message, id: newMessage.id, fileData: [], User: user,
+          ...message, id: newMessage.id, Files: [], User: user,
         });
         successCallback(true);
       } catch (error) {
@@ -62,17 +62,18 @@ module.exports = function initSocket(io) {
 
           if (!filesAmount[userId]) filesAmount[userId] = 1;
           else filesAmount[userId]++;
-          if (!filesArray[userId]) filesArray[userId] = [{ isImage, name: `${uniqueName}.${fileExtension}` }];
-          else filesArray[userId] = [...filesArray[userId], { isImage, name: `${uniqueName}.${fileExtension}` }];
 
           try {
-            await File.create({
+            const file = await File.create({
               fileStorageName: uniqueName,
               fileUserName: fileName,
               size: fileSize,
               extension: fileExtension,
               fkMessageId: messageId,
             });
+
+            if (!filesArray[userId]) filesArray[userId] = [file.dataValues];
+            else filesArray[userId] = [...filesArray[userId], file.dataValues];
 
             if (filesAmount[userId] === filesCount) {
               const user = await User.findOne(
@@ -90,7 +91,7 @@ module.exports = function initSocket(io) {
                 messageType: 'File',
               };
               io.emit(`userIdChat${conversationId}`, {
-                ...requestMessage, id: messageId, fileData: filesArray[userId], User: user.dataValues,
+                ...requestMessage, id: messageId, Files: filesArray[userId], User: user.dataValues,
               });
               filesAmount[userId] = 0;
               filesArray[userId] = [];

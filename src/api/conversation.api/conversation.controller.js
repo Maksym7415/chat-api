@@ -8,6 +8,7 @@ const {
   Message,
   ChatMessage,
   Sequelize,
+  File,
 } = require('../../../models');
 const {
   formErrorObject,
@@ -124,6 +125,9 @@ module.exports = {
               where: {
                 id: conversationId,
               },
+            },
+            {
+              model: File,
             },
             {
               model: User,
