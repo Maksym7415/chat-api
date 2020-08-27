@@ -14,7 +14,7 @@ module.exports = function initSocket(io) {
       conversationId, message, userId, opponentId,
     }, successCallback) => { // successCallback to inform client about sucessfull sending of message
       // if(message.type === 'file') {
-
+      console.log(123457);
       // }
       if (!conversationId) {
         const user = await User.findOne({
@@ -29,7 +29,8 @@ module.exports = function initSocket(io) {
         });
         const { newConversationId, newMessage } = await addChat(opponentId, message, 'Dialog', [user, opponent]);
         console.log(newConversationId, newMessage);
-        return io.emit(`userIdNewChat${userId}`, { ...newMessage, User: user }, newConversationId);
+        io.emit(`userIdNewChat${userId}`, { ...newMessage, User: user }, newConversationId);
+        return io.emit(`userIdNewChat${opponentId}`, { ...newMessage, User: user }, newConversationId);
       }
       console.log(message);
       const newMessage = await Message.create({
@@ -114,6 +115,9 @@ module.exports = function initSocket(io) {
           }
         }
       });
+    });
+    socket.on('typingState', (user, conversationId) => {
+      io.emit(`typingStateId${conversationId}`, user);
     });
   });
 };
