@@ -1,18 +1,36 @@
 const fs = require('fs');
 const {
-  ChatMessage, Message, User, File,
+  ChatMessage, Message, User, File, Conversation,
 } = require('../../../models');
 const getFilesizeInBytes = require('../../helpers/checkFileSize');
+const addChat = require('./addNewChatFunction');
 
 module.exports = function initSocket(io) {
   io.on('connection', (socket) => {
     let fileIterationsCount = {}; // creating object for counter of filePortion iterations
     let filesAmount = 0; // files count from one message
     console.log('connection');
-    socket.on('chats', async ({ conversationId, message, userId }, successCallback) => { // successCallback to inform client about sucessfull sending of message
+    socket.on('chats', async ({
+      conversationId, message, userId, opponentId,
+    }, successCallback) => { // successCallback to inform client about sucessfull sending of message
       // if(message.type === 'file') {
 
       // }
+      if (!conversationId) {
+        const user = await User.findOne({
+          where: {
+            id: userId,
+          },
+        });
+        const opponent = await User.findOne({
+          where: {
+            id: opponentId,
+          },
+        });
+        const { newConversationId, newMessage } = await addChat(opponentId, message, 'Dialog', [user, opponent]);
+        console.log(newConversationId, newMessage);
+        return io.emit(`userIdNewChat${userId}`, { ...newMessage, User: user }, newConversationId);
+      }
       console.log(message);
       const newMessage = await Message.create({
         message: message.message,
