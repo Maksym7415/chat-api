@@ -104,11 +104,10 @@ module.exports = {
         if (!isUserConversation.length) {
           next(createError(formErrorObject(MAIN_ERROR_CODES.FORBIDDEN, 'User has not access to this conversation')));
         } else {
-
           // >>>DO NOT DELETE<<<
           //
-          // select * from 
-          // (select message.id as 'm_id', user.id as 'u_id', sendDate from message, user where message.fkSenderId = user.id order by sendDate desc limit 10) 
+          // select * from
+          // (select message.id as 'm_id', user.id as 'u_id', sendDate from message, user where message.fkSenderId = user.id order by sendDate desc limit 10)
           // as Message_Limit
           // order by sendDate asc;
 
@@ -137,6 +136,16 @@ module.exports = {
       }
     } catch (error) {
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
+    }
+  },
+  getOpponentsIdWhereConversTypeDialog: async ({ params }, res) => {
+    try {
+      console.log(params.id);
+      // select * from messenger.conversation where conversationType = 'Dialog' and id in (SELECT fkChatId FROM messenger.chatuser where fkChatId in (select fkChatId from messenger.chatuser where fkUserId = 13))
+      const usersId = await sequelize.query('SELECT * FROM messenger.chatuser where fkChatId in (select fkChatId from messenger.chatuser where fkUserId = 10)');
+      return res.json({ data: usersId });
+    } catch (e) {
+      console.log({ e });
     }
   },
 };
