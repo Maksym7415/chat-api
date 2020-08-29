@@ -26,9 +26,9 @@ module.exports = (sequelize, DataType) => {
     freezeTableName: true,
     indexes: [
       {
-          unique: true,
-          fields: ['fkContactId', 'fkUserId']
-      }
+        unique: true,
+        fields: ['fkContactId', 'fkUserId'],
+      },
     ],
   });
   contactTable.associate = (models) => {

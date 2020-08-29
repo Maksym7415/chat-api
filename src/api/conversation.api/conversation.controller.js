@@ -138,12 +138,13 @@ module.exports = {
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
     }
   },
-  getOpponentsIdWhereConversTypeDialog: async ({ params }, res) => {
+  getOpponentsIdWhereConversTypeDialog: async ({ query: { opponentId, userId } }, res) => {
     try {
-      console.log(params.id);
-      // select * from messenger.conversation where conversationType = 'Dialog' and id in (SELECT fkChatId FROM messenger.chatuser where fkChatId in (select fkChatId from messenger.chatuser where fkUserId = 13))
-      const usersId = await sequelize.query('SELECT * FROM messenger.chatuser where fkChatId in (select fkChatId from messenger.chatuser where fkUserId = 10)');
-      return res.json({ data: usersId });
+      const data = await sequelize.query(`
+            select id from messenger.conversation where conversationType = 'Dialog' and id in 
+            (select fkChatId from messenger.chatuser where fkUserId = ${opponentId} and fkChatId in 
+            (select fkChatId FROM messenger.chatuser where fkUserId = ${userId}))`, { type: sequelize.QueryTypes.SELECT });
+      return res.json({ data });
     } catch (e) {
       console.log({ e });
     }

@@ -11,6 +11,6 @@ router.get('/getUserConversations', authMiddleware, getUserConversations);
 
 router.get('/conversationHistory/:id', authMiddleware, conversationHistory);
 
-router.get('/getOpponentsIdWhereConversTypeDialog/:id', getOpponentsIdWhereConversTypeDialog);
+router.get('/getOpponentsIdWhereConversTypeDialog', getOpponentsIdWhereConversTypeDialog);
 
 module.exports = router;
