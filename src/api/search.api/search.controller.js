@@ -1,5 +1,5 @@
 const {
-  Contact,
+  User,
   Sequelize,
 } = require('../../../models');
 
@@ -11,12 +11,14 @@ module.exports = {
       if (!searchRequest) {
         return res.json({ response: [] });
       }
-      const contacts = await Contact.findAll({
+      const contacts = await User.findAll({
         where: {
-          pseudonyme: {
+          firstName: {
             [Op.substring]: searchRequest,
           },
-
+          id: {
+            [Op.not]: 11,
+          },
         },
       });
       return res.json({ response: contacts });
