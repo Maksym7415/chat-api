@@ -10,6 +10,7 @@ module.exports =
 {"id":9,"conversationName":"superchat","conversationType":"Chat","conversationCreationDate": "2018-11-30 06:45:48"},
 {"id":10,"conversationName":"private chat","conversationType":"Chat","conversationCreationDate": "2019-03-26 08:08:49"},
 {"id":11,"conversationName":"Test Chat","conversationType":"Chat","conversationCreationDate": "2020-03-26 08:08:49"},
-{"id":12,"conversationType":"Dialog","conversationCreationDate": "2020-04-26 08:08:49"},
-{"id":13,"conversationType":"Dialog","conversationCreationDate": "2020-05-26 08:08:49"},
-{"id":14,"conversationType":"Dialog","conversationCreationDate": "2020-06-26 08:08:49"},]
+// {"id":12,"conversationType":"Dialog","conversationCreationDate": "2020-04-26 08:08:49"},
+// {"id":13,"conversationType":"Dialog","conversationCreationDate": "2020-05-26 08:08:49"},
+// {"id":14,"conversationType":"Dialog","conversationCreationDate": "2020-06-26 08:08:49"},
+]
