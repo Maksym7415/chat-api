@@ -1,17 +1,10 @@
 const {
-  ChatMessage, Message, User, File, Conversation, ChatUser, Contact,
+  ChatMessage, Message, Conversation, ChatUser,
 } = require('../../../models');
 
 const addChat = async (opponentId, message, chatType, chatUsers) => {
   try {
-    const { firstName } = await User.findOne({
-      where: {
-        id: opponentId,
-      },
-    });
-
     const newChat = await Conversation.create({
-      conversationName: firstName,
       conversationType: chatType,
       conversationCreationDate: message.sendDate,
     });

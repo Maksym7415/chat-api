@@ -6,7 +6,7 @@ const {
 const { Op } = Sequelize;
 
 module.exports = {
-  getAllContact: async ({ query: { searchRequest } }, res) => {
+  getAllContact: async ({ token, query: { searchRequest } }, res) => {
     try {
       if (!searchRequest) {
         return res.json({ response: [] });
@@ -17,7 +17,7 @@ module.exports = {
             [Op.substring]: searchRequest,
           },
           id: {
-            [Op.not]: 11,
+            [Op.not]: token.userId,
           },
         },
       });
