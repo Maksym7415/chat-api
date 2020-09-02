@@ -142,4 +142,15 @@ module.exports = {
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
     }
   },
+  getOpponentsIdWhereConversTypeDialog: async ({ query: { opponentId, userId } }, res) => {
+    try {
+      const data = await sequelize.query(`
+            select id from messenger.conversation where conversationType = 'Dialog' and id in 
+            (select fkChatId from messenger.chatuser where fkUserId = ${opponentId} and fkChatId in 
+            (select fkChatId FROM messenger.chatuser where fkUserId = ${userId}))`, { type: sequelize.QueryTypes.SELECT });
+      return res.json({ data });
+    } catch (e) {
+      console.log({ e });
+    }
+  },
 };

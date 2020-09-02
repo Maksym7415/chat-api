@@ -1,5 +1,3 @@
-'use strict';
-
 const data = require('../DBdata/Contact');
 
 module.exports = {
@@ -10,11 +8,11 @@ module.exports = {
     //   pseudonyme: 'pseudonyme',
     //   type: 'type'
     // }]
-    
-    await queryInterface.bulkInsert('contact', data, {})
+
+    await queryInterface.bulkInsert('contact', data, {});
   },
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('contact', null, {});
-  }
+  },
 };

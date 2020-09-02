@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Contact', {
@@ -6,11 +5,11 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       fkUserId: {
         type: Sequelize.INTEGER,
-        unique: "fkUserId_fkContactId_unique",
+        unique: 'fkUserId_fkContactId_unique',
         allowNull: false,
         references: {
           model: {
@@ -21,7 +20,7 @@ module.exports = {
       },
       fkContactId: {
         type: Sequelize.INTEGER,
-        unique: "fkUserId_fkContactId_unique",
+        unique: 'fkUserId_fkContactId_unique',
         allowNull: false,
         references: {
           model: {
@@ -38,16 +37,16 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-    },{
+    }, {
       uniqueKeys: {
         fkUserId_fkContactId_unique: {
           customIndex: true,
-          fields: ['fkUserId', 'fkContactId']
-        }
+          fields: ['fkUserId', 'fkContactId'],
+        },
       },
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('Contact');
-  }
+  },
 };

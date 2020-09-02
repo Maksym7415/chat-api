@@ -27,7 +27,7 @@ initSocket(io);
 
 app.use('/', express.static(path.join(__dirname, './uploads')));
 
-app.use('/api', routers.authRouters, routers.userRouters, routers.converSationRouters, routers.filesRouter);
+app.use('/api', routers.authRouters, routers.userRouters, routers.converSationRouters, routers.filesRouter, routers.searchRouter);
 
 app.use('*', (req, res) => {
   res.status(404).send('Page not found!');
@@ -38,5 +38,5 @@ app.use(errorHandling);
 module.exports = {
   app,
   http,
-  // https
+  // https,
 };

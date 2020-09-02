@@ -1,17 +1,36 @@
 const fs = require('fs');
 const {
-  ChatMessage, Message, User, File,
+  ChatMessage, Message, User, File, Conversation,
 } = require('../../../models');
 
 let filesAmount = {}; // object with key=userId where files count from one message
 let filesArray = {}; // object with key=userId of arrays of fileData from one message
+const addChat = require('./addNewChatFunction');
 
 module.exports = function initSocket(io) {
   io.on('connection', (socket) => {
     console.log('connection');
-    socket.on('chats', async ({ conversationId, message, userId }, successCallback) => { // successCallback to inform client about sucessfull sending of message
+    socket.on('chats', async ({
+      conversationId, message, userId, opponentId,
+    }, successCallback) => { // successCallback to inform client about sucessfull sending of message
       if (!message) return successCallback(false);
       try {
+        if (!conversationId) {
+          const user = await User.findOne({
+            where: {
+              id: userId,
+            },
+          });
+          const opponent = await User.findOne({
+            where: {
+              id: opponentId,
+            },
+          });
+          const { newConversationId, newMessage } = await addChat(opponentId, message, 'Dialog', [user, opponent]);
+          console.log(newConversationId, newMessage);
+          io.emit(`userIdNewChat${userId}`, { ...newMessage, User: user }, newConversationId);
+          return io.emit(`userIdNewChat${opponentId}`, { ...newMessage, User: user }, newConversationId);
+        }
         const newMessage = await Message.create({
           message: message.message,
           sendDate: message.sendDate,
@@ -103,6 +122,9 @@ module.exports = function initSocket(io) {
           }
         });
       }
+    });
+    socket.on('typingState', (user, conversationId) => {
+      io.emit(`typingStateId${conversationId}`, user);
     });
   });
 };
