@@ -38,6 +38,9 @@ async function getMenuHtml(url) {
   try {
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
+    const html = $.html();
+    console.log($('*').text().trim().split('\n'));
+    // console.log(html);
   } catch (error) {
     console.log(error);
   }
@@ -78,7 +81,8 @@ async function getMenu(url, tag) {
     // console.log(targetHref, entriesCounter);
     if (targetHref) {
       isParsing = true;
-      return console.log('I am ready to parse');
+      console.log('I am ready to parse');
+      return getMenuHtml(targetHref);
     }
     console.log(entriesCounter);
     if (entriesCounter >= 3) return; // (() => console.log('Nothing was found'))();
