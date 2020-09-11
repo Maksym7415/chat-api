@@ -34,18 +34,6 @@ initSocket(io);
 //
 //
 
-async function getMenuHtml(url) {
-  try {
-    const response = await axios.get(url);
-    const $ = cheerio.load(response.data);
-    const html = $.html();
-    console.log($('*').text().trim().split('\n'));
-    // console.log(html);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 const vgmUrl = 'https://www.telegraafhotel.com/et/restoran-tallinnas/';
 const errorLink = 'https://github.com';
 const firstStageUrl = 'https://www.telegraafhotel.com/et/restoran-tallinnas/restoran-tchaikovsky-menuu/';
@@ -61,6 +49,25 @@ let promise = () => new Promise((res, rej) => {
   resolve = promiseCallback(res);
 }); // promise for awaiting iteration process in nodesArray on each stage
 
+async function getMenuHtml(url) {
+  try {
+    const response = await axios.get(url, { responseType: 'text' });
+    const json = [];
+    const result = response.data.split('<body')[1].replace(/\r\n|\r|\t|\n/g, '').replace(/(<([^>]+)>)/g, '^').split('^');
+    result.forEach((el, index) => {
+      if (el.toLowerCase().includes('eur') && el.length < 10) {
+        let price = '';
+        let currency = '';
+        el.split('').forEach((el) => (typeof +el === 'number' && +el !== +el ? currency += el : price += el));
+        json.push({ receipe: result[index - 2], price: price.match(/[0-9]+/g)[0], currency: currency.match(/[a-zA-Z]+/g)[0] });
+      }
+    });
+    console.log(json);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function getMenu(url, tag) {
   if (targetHref) return;
   try {
@@ -72,7 +79,7 @@ async function getMenu(url, tag) {
       if (!href) return;
       if (href.split('/')[2] !== url.split('/')[2]) return;
       const targetLink = element.children && element.children && element.children[0] && element.children[0].data;
-      if (targetLink === 'Broneeri hoolitsus') {
+      if (targetLink === 'Menüü') {
         return targetHref = href;
       }
       nodesArray.push(href);
