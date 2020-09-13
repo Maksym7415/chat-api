@@ -33,6 +33,10 @@ module.exports = (sequelize, DataType) => {
       type: DataType.STRING(45),
       allowNull: true,
     },
+    userAvatar: {
+      type: DataType.STRING(100),
+      allowNull: true,
+    },
     userCreationTime: {
       type: DataType.DATE,
       defaultValue: DataType.NOW,
@@ -51,6 +55,7 @@ module.exports = (sequelize, DataType) => {
     timestamps: false,
   });
   userTable.associate = (models) => {
+    userTable.hasMany(models.Avatar, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
     userTable.hasMany(models.Session, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });
     userTable.hasMany(models.Contact, { foreignKey: { name: 'fkContactId', allowNull: false }, foreignKeyConstraint: true });
     userTable.hasMany(models.Contact, { foreignKey: { name: 'fkUserId', allowNull: false }, foreignKeyConstraint: true });

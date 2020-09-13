@@ -34,6 +34,10 @@ module.exports = {
         type: Sequelize.STRING(45),
         allowNull: true,
       },
+      userAvatar: {
+        type: Sequelize.STRING(100),
+        allowNull: true,
+      },
       userCreationTime: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('now'),

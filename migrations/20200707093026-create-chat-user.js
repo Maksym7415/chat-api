@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('ChatUser', {
@@ -6,11 +5,11 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       fkUserId: {
         type: Sequelize.INTEGER,
-        unique: "fkUserId_fkChatId_fkPermissionId_unique",
+        unique: 'fkUserId_fkChatId_fkPermissionId_unique',
         allowNull: false,
         references: {
           model: {
@@ -18,11 +17,10 @@ module.exports = {
             key: 'id',
           },
         },
-        allowNull: false,
       },
       fkChatId: {
         type: Sequelize.INTEGER,
-        unique: "fkUserId_fkChatId_fkPermissionId_unique",
+        unique: 'fkUserId_fkChatId_fkPermissionId_unique',
         references: {
           model: {
             tableName: 'Conversation',
@@ -33,7 +31,7 @@ module.exports = {
       },
       fkPermissionId: {
         type: Sequelize.INTEGER,
-        unique: "fkUserId_fkChatId_fkPermissionId_unique",
+        unique: 'fkUserId_fkChatId_fkPermissionId_unique',
         references: {
           model: {
             tableName: 'Permission',
@@ -42,19 +40,18 @@ module.exports = {
         },
         allowNull: false,
       },
-      
+
     },
     {
-        uniqueKeys: {
-          fkUserId_fkChatId_fkPermissionId_unique: {
-            customIndex: true,
-            fields: ['fkUserId', 'fkChatId', 'fkPermissionId']
-        }
-      }
+      uniqueKeys: {
+        fkUserId_fkChatId_fkPermissionId_unique: {
+          customIndex: true,
+          fields: ['fkUserId', 'fkChatId', 'fkPermissionId'],
+        },
+      },
     });
-    
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('ChatUser');
-  }
+  },
 };

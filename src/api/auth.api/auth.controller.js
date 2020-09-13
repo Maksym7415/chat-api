@@ -52,8 +52,10 @@ module.exports = {
   checkVerificationCode: async (req, res, next) => {
     try {
       const { verificationCode, login } = req.body;
+      console.log(214324);
       // const browserIndenfication = req.get('User-Agent'); // Тут версия браузера
       const isUser = await User.findOne({ where: { login, verificationCode } });
+
       if (isUser) {
         const tokens = await tokenHelper(login, 'user', 'crome', isUser.id, isUser.firstName);
         return res.json(tokens);
@@ -62,6 +64,7 @@ module.exports = {
       next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'User does not exist in system')));
       // res.status(400).json({ message: 'there is no such user in the system' });
     } catch (error) {
+      console.log(error);
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
       // next(createError(501, error));
     }

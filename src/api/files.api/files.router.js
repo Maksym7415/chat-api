@@ -7,6 +7,7 @@ const uuid = require('uuid');
 const {
   addFiles,
 } = require('./files.controller');
+const authMiddleware = require('../middleware/auth');
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -14,11 +15,12 @@ const storage = multer.diskStorage({
   },
   filename(req, file, cb) {
     const name = uuid.v1();
-    cb(null, `${name}.jpg`);
+    const extension = file.originalname.split('.');
+    cb(null, `${name}.${extension[extension.length - 1]}`);
   },
 });
-router.use('/', express.static(path.join(__dirname, '../../../uploads')));
+// router.use('/', express.static(path.join(__dirname, '../../../uploads')));
 const upload = multer({ storage });
-router.post('/upload', upload.array('file', 5), addFiles);
+router.post('/upload', authMiddleware, upload.single('file'), addFiles);
 
 module.exports = router;

@@ -26,8 +26,7 @@ module.exports = function initSocket(io) {
               id: opponentId,
             },
           });
-          const { newConversationId, newMessage } = await addChat(opponentId, message, 'Dialog', [user, opponent]);
-          console.log(newConversationId, newMessage);
+          const { newConversationId, newMessage } = await addChat(message, 'Dialog', [user, opponent]);
           io.emit(`userIdNewChat${userId}`, { ...newMessage, User: user }, newConversationId);
           return io.emit(`userIdNewChat${opponentId}`, { ...newMessage, User: user }, newConversationId);
         }
@@ -56,6 +55,21 @@ module.exports = function initSocket(io) {
         successCallback(false);
       }
     });
+
+    socket.on('chatCreation', async (groupMembers, chatCreationTime, chatName, successCallback) => {
+      try {
+        const { newConversationId, newMessage } = await addChat({ sendDate: chatCreationTime }, 'Chat', groupMembers, chatName);
+        if (!newMessage) {
+          groupMembers.forEach(({ id }) => {
+            io.emit(`userIdNewChat${id}`, {}, newConversationId);
+          });
+        }
+        successCallback(true);
+      } catch (e) {
+        console.log({ e });
+      }
+    });
+
     socket.on('files', async ({
       data, conversationId, fileSize, uniqueName, fileName, fileExtension, message, userId, isImage, filesCount, messageId, sendDate,
     }, successCallback) => {
