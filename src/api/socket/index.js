@@ -48,7 +48,7 @@ module.exports = function initSocket(io) {
               fkMessageId: messageId,
             },
           });
-          await File.delet({
+          await File.delete({
             where: {
               fkMessageId: messageId,
             },
