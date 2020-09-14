@@ -13,6 +13,7 @@ module.exports = function initSocket(io) {
     socket.on('chats', async ({
       conversationId, message, userId, opponentId, messageId, isDeleteMessage,
     }, successCallback) => { // successCallback to inform client about sucessfull sending of message
+      let isEdit = false;
       if (!message) return successCallback(false);
       let newMessage = {};
       let user = {};
@@ -41,6 +42,7 @@ module.exports = function initSocket(io) {
               id: message.fkSenderId,
             },
           });
+          isEdit = true;
         } else if (isDeleteMessage) {
           await ChatMessage.delete({
             where: {
@@ -64,6 +66,7 @@ module.exports = function initSocket(io) {
             sendDate: message.sendDate,
             messageType: message.messageType,
             fkSenderId: message.fkSenderId,
+            isEditing: true,
           });
           await ChatMessage.create({
             fkChatId: conversationId,
@@ -71,7 +74,7 @@ module.exports = function initSocket(io) {
           });
         }
         io.emit(`userIdChat${conversationId}`, {
-          ...message, id: newMessage.id, Files: [], User: user,
+          ...message, id: newMessage.id, Files: [], User: user, isEdit,
         });
         successCallback(true);
       } catch (error) {

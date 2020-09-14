@@ -1,10 +1,9 @@
-'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Message', {
       id: {
         type: Sequelize.INTEGER,
-        autoIncrement:true,
+        autoIncrement: true,
         primaryKey: true,
       },
       fkSenderId: {
@@ -18,8 +17,12 @@ module.exports = {
         allowNull: false,
       },
       message: {
-          type: Sequelize.TEXT,
-          allowNull: false,
+        type: Sequelize.TEXT,
+        allowNull: false,
+      },
+      isEditing: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
       },
       sendDate: {
         type: Sequelize.DATE,
@@ -30,10 +33,10 @@ module.exports = {
         type: Sequelize.BIGINT,
         defaultValue: new Date().getTime(),
         allowNull: false,
-      }
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('Message');
-  }
+  },
 };

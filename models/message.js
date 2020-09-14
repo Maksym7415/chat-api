@@ -9,6 +9,10 @@ module.exports = (sequelize, DataType) => {
       type: DataType.TEXT,
       allowNull: false,
     },
+    isEditing: {
+      type: DataType.BOOLEAN,
+      allowNull: false,
+    },
     fkSenderId: {
       type: DataType.INTEGER,
       allowNull: false,
@@ -21,13 +25,13 @@ module.exports = (sequelize, DataType) => {
     sendDateMs: {
       type: DataType.BIGINT,
       defaultValue: new Date().getTime(),
-      allowNull: false
-    }
+      allowNull: false,
+    },
   }, {
     freezeTableName: true,
   });
   messageTable.associate = (models) => {
-    messageTable.hasMany(models.File, { foreignKey: { name: 'fkMessageId', allowNull: false}, foreignKeyConstraint: true });
+    messageTable.hasMany(models.File, { foreignKey: { name: 'fkMessageId', allowNull: false }, foreignKeyConstraint: true });
     messageTable.hasMany(models.ChatMessage, { foreignKey: { name: 'fkMessageId', allowNull: false }, foreignKeyConstraint: true });
     messageTable.belongsTo(models.User, { foreignKey: { name: 'fkSenderId', allowNull: false }, foreignKeyConstraint: true });
     messageTable.belongsToMany(models.Conversation, {
