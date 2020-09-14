@@ -1,6 +1,6 @@
 const fs = require('fs');
 const {
-  ChatMessage, Message, User, File, Conversation,
+  ChatMessage, Message, User, File,
 } = require('../../../models');
 
 let filesAmount = {}; // object with key=userId where files count from one message
@@ -79,9 +79,9 @@ module.exports = function initSocket(io) {
       }
     });
 
-    socket.on('chatCreation', async (groupMembers, chatCreationTime, chatName, successCallback) => {
+    socket.on('chatCreation', async (groupMembers, chatCreationTime, chatName, imageData, fileExtension, successCallback) => {
       try {
-        const { newConversationId, newMessage } = await addChat({ sendDate: chatCreationTime }, 'Chat', groupMembers, chatName);
+        const { newConversationId, newMessage } = await addChat({ sendDate: chatCreationTime }, 'Chat', groupMembers, chatName, imageData, fileExtension);
         if (!newMessage) {
           groupMembers.forEach(({ id }) => {
             io.emit(`userIdNewChat${id}`, {}, newConversationId);

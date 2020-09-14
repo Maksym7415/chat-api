@@ -1,8 +1,10 @@
+const fs = require('fs');
+const uuid = require('uuid');
 const {
   ChatMessage, Message, Conversation, ChatUser,
 } = require('../../../models');
 
-const addChat = async (message, chatType, chatUsers, chatName) => {
+const addChat = async (message, chatType, chatUsers, chatName, imageData, fileExtension) => {
   try {
     let newMessage = {};
     let newChat = {};
@@ -12,10 +14,17 @@ const addChat = async (message, chatType, chatUsers, chatName) => {
         conversationCreationDate: message.sendDate,
       });
     } else {
+      const name = uuid.v1();
+      console.log(imageData);
+      const fullName = `${name}.${fileExtension}`;
+      fs.appendFile(`./uploads/${fullName}`, imageData, async (err) => {
+        if (err) console.log('error');
+      });
       newChat = await Conversation.create({
         conversationType: chatType,
         conversationCreationDate: message.sendDate,
         conversationName: chatName,
+        conversationAvatar: fullName,
       });
     }
 
