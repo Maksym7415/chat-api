@@ -1,6 +1,6 @@
 const fs = require('fs');
 const {
-  ChatMessage, Message, User, File,
+  ChatMessage, Message, User, File, sequelize,
 } = require('../../../models');
 
 let filesAmount = {}; // object with key=userId where files count from one message
@@ -17,6 +17,7 @@ module.exports = function initSocket(io) {
       if (!message) return successCallback(false);
       let newMessage = {};
       let user = {};
+
       try {
         user = await User.findOne({
           where: {
@@ -34,12 +35,19 @@ module.exports = function initSocket(io) {
           return io.emit(`userIdNewChat${opponentId}`, { ...newMessage, User: user }, newConversationId);
         }
         if (messageId) {
-          newMessage = await Message.update({
+          // await sequelize.query(`update messenger.message
+          // set
+          //   message = ${message.message},
+          //   sendDate = ${message.sendDate}
+          //   where id in
+          //     (select fkMessageId from messenger.chatmessage
+          //     where fkChatId = ${conversationId} and fkMessageId=${messageId})`);
+          await Message.update({
             message: message.message,
             sendDate: message.sendDate,
           }, {
             where: {
-              id: message.fkSenderId,
+              id: messageId,
             },
           });
           isEdit = true;
@@ -57,7 +65,7 @@ module.exports = function initSocket(io) {
           });
           await Message.delete({
             where: {
-              id: message.fkSenderId,
+              id: messageId,
             },
           });
         } else {
@@ -74,10 +82,11 @@ module.exports = function initSocket(io) {
           });
         }
         io.emit(`userIdChat${conversationId}`, {
-          ...message, id: newMessage.id || message.id, Files: [], User: user, isEdit,
+          ...message, id: newMessage.id || messageId, Files: [], User: user, isEdit,
         });
         successCallback(true);
       } catch (error) {
+        console.log(error);
         successCallback(false);
       }
     });

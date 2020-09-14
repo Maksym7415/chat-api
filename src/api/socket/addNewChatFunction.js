@@ -42,6 +42,7 @@ const addChat = async (message, chatType, chatUsers, chatName, imageData, fileEx
         sendDate: message.sendDate,
         messageType: message.messageType,
         fkSenderId: message.fkSenderId,
+        isEditing: false,
       });
 
       await ChatMessage.create({
