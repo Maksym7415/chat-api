@@ -33,63 +33,7 @@ initSocket(io);
 //
 //
 //
-const vgmUrl = 'https://www.telegraafhotel.com/et/restoran-tallinnas/';
-
-let array = [];
-let exit;
-let result;
-let count = 0;
-
-async function getMenu(url, tag) {
-  if (result) return;
-  count += 1;
-  // console.log(count);
-  try {
-    const response = await got(url);
-    const $ = cheerio.load(response.body);
-    let nodesArray = [];
-    $(tag).each((i, link) => {
-      const { href } = link.attribs;
-      nodesArray.push({
-        node: link.childNodes,
-        href,
-      });
-    });
-    nodesArray.forEach((el) => {
-      console.log(el.node[0].data);
-      if (el.node[0].data === 'Please click here to see the cocktail menu!') {
-        result = el.href;
-      } else getMenu(el.href, 'a');
-      // console.log(href);
-    });
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-getMenu(vgmUrl, 'a');
-
-// got(vgmUrl).then((response) => {
-//   let $ = cheerio.load(response.body);
-//   $('a').each((i, link) => {
-//     const { href } = link.attribs;
-//     if (href && href.includes('menuu')) {
-//       console.log(href);
-//       axios.get(href, { responseType: 'text' }).then((res) => {
-//         // console.log(res);
-//         let $ = cheerio.load(res, { decodeEntities: false });
-//         $('div').each((i, link) => {
-//           console.log('hello');
-//           const divs = link.html();
-//           if (divs) console.log(divs);
-//         });
-//         // fs.writeFile('./uploads/index.html', result.html(), () => {});
-//       });
-//     }
-//   });
-// }).catch((err) => {
-//   console.log(err);
-// });
+//
 
 // let TextElem = (e) => ({
 //   toJSON: () => ({

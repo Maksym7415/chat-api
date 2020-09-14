@@ -130,3 +130,61 @@ module.exports = function initSocket(io) {
     });
   });
 };
+
+// const vgmUrl = 'https://www.telegraafhotel.com/et/restoran-tallinnas/';
+
+// let hrefArray = [];
+// let exit;
+// let result;
+// let prevUrl = 'https://www.telegraafhotel.com/et/restoran-tallinnas/';
+// let count = -1;
+// let hrefCount = 0;
+
+// async function getMenu(url, tag, isRecursive) {
+//   if (isRecursive) count = -1;
+//   count += 1;
+//   hrefArray = [];
+//   try {
+//     const response = await got(url);
+//     const $ = cheerio.load(response.body);
+//     let nodesArray = [];
+//     $(tag).each((i, link) => {
+//       const { href } = link.attribs;
+//       nodesArray.push({
+//         node: link.childNodes,
+//         href,
+//       });
+//     });
+//     nodesArray.forEach((el) => {
+//       // console.log(el.node[0].data);
+//       if (el.node[0] && el.node[0].data === 'Sviidid') {
+//         result = el.href;
+//       } else {
+//         el.href && el.href !== '#' && hrefArray.push(el.href);
+//         // prevUrl = hrefArray[hrefCount];
+//       }
+//     });
+//     console.log(result);
+//     if (result) {
+//       console.log(result);
+//       return;
+//     }
+//     // console.log(count, prevUrl, hrefArray);
+//     // const prevHrefArray = hrefArray.filter((el) => el.substr(0, 8) === 'https://');
+//     const prevHrefArray = hrefArray.filter((el) => el.split('/')[2] === 'www.telegraafhotel.com');
+//     if (count >= 1) {
+//       hrefCount += 1;
+//       getMenu(prevUrl, 'a', true);
+//       return;
+//     }
+//     // console.log(hrefCount, prevUrl, );
+//     console.log(prevHrefArray[hrefCount]);
+//     if(prevHrefArray.length - 1 === hrefCount) return console.log('not found')
+//     getMenu(prevHrefArray[hrefCount], 'a', false);
+//     return;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
+// getMenu(vgmUrl, 'a');
