@@ -74,7 +74,7 @@ module.exports = function initSocket(io) {
           });
         }
         io.emit(`userIdChat${conversationId}`, {
-          ...message, id: newMessage.id, Files: [], User: user, isEdit,
+          ...message, id: newMessage.id || message.id, Files: [], User: user, isEdit,
         });
         successCallback(true);
       } catch (error) {
