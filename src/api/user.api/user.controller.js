@@ -28,30 +28,56 @@ module.exports = {
       // next(createError(501, error));
     }
   },
-  setMainUserPhoto: async ({ path, query }, res) => {
+  setMainUserPhoto: async ({ token, params, query }, res) => {
     try {
       const user = await User.findOne({
         where: {
-          id: path.userId,
+          id: token.userId,
         },
       });
       const oldAvatar = user.userAvatar;
       await User.update({
         userAvatar: query.url,
+      }, {
+        where: {
+          id: token.userId,
+        },
       });
       await Avatar.destroy({
         where: {
-          id: path.photoId,
+          id: params.photoId,
         },
       });
       await Avatar.create({
         fileName: oldAvatar,
-        fkUserId: path.userId,
+        fkUserId: token.userId,
         defaultAvatar: true,
       });
       return res.status(200).json({ message: 'success' });
     } catch (e) {
-      console.log({ e });
+      console.log({ e }); // нужно дописать ))
+    }
+  },
+  getUserAvatars: async ({ token }, res) => {
+    try {
+      const avatars = await Avatar.findAll({
+        where: {
+          fkUserId: token.userId,
+        },
+      });
+      const { userAvatar, id } = await User.findOne({
+        where: {
+          id: token.userId,
+        },
+      });
+      if (!userAvatar) return res.status(200).json([]);
+      return res.status(200).json(
+        [{
+          id: 0, fileName: userAvatar, defaultAvatar: true, fkUserId: id,
+        }, ...avatars],
+      );
+    } catch (e) {
+      console.log({ e }); // нужно дописать ))
     }
   },
 };

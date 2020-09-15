@@ -3,7 +3,7 @@ const { Avatar, Conversation, User } = require('../../../models');
 module.exports = {
   addFiles: async ({ token: { userId }, file: { filename }, query }, res, next) => {
     try {
-      const user = User.findOne({ where: { id: userId } });
+      const user = await User.findOne({ where: { id: userId } });
       if (query.chatId) {
         await Conversation.update({
           conversationAvatar: filename,
@@ -29,9 +29,9 @@ module.exports = {
           defaultAvatar: true,
         });
       }
-      return res.status(200).json({ message: 'upload is success' });
+      return res.status(200).json('upload is success');
     } catch (e) {
-      console.log(e);
+      console.log(e); // нужно дописать ))
     }
   },
 };
