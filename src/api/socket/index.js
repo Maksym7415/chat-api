@@ -123,6 +123,7 @@ module.exports = function initSocket(io) {
             sendDate: message.sendDate,
             messageType: message.messageType,
             fkSenderId: message.fkSenderId,
+            isEditing: message.isEditing,
           });
           await ChatMessage.create({
             fkChatId: conversationId,
