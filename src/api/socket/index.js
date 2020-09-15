@@ -14,11 +14,35 @@ module.exports = function initSocket(io) {
       conversationId, message, userId, opponentId, messageId, isDeleteMessage,
     }, successCallback) => { // successCallback to inform client about sucessfull sending of message
       let isEdit = false;
-      if (!message) return successCallback(false);
+      console.log(messageId, conversationId);
+
       let newMessage = {};
       let user = {};
 
       try {
+        if (isDeleteMessage) {
+          await ChatMessage.destroy({
+            where: {
+              fkChatId: conversationId,
+              fkMessageId: messageId,
+            },
+          });
+          await File.destroy({
+            where: {
+              fkMessageId: messageId,
+            },
+          });
+          await Message.destroy({
+            where: {
+              id: messageId,
+            },
+          });
+          io.emit(`deleteMessage${messageId}`, {
+            conversationId, messageId,
+          });
+          return successCallback(true);
+        }
+        if (!message) return successCallback(false);
         user = await User.findOne({
           where: {
             id: userId,
@@ -51,23 +75,6 @@ module.exports = function initSocket(io) {
             },
           });
           isEdit = true;
-        } else if (isDeleteMessage) {
-          await ChatMessage.delete({
-            where: {
-              fkChatId: conversationId,
-              fkMessageId: messageId,
-            },
-          });
-          await File.delete({
-            where: {
-              fkMessageId: messageId,
-            },
-          });
-          await Message.delete({
-            where: {
-              id: messageId,
-            },
-          });
         } else {
           newMessage = await Message.create({
             message: message.message,
@@ -101,6 +108,7 @@ module.exports = function initSocket(io) {
         }
         successCallback(true);
       } catch (e) {
+        successCallback(false);
         console.log({ e });
       }
     });
