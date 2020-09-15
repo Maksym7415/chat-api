@@ -37,10 +37,9 @@ module.exports = function initSocket(io) {
               id: messageId,
             },
           });
-          io.emit(`deleteMessage${messageId}`, {
+          return io.emit(`deleteMessage${conversationId}`, {
             conversationId, messageId,
           });
-          return successCallback(true);
         }
         if (!message) return successCallback(false);
         user = await User.findOne({
