@@ -37,7 +37,7 @@ module.exports = function initSocket(io) {
               id: messageId,
             },
           });
-          io.emit(`deleteMessage${messageId}`, {
+          io.emit('deleteMessage', {
             conversationId, messageId,
           });
           return successCallback(true);
