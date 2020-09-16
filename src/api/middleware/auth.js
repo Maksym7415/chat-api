@@ -14,7 +14,9 @@ module.exports = async (req, res, next) => {
       res.status(400).json({ code: 400, message: 'There is should be access token' });
       return;
     }
-    const isSession = await Session.findOne({ where: { fkUserId: payload.userId, userAgent: 'crome' } }); // Чтобы нельзя было зайти под старым токеном
+    const isSession = await Session.findOne({ where: { fkUserId: payload.userId, userAgent: 'crome' } }); // для тест окружения
+
+    // const isSession = await Session.findOne({ where: { fkUserId: payload.userId, accessToken: token, userAgent: 'crome' } }); // Чтобы нельзя было зайти под старым токеном
     if (isSession) {
       req.token = payload;
     } else {
