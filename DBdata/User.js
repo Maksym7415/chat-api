@@ -110,4 +110,14 @@ module.exports = [
     status: 'Available',
     verificationCode: '12345',
   },
+  {
+    id: 13,
+    login: 'userForTestUpdateProfile@mail.com',
+    firstName: 'Update',
+    lastName: 'Profile',
+    tagName: 'Upfate',
+    fullName: 'Update Profile',
+    status: 'Available',
+    verificationCode: '12345',
+  },
 ];
