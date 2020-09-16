@@ -40,7 +40,6 @@ module.exports = function initSocket(io) {
           io.emit('deleteMessage', {
             conversationId, messageId,
           });
-          return successCallback(true);
         }
         if (!message) return successCallback(false);
         user = await User.findOne({
