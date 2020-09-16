@@ -5,10 +5,10 @@ const token = require('../../testToken');
 
 const request = supertest(app);
 
-describe(' check getUserProfile data api', () => {
+describe(' check getUserProfileById data api', () => {
   it('successfully give user data profile with his roles', async (done) => {
     const response = await request
-      .get('/api/getUserProfileData')
+      .get('/api/getUserProfileById/2')
       .set('Authorization', token)
       .set('User-Agent', 'Crome');
 
