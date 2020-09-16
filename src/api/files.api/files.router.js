@@ -1,8 +1,6 @@
 /* eslint-disable prefer-template */
 const router = require('express').Router();
 const multer = require('multer');
-const express = require('express');
-const path = require('path');
 const uuid = require('uuid');
 const {
   addFiles,
