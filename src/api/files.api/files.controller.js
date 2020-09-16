@@ -1,22 +1,37 @@
-const { Message, ChatMessage } = require('../../../models');
+const { Avatar, Conversation, User } = require('../../../models');
 
 module.exports = {
-  addFiles: async (req, res, next) => {
-    console.log(req.body.userId);
-    // try{
-    //   const file = await Message.create({
-    //     message: message.message,
-    //     sendDate: message.sendDate,
-    //     messageType: message.messageType,
-    //     fkSenderId: message.fkSenderId,
-    //   });
-    //   await ChatMessage.create({
-    //     fkChatId: conversationId,
-    //     fkMessageId: newMessage.id,
-    //   });
-    //   return  res.status(200).json('ok');
-    // }catch(e){
-
-    // }
+  addFiles: async ({ token: { userId }, file: { filename }, query }, res, next) => {
+    try {
+      const user = await User.findOne({ where: { id: userId } });
+      if (query.chatId) {
+        await Conversation.update({
+          conversationAvatar: filename,
+        },
+        {
+          where: {
+            id: query.chatId,
+          },
+        });
+      } else if (!user.userAvatar) {
+        await User.update({
+          userAvatar: filename,
+        },
+        {
+          where: {
+            id: userId,
+          },
+        });
+      } else {
+        await Avatar.create({
+          fileName: filename,
+          fkUserId: userId,
+          defaultAvatar: true,
+        });
+      }
+      return res.status(200).json('upload is success');
+    } catch (e) {
+      console.log(e); // нужно дописать ))
+    }
   },
 };

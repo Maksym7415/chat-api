@@ -13,6 +13,10 @@ module.exports = (sequelize, DataType) => {
       type: DataType.STRING,
       allowNull: false,
     },
+    conversationAvatar: {
+      type: DataType.STRING(100),
+      allowNull: true,
+    },
     conversationCreationDate: {
       type: DataType.DATE,
       defaultValue: DataType.NOW,
@@ -21,7 +25,7 @@ module.exports = (sequelize, DataType) => {
     conversationUpdateDate: {
       type: DataType.DATE,
       allowNull: true,
-    }
+    },
   }, {
     freezeTableName: true,
   });

@@ -1,52 +1,91 @@
 const {
-  ChatMessage, Message, User, File, Conversation,
+  ChatMessage, Message, User, File,
 } = require('../../../models');
 const addChat = require('./addNewChatFunction');
 
 module.exports = (io, socket) => socket.on('chats', async ({
-  conversationId, message, userId, opponentId,
+  conversationId, message, userId, opponentId, messageId, isDeleteMessage,
 }, successCallback) => { // successCallback to inform client about sucessfull sending of message
-  if (!message) return successCallback(false);
+  let isEdit = false;
+  console.log(messageId, conversationId);
+
+  let newMessage = {};
+  let user = {};
+
   try {
-    if (!conversationId) {
-      const user = await User.findOne({
+    if (isDeleteMessage) {
+      await ChatMessage.destroy({
         where: {
-          id: userId,
+          fkChatId: conversationId,
+          fkMessageId: messageId,
         },
       });
+      await File.destroy({
+        where: {
+          fkMessageId: messageId,
+        },
+      });
+      await Message.destroy({
+        where: {
+          id: messageId,
+        },
+      });
+      io.emit('deleteMessage', {
+        conversationId, messageId,
+      });
+    }
+    if (!message) return successCallback(false);
+    user = await User.findOne({
+      where: {
+        id: userId,
+      },
+    });
+    if (!conversationId) {
       const opponent = await User.findOne({
         where: {
           id: opponentId,
         },
       });
-      const { newConversationId, newMessage } = await addChat(opponentId, message, 'Dialog', [user, opponent]);
-      console.log(newConversationId, newMessage);
+      const { newConversationId, newMessage } = await addChat(message, 'Dialog', [user, opponent]);
       io.emit(`userIdNewChat${userId}`, { ...newMessage, User: user }, newConversationId);
       return io.emit(`userIdNewChat${opponentId}`, { ...newMessage, User: user }, newConversationId);
     }
-    const newMessage = await Message.create({
-      message: message.message,
-      sendDate: message.sendDate,
-      messageType: message.messageType,
-      fkSenderId: message.fkSenderId,
-    });
-    await ChatMessage.create({
-      fkChatId: conversationId,
-      fkMessageId: newMessage.id,
-    });
-    const user = await User.findOne(
-      {
+    if (messageId) {
+      // await sequelize.query(`update messenger.message
+      // set
+      //   message = ${message.message},
+      //   sendDate = ${message.sendDate}
+      //   where id in
+      //     (select fkMessageId from messenger.chatmessage
+      //     where fkChatId = ${conversationId} and fkMessageId=${messageId})`);
+      await Message.update({
+        message: message.message,
+        sendDate: message.sendDate,
+      }, {
         where: {
-          id: userId,
+          id: messageId,
         },
-      },
-    );
-    console.log('SUCCESS');
+      });
+      isEdit = true;
+    } else {
+      newMessage = await Message.create({
+        message: message.message,
+        sendDate: message.sendDate,
+        messageType: message.messageType,
+        fkSenderId: message.fkSenderId,
+        isEditing: true,
+      });
+      await ChatMessage.create({
+        fkChatId: conversationId,
+        fkMessageId: newMessage.id,
+      });
+    }
     io.emit(`userIdChat${conversationId}`, {
-      ...message, id: newMessage.id, Files: [], User: user,
+      ...message, id: newMessage.id || messageId, Files: [], User: user, isEdit,
     });
     successCallback(true);
   } catch (error) {
+    console.log(error);
     successCallback(false);
   }
 });
