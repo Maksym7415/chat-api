@@ -3,11 +3,10 @@ const { User, Role, Avatar } = require('../../../models');
 const { formErrorObject, MAIN_ERROR_CODES } = require('../../../services/errorHandling');
 
 module.exports = {
-  getUserProfileData: async (req, res, next) => {
+  getUserProfileData: async ({ token }, res, next) => {
     try {
-      const { id } = req.params;
       const user = await User.findOne({
-        where: { id },
+        where: { id: token.userId },
         attributes: {
           exclude: ['verificationCode'],
         },
@@ -28,6 +27,28 @@ module.exports = {
       // next(createError(501, error));
     }
   },
+
+  updateUserProfile: async ({
+    token, body: { firstName, lastName, tagName },
+  }, res, next) => {
+    console.log('FIRSTNAME', firstName);
+    if (!firstName && !lastName && !tagName) return next(createError(formErrorObject(MAIN_ERROR_CODES.VALIDATION)));
+    try {
+      await User.update({
+        firstName,
+        lastName,
+        tagName,
+      }, {
+        where: {
+          id: token.userId,
+        },
+      });
+      return res.status(200).json({ message: 'success' });
+    } catch (error) {
+      next(createError(formErrorObject(MAIN_ERROR_CODES.SYSTEM_ERROR)));
+    }
+  },
+
   setMainUserPhoto: async ({ token, params, query }, res) => {
     try {
       const user = await User.findOne({
@@ -58,6 +79,7 @@ module.exports = {
       console.log({ e }); // нужно дописать ))
     }
   },
+
   getUserAvatars: async ({ token }, res) => {
     try {
       const avatars = await Avatar.findAll({
