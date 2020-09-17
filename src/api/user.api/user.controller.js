@@ -72,7 +72,7 @@ module.exports = {
       await Avatar.create({
         fileName: oldAvatar,
         fkUserId: token.userId,
-        defaultAvatar: true,
+        defaultAvatar: false,
       });
       return res.status(200).json({ message: 'success' });
     } catch (e) {
@@ -92,7 +92,7 @@ module.exports = {
           id: token.userId,
         },
       });
-      if (!userAvatar) return res.status(200).json([]);
+      if (!userAvatar) return res.status(200).json([]); // !!!!
       return res.status(200).json(
         [{
           id: 0, fileName: userAvatar, defaultAvatar: true, fkUserId: id,

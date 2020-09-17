@@ -20,7 +20,7 @@ module.exports = {
           await Avatar.create({
             fileName: filename,
             fkUserId: userId,
-            defaultAvatar: true,
+            defaultAvatar: false,
           });
         }
         return res.status(200).json('upload is success');
