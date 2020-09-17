@@ -5,9 +5,11 @@ const {
   setMainUserPhoto,
   getUserAvatars,
   updateUserProfile,
+  getUserProfileById,
 } = require('./user.controller');
 
 router.get('/getUserProfileData/', authMiddleware, getUserProfileData);
+router.get('/getUserProfileById/:id', authMiddleware, getUserProfileById);
 router.put('/setMainPhoto/:photoId', authMiddleware, setMainUserPhoto);
 router.get('/getAvatars', authMiddleware, getUserAvatars);
 router.put('/updateProfile', authMiddleware, updateUserProfile);

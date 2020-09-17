@@ -8,7 +8,7 @@ module.exports = {
       const user = await User.findOne({
         where: { id: token.userId },
         attributes: {
-          exclude: ['verificationCode'],
+          exclude: ['verificationCode', 'status', 'userCreationTime', 'userUpdateTime'],
         },
         include: {
           model: Role,
@@ -23,6 +23,32 @@ module.exports = {
       next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'User not found')));
       // return res.status(400).json('no user found');
     } catch (error) {
+      next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
+      // next(createError(501, error));
+    }
+  },
+
+  getUserProfileById: async ({ params }, res, next) => {
+    try {
+      const user = await User.findOne({
+        where: { id: params.id },
+        attributes: {
+          exclude: ['verificationCode', 'status', 'userCreationTime', 'userUpdateTime'],
+        },
+        include: {
+          model: Role,
+          through: {
+            attributes: [],
+          },
+        },
+      });
+      if (user) {
+        return res.json(user);
+      }
+      next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'User not found')));
+      // return res.status(400).json('no user found');
+    } catch (error) {
+      console.log(error);
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
       // next(createError(501, error));
     }
