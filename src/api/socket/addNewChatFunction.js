@@ -15,11 +15,15 @@ const addChat = async (message, chatType, chatUsers, chatName, imageData, fileEx
       });
     } else {
       const name = uuid.v1();
+      let fullName;
       console.log(imageData);
-      const fullName = `${name}.${fileExtension}`;
-      fs.appendFile(`./uploads/${fullName}`, imageData, async (err) => {
-        if (err) console.log('error');
-      });
+      if (imageData) {
+        fullName = `${name}.${fileExtension}`;
+        fs.appendFile(`./uploads/${fullName}`, imageData, async (err) => {
+          if (err) console.log('error');
+        });
+      }
+      fullName = null;
       newChat = await Conversation.create({
         conversationType: chatType,
         conversationCreationDate: message.sendDate,
