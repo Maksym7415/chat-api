@@ -1,55 +1,14 @@
-const {
-  app,
-  http,
-  // https
-} = require('./server');
-// const socketAppConnection = require('./socket.server');
-// const crypto = require('crypto-js');
-// const fs = require('fs');
-// const http = require('http').createServer(app);
+const { http } = require('./server');
 require('dotenv').config();
 
-// socketAppConnection();
-// const options = {
-//   key: fs.readFileSync('keys/privatekey.pem').toString(),
-//   cert: fs.readFileSync('keys/certificate.pem').toString()
-// };
-
-// https.createServer(options, app).listen(process.env.PORT, async () => {
-//       console.log(`Listening on port ${process.env.PORT}`);
-//   });
+const PORT = process.env.NODE_ENV === 'production' ? 5000 : process.env.PORT;
 
 try {
-  http.listen(process.env.PORT, async () => {
-    console.log(`Listening on port ${process.env.PORT}`);
+  http.listen(PORT, async () => {
+    console.log(`Listening on port ${PORT}`);
   });
   // throw "test";
 } catch (error) {
   console.log(error);
   http.close();
 }
-
-// THIS CODE FOR SERVER
-
-// const fs = require('fs');
-
-// let subdomain = 'test'
-
-// let socketPath = `/home/asmer/node_hosts/${subdomain}` //путь к сокету
-
-// const {
-//   app,
-//   http,
-// } = require('./server');
-
-// require('dotenv').config();
-
-// try {
-//   http.listen(socketPath, () => {
-//     console.log(`Now listening on ${socketPath}`)
-//     fs.chmodSync(socketPath, '777'); //права доступа к файлу сокета
-//   });
-// } catch (error) {
-//   console.log(error);
-//   http.close();
-// }

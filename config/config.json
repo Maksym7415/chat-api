@@ -20,10 +20,13 @@
     }
   },
   "production": {
-    "username": "maks",
-    "password": "QfAekkCnfrtH",
-    "database": "maks",
-    "host": "localhost",
-    "dialect": "mysql"
+    "username": "admin",
+    "password": "0w6fWH6hUBzlVBt6iQll",
+    "database": "messenger",
+    "host": "users.c7by2wbwicok.us-east-2.rds.amazonaws.com",
+    "dialect": "mysql",
+    "define": {
+      "timestamps": false
+    }
   }
 }
