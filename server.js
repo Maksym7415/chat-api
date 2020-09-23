@@ -25,11 +25,11 @@ app.use(bodyParser.urlencoded({
 
 initSocket(io);
 
-app.get('chat/', (req, res) => res.send('Hello'));
+app.get('/chat/', (req, res) => res.send('Hello'));
 
-app.use(`${apiPath}/`, express.static(path.join(__dirname, './uploads')));
+app.use(`/${apiPath}/`, express.static(path.join(__dirname, './uploads')));
 
-app.use(`${apiPath}/api`, routers.authRouters, routers.userRouters, routers.converSationRouters, routers.filesRouter, routers.searchRouter);
+app.use(`/${apiPath}/api`, routers.authRouters, routers.userRouters, routers.converSationRouters, routers.filesRouter, routers.searchRouter);
 
 app.use('*', (req, res) => {
   res.status(404).send('Page not found!');
