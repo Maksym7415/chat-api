@@ -1,4 +1,7 @@
-const { http } = require('./server');
+const {
+  http,
+} = require('./server');
+
 require('dotenv').config();
 
 const PORT = process.env.NODE_ENV === 'production' ? 5000 : process.env.PORT;
