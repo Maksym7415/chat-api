@@ -39,7 +39,7 @@ const hrefs = [
   'https://www.selver.ee/juustud/delikatessjuustud?p=5',
 ];
 
-async function getMenu(url, tag) {
+async function getProductHrefs(url, tag) {
   try {
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
@@ -59,7 +59,7 @@ async function getMenu(url, tag) {
 }
 module.exports = async () => {
   for (const item of hrefs) {
-    await getMenu(item, 'a');
+    await getProductHrefs(item, 'a');
   }
   fs.writeFileSync('productsHref.js', JSON.stringify(hrefsArray));
   console.log('all hrefs were create');

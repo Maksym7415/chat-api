@@ -22,7 +22,9 @@ const initSocket = require('./src/api/socket');
 const routers = require('./src/api/routers');
 const parseProductDataFunction = require('./parseSpeciefiedProduct');
 const getProductHrefs = require('./getProfuctHrefs');
-
+const puppeteer = require('puppeteer');
+const Spoky = require('./casper');
+//Spoky()
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -31,12 +33,30 @@ app.use(bodyParser.urlencoded({
 
 initSocket(io);
 
-//getProductHrefs().then((res) => {
-// console.log(res);
-// parseProductDataFunction();
-//});
+const url = 'https://ecoop.ee/et/kategooriad/munad/';
 
-parseProductDataFunction();
+puppeteer
+  .launch()
+  .then(function(browser) {
+    return browser.newPage();
+  })
+  .then(function(page) {
+    return page.goto(url).then(function() {
+      return page.content();
+    });
+  })
+  .then(function(html) {
+    console.log(html);
+  })
+  .catch(function(err) {
+    //handle error
+  });
+
+
+//getProductHrefs()
+
+
+//parseProductDataFunction();
 
 app.use('/', express.static(path.join(__dirname, './uploads')));
 
