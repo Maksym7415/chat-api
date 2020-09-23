@@ -23,7 +23,9 @@ app.use(bodyParser.urlencoded({
   extended: false,
 }));
 
-initSocket(io);
+initSocket(io);\
+
+app.get('chat/', (req, res) => res.send('Hello'))
 
 app.use(`${apiPath}/`, express.static(path.join(__dirname, './uploads')));
 
