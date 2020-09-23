@@ -20,7 +20,6 @@
     "seed:name": "./node_modules/.bin/sequelize db:seed --seed",
     "db:seed:undo:all": "./node_modules/.bin/sequelize db:seed:undo:all",
     "pretest": "env NODE_ENV=test npm run migrate:reset",
-    "start:prod": "env NODE_ENV=production npm run start_manual",
     "coverage": "jest --coverage"
   },
   "author": "",
