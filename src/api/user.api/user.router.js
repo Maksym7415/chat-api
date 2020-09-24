@@ -6,6 +6,8 @@ const {
   getUserAvatars,
   updateUserProfile,
   getUserProfileById,
+  signNotification,
+  pushSubscription
 } = require('./user.controller');
 
 router.get('/getUserProfileData/', authMiddleware, getUserProfileData);
@@ -13,5 +15,8 @@ router.get('/getUserProfileById/:id', authMiddleware, getUserProfileById);
 router.put('/setMainPhoto/:photoId', authMiddleware, setMainUserPhoto);
 router.get('/getAvatars', authMiddleware, getUserAvatars);
 router.put('/updateProfile', authMiddleware, updateUserProfile);
+router.post('/save-subscription', signNotification);
+router.post('/trigger-push-msg', pushSubscription);
+
 
 module.exports = router;
