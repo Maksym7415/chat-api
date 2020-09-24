@@ -15,16 +15,13 @@ const http = require('http').createServer(app);
 // const https = require('https');
 // const io = require('socket.io')(https);
 const io = require('socket.io')(http);
-const cheerio = require('cheerio');
-const got = require('got');
 const { default: Axios } = require('axios');
 const initSocket = require('./src/api/socket');
 const routers = require('./src/api/routers');
 const parseProductDataFunction = require('./parseSpeciefiedProduct');
 const getProductHrefs = require('./getProfuctHrefs');
-const puppeteer = require('puppeteer');
-const Spoky = require('./casper');
-//Spoky()
+const ReactParse = require('./scrpappingForReactPages');
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -33,24 +30,10 @@ app.use(bodyParser.urlencoded({
 
 initSocket(io);
 
-const url = 'https://ecoop.ee/et/kategooriad/munad/';
 
-puppeteer
-  .launch()
-  .then(function(browser) {
-    return browser.newPage();
-  })
-  .then(function(page) {
-    return page.goto(url).then(function() {
-      return page.content();
-    });
-  })
-  .then(function(html) {
-    console.log(html);
-  })
-  .catch(function(err) {
-    //handle error
-  });
+
+
+ReactParse()
 
 
 //getProductHrefs()
