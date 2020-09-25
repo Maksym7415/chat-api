@@ -87,7 +87,7 @@ module.exports = (io, socket) => socket.on('chats', async ({
     });
     successCallback(true);
     try {
-      const subscriptions = await getSubscriptionsFromDatabase(userId);
+      const subscriptions = await getSubscriptionsFromDatabase(12); // Нужно написать запрос к бд (opponents Id)
       let promiseChain = Promise.resolve();
       for (let i = 0; i < subscriptions.length; i++) {
         const { subscription, id } = subscriptions[i];
