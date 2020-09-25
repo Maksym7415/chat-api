@@ -15,7 +15,7 @@ try {
     console.log(`Listening on port ${HTTP_PORT}`);
   });
   sockcetServer.listen(SOCKET_PORT, () => {
-    initSocket(io(sockcetServer, { path: '/chat', transports: ['websocket', 'polling'] }));
+    initSocket(io(sockcetServer, { path: '/socket', transports: ['websocket', 'polling'] }));
     console.log(`Listening on port ${SOCKET_PORT}`);
   });
 } catch (error) {
