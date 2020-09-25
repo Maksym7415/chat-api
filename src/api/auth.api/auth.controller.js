@@ -39,6 +39,7 @@ module.exports = {
           await handleSendEmail(login, `${verificationCode}`);
           return res.json('send you your verification code');
         } catch (error) {
+          console.log(error);
           next(createError(formErrorObject(MAIN_ERROR_CODES.BAD_REQUEST, 'Verification code was not transfered')));
           // next(createError(400, 'some problems with code transfer'));
         }
