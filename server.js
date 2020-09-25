@@ -10,7 +10,7 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const http = require('http').createServer(app);
-const io = require('socket.io')(http, { path: '/chat' });
+// const io = require('socket.io')(http, { path: '/chat' });
 const initSocket = require('./src/api/socket');
 
 const routers = require('./src/api/routers');
