@@ -2,6 +2,8 @@ const {
   ChatMessage, Message, User, File,
 } = require('../../../models');
 const addChat = require('./addNewChatFunction');
+const getSubscriptionsFromDatabase = require('../../helpers/notification_methods/getSubscriptionsFromDatabase');
+const triggerPushMsg = require('../../helpers/notification_methods/triggerPushMessages');
 
 module.exports = (io, socket) => socket.on('chats', async ({
   conversationId, message, userId, opponentId, messageId, isDeleteMessage,
@@ -84,6 +86,23 @@ module.exports = (io, socket) => socket.on('chats', async ({
       ...message, id: newMessage.id || messageId, Files: [], User: user, isEdit,
     });
     successCallback(true);
+    try {
+      const subscriptions = await getSubscriptionsFromDatabase(userId);
+      let promiseChain = Promise.resolve();
+      for (let i = 0; i < subscriptions.length; i++) {
+        const { subscription, id } = subscriptions[i];
+        promiseChain = promiseChain.then(async () => {
+          try {
+            setTimeout(() => triggerPushMsg({ subscription, id }, { id: conversationId, message: message.message }), 4000);
+            return;
+          } catch (err) {
+            console.log(err);
+          }
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
   } catch (error) {
     console.log(error);
     successCallback(false);
