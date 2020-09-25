@@ -1,17 +1,25 @@
+const io = require('socket.io');
 const {
-  http,
+  httpServer,
+  sockcetServer,
 } = require('./server');
+const initSocket = require('./src/api/socket');
 
 require('dotenv').config();
 
-const PORT = process.env.NODE_ENV === 'production' ? 5000 : process.env.PORT;
+const HTTP_PORT = process.env.NODE_ENV === 'production' ? 5000 : process.env.HTTP_PORT;
+const { SOCKET_PORT } = process.env;
 
 try {
-  http.listen(PORT, async () => {
-    console.log(`Listening on port ${PORT}`);
+  httpServer.listen(HTTP_PORT, async () => {
+    console.log(`Listening on port ${HTTP_PORT}`);
   });
-  // throw "test";
+  sockcetServer.listen(SOCKET_PORT, () => {
+    initSocket(io(sockcetServer, { path: '/chat', transports: ['websocket', 'polling'] }));
+    console.log(`Listening on port ${SOCKET_PORT}`);
+  });
 } catch (error) {
   console.log(error);
-  http.close();
+  httpServer.close();
+  sockcetServer.close();
 }
