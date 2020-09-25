@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({
   extended: false,
 }));
 
-initSocket(io);
+// initSocket(io);
 
 app.get(apiPath, (req, res) => res.send('Hello'));
 
