@@ -2,10 +2,10 @@ const nodemailer = require('nodemailer');
 
 async function handleSendEmail(to, text) {
   let transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
+    // host: 'smtp.gmail.com',
+    port: 465,
     secure: true,
-    service: 'gmail',
+    service: 'Gmail',
     auth: {
       // user: 'm.popov@telesens.ua',
       // pass: 'Tunrajaj!',
@@ -16,13 +16,16 @@ async function handleSendEmail(to, text) {
       rejectUnauthorized: false,
     },
   });
-
-  await transporter.sendMail({
-    from: 'Conversation APP',
-    to,
-    subject: 'Confirmation code',
-    text,
-  });
+  try {
+    await transporter.sendMail({
+      from: 'Conversation APP',
+      to,
+      subject: 'Confirmation code',
+      text,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 module.exports = handleSendEmail;
