@@ -16,16 +16,13 @@ async function handleSendEmail(to, text) {
       rejectUnauthorized: false,
     },
   });
-  try {
-    await transporter.sendMail({
-      from: 'Conversation APP',
-      to,
-      subject: 'Confirmation code',
-      text,
-    });
-  } catch (error) {
-    console.log(error);
-  }
+
+  await transporter.sendMail({
+    from: 'Conversation APP',
+    to,
+    subject: 'Confirmation code',
+    text,
+  });
 }
 
 module.exports = handleSendEmail;
