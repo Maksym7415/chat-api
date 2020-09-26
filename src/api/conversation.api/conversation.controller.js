@@ -77,7 +77,7 @@ module.exports = {
       }
       next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'User does not exist')));
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
     }
   },
