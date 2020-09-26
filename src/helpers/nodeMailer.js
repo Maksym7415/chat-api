@@ -7,7 +7,7 @@ async function handleSendEmail(to, text) {
     secure: false,
     service: 'gmail',
     auth: {
-      user: 'm.popov.telesens.ua',
+      user: 'm.popov@telesens.ua',
       pass: 'Tunrajaj!',
       // user: 'mynamesurnamemyname@gmail.com',
       // pass: 'aA123456!',
