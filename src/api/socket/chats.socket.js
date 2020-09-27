@@ -7,7 +7,7 @@ module.exports = (io, socket) => socket.on('chats', async ({
   conversationId, message, userId, opponentId, messageId, isDeleteMessage,
 }, successCallback) => { // successCallback to inform client about sucessfull sending of message
   let isEdit = false;
-  console.log(message);
+  console.log('MESSAGE', message);
 
   let newMessage = {};
   let user = {};
