@@ -142,7 +142,7 @@ module.exports = {
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
     }
   },
-  getOpponentsIdWhereConversTypeDialog: async ({ query: { opponentId, userId } }, res) => {
+  getOpponentsIdWhereConversTypeDialog: async ({ query: { opponentId, userId } }, res, next) => {
     try {
       const data = await sequelize.query(`
             select id from messenger.conversation where conversationType = 'Dialog' and id in 
@@ -151,6 +151,7 @@ module.exports = {
       return res.json({ data });
     } catch (e) {
       console.log({ e });
+      next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
     }
   },
 };
