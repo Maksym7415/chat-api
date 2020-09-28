@@ -22,7 +22,6 @@ module.exports = {
     const {
       userId,
     } = req.token;
-    console.log('USERID', userId);
     try {
       const isUser = User.findOne({
         where: {
@@ -42,7 +41,7 @@ module.exports = {
 
         const userConversations = await Conversation.findAll({
           group: ['id'],
-          attributes: [['id', 'conversationId'], [sequelize.fn('ifnull', sequelize.col('conversationName'), sequelize.literal(`(select max(user.fullName) from user, chatuser where user.id = fkUserId and fkChatId = conversation.id and user.id != ${userId})`)), 'conversationName'], 'conversationAvatar', 'conversationType', 'conversationCreationDate'],
+          attributes: [['id', 'conversationId'], [sequelize.fn('ifnull', sequelize.col('conversationName'), sequelize.literal(`(select max(User.fullName) from User, chatuser where User.id = fkUserId and fkChatId = conversation.id and User.id != ${userId})`)), 'conversationName'], 'conversationAvatar', 'conversationType', 'conversationCreationDate'],
           include: [
             {
               model: User,
@@ -61,7 +60,7 @@ module.exports = {
               required: false,
               where: {
                 sendDate: {
-                  [Op.in]: sequelize.literal('(select max(sendDate) from message, chatmessage where message.id = fkMessageId group by chatmessage.fkChatId)'),
+                  [Op.in]: sequelize.literal('(select max(sendDate) from Message, chatmessage where Message.id = fkMessageId group by Chatmessage.fkChatId)'),
                 },
               },
               include: {
@@ -78,7 +77,7 @@ module.exports = {
       }
       return next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'User does not exist')));
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
     }
   },
