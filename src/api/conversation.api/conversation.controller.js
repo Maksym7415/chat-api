@@ -41,7 +41,7 @@ module.exports = {
 
         const userConversations = await Conversation.findAll({
           group: ['id'],
-          attributes: [['id', 'conversationId'], [sequelize.fn('ifnull', sequelize.col('conversationName'), sequelize.literal(`(select max(User.fullName) from User, Chatuser where User.id = fkUserId and fkChatId = Conversation.id and User.id != ${userId})`)), 'conversationName'], 'conversationAvatar', 'conversationType', 'conversationCreationDate'],
+          attributes: [['id', 'conversationId'], [sequelize.fn('ifnull', sequelize.col('conversationName'), sequelize.literal(`(select max(User.fullName) from User, ChatUser where User.id = fkUserId and fkChatId = Conversation.id and User.id != ${userId})`)), 'conversationName'], 'conversationAvatar', 'conversationType', 'conversationCreationDate'],
           include: [
             {
               model: User,
@@ -60,7 +60,7 @@ module.exports = {
               required: false,
               where: {
                 sendDate: {
-                  [Op.in]: sequelize.literal('(select max(sendDate) from Message, Chatmessage where Message.id = fkMessageId group by Chatmessage.fkChatId)'),
+                  [Op.in]: sequelize.literal('(select max(sendDate) from Message, ChatMessage where Message.id = fkMessageId group by ChatMessage.fkChatId)'),
                 },
               },
               include: {
