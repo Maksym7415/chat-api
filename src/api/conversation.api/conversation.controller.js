@@ -145,9 +145,9 @@ module.exports = {
   getOpponentsIdWhereConversTypeDialog: async ({ query: { opponentId, userId } }, res, next) => {
     try {
       const data = await sequelize.query(`
-            select id from messenger.conversation where conversationType = 'Dialog' and id in 
-            (select fkChatId from messenger.chatuser where fkUserId = ${opponentId} and fkChatId in 
-            (select fkChatId FROM messenger.chatuser where fkUserId = ${userId}))`, { type: sequelize.QueryTypes.SELECT });
+            select id from messenger.Conversation where conversationType = 'Dialog' and id in 
+            (select fkChatId from messenger.ChatUser where fkUserId = ${opponentId} and fkChatId in 
+            (select fkChatId FROM messenger.ChatUser where fkUserId = ${userId}))`, { type: sequelize.QueryTypes.SELECT });
       return res.json({ data });
     } catch (e) {
       console.log({ e });
