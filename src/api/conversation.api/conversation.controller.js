@@ -150,7 +150,7 @@ module.exports = {
             (select fkChatId FROM messenger.ChatUser where fkUserId = ${userId}))`, { type: sequelize.QueryTypes.SELECT });
       return res.json({ data });
     } catch (e) {
-      console.log({ e });
+      console.log('GET OPPENENTS', { e });
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
     }
   },
