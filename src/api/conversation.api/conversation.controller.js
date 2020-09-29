@@ -94,9 +94,9 @@ module.exports = {
           },
           include: {
             model: User,
-            // through: {
-            //   model: ChatUser,
-            // },
+            through: {
+              model: ChatUser,
+            },
             where: {
               id: userId,
             },
