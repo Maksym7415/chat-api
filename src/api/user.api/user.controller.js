@@ -1,6 +1,10 @@
 const createError = require('http-errors');
-const { User, Role, Avatar } = require('../../../models');
+const {
+  User, Role, Avatar,
+} = require('../../../models');
 const { formErrorObject, MAIN_ERROR_CODES } = require('../../../services/errorHandling');
+const isValidSaveNotificationRequest = require('../../helpers/notification_methods/isValidSaveNotificationRequest');
+const saveSubscriptionToDatabase = require('../../helpers/notification_methods/saveSubscriptionToDatabase');
 
 module.exports = {
   getUserProfileData: async ({ token }, res, next) => {
@@ -126,6 +130,24 @@ module.exports = {
       );
     } catch (e) {
       console.log({ e }); // нужно дописать ))
+    }
+  },
+  signNotification: async (req, res) => {
+    try {
+      if (!isValidSaveNotificationRequest(req, res)) return;
+      console.log(req.body);
+      return saveSubscriptionToDatabase(req.body, req.params.id)
+        .then((subscriptionId) => {
+          if (subscriptionId) return res.status(200).json({ data: { success: true } });
+          return res.status(200).json({ data: { success: 'such subscription have been added before' } });
+        });
+    } catch (e) {
+      res.status(500).json({
+        error: {
+          id: 'unable-to-save-subscription',
+          message: 'The subscription was received but we were unable to save it to our database.',
+        },
+      });
     }
   },
 };
