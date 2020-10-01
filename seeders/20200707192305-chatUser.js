@@ -8,10 +8,10 @@ module.exports = {
     //   fkPermissionId: 1
     // }]
 
-    await queryInterface.bulkInsert('ChatUser', data, {});
+    await queryInterface.bulkInsert('chatUser', data, {});
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('ChatUser', null, {});
+    await queryInterface.bulkDelete('chatUser', null, {});
   },
 };

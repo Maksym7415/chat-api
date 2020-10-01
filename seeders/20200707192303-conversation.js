@@ -6,10 +6,10 @@ module.exports = {
     //   chatType: 'single'
     // }]
 
-    await queryInterface.bulkInsert('Conversation', data, {});
+    await queryInterface.bulkInsert('conversation', data, {});
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('Conversation', null, {});
+    await queryInterface.bulkDelete('conversation', null, {});
   },
 };

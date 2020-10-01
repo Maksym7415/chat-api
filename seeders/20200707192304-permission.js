@@ -7,10 +7,10 @@ module.exports = {
     //   description: 'description',
     // }]
 
-    await queryInterface.bulkInsert('Permission', data, {});
+    await queryInterface.bulkInsert('permission', data, {});
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('Permission', null, {});
+    await queryInterface.bulkDelete('permission', null, {});
   },
 };
