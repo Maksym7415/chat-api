@@ -9,10 +9,10 @@ module.exports = {
     //   type: 'type'
     // }]
 
-    await queryInterface.bulkInsert('contact', data, {});
+    await queryInterface.bulkInsert('Contact', data, {});
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('contact', null, {});
+    await queryInterface.bulkDelete('Contact', null, {});
   },
 };

@@ -9,10 +9,10 @@ module.exports = {
     //   userAgent: 'crome',
     // }];
 
-    await queryInterface.bulkInsert('session', data, {});
+    await queryInterface.bulkInsert('Session', data, {});
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('session', null, {});
+    await queryInterface.bulkDelete('Session', null, {});
   },
 };

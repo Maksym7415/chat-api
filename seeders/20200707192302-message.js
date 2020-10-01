@@ -8,10 +8,10 @@ module.exports = {
     //   file: 'file'
     // }]
 
-    await queryInterface.bulkInsert('message', data, {});
+    await queryInterface.bulkInsert('Message', data, {});
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('message', null, {});
+    await queryInterface.bulkDelete('Message', null, {});
   },
 };

@@ -7,10 +7,10 @@ module.exports = {
     //   fkUserId: 1,
     //   fkRoleId: 1
     // }];
-    
-    await queryInterface.bulkInsert('userRole', data, {})
+
+    await queryInterface.bulkInsert('UserRole', data, {});
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('userRole', null, {});
-  }
-}
+    await queryInterface.bulkDelete('UserRole', null, {});
+  },
+};

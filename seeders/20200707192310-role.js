@@ -8,9 +8,9 @@ module.exports = {
     //   description: 'Admin'
     // }];
 
-    await queryInterface.bulkInsert('role', data, {})
+    await queryInterface.bulkInsert('Role', data, {});
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('role', null, {});
-  }
-}
+    await queryInterface.bulkDelete('Role', null, {});
+  },
+};
