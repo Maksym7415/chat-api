@@ -73,6 +73,7 @@ module.exports = {
               },
             }],
         });
+        console.log(userConversations);
         return res.json({ data: userConversations });
       }
       return next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'User does not exist')));
