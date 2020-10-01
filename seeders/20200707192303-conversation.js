@@ -1,5 +1,3 @@
-'use strict';
-
 const data = require('../DBdata/Conversation');
 
 module.exports = {
@@ -7,11 +5,11 @@ module.exports = {
     // const data = [{
     //   chatType: 'single'
     // }]
-    
-    await queryInterface.bulkInsert('conversation', data, {})
+
+    await queryInterface.bulkInsert('Conversation', data, {});
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('conversation', null, {});
-  }
+    await queryInterface.bulkDelete('Conversation', null, {});
+  },
 };
