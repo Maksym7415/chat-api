@@ -21,21 +21,62 @@ module.exports = function initSocket(io) {
         },
       });
       userChats.forEach((room) => {
-        socket.join(`${room.id}abc`);
+        socket.join(`chat-${room.id}`);
       });
       console.log('join rooms');
     });
 
-    socket.on('message', async ({ conversationId, message, userId }) => {
-      const user = await User.findOne({
-        where: {
-          id: userId,
+    socket.on('message', async ({
+      conversationId, message, userId, actionType, messageId,
+    }) => {
+      if (actionType === 'new') {
+        const { sendDate, messageType, ...msg } = message;
+        const user = await User.findOne({
+          where: {
+            id: userId,
+          },
+        });
+        const newMessage = await Message.create({
+          ...msg, sendDate, sendDateMs: new Date(sendDate).getTime(), isEditing: false,
+        });
+        io.in(`chat-${conversationId}`).emit('message', {
+          message: {
+            ...newMessage, Files: [], User: user, // change isEdit to isEditing
+          },
+          conversationId,
+          actionType,
+        });
+      } else if (actionType === 'edit') {
+        const { text, sendDate } = message;
+        await Message.update({
+          message: text,
+          sendDate,
+          sendDateMs: new Date(sendDate).getTime(),
         },
-      });
-      // message, id: newMessage.id || messageId, Files: [], User: user, isEdit
-      io.in(`${conversationId}abc`).emit('message', {
-        ...message, id: 454, Files: [], isEdit: false, User: user,
-      }, conversationId);
+        {
+          where: {
+            id: messageId,
+          },
+        });
+        io.in(`chat-${conversationId}`).emit('message', {
+          message: { isEditing: true, message: text, id: messageId },
+          conversationId,
+          actionType,
+        });
+      } else {
+        await Message.destroy(
+          {
+            where: {
+              id: messageId,
+            },
+          },
+        );
+        io.in(`chat-${conversationId}`).emit('message', {
+          message: { id: messageId },
+          conversationId,
+          actionType,
+        });
+      }
     });
 
     socket.on('roomConnect', async (groupMembers, chatCreationTime, chatName, imageData, fileExtension, successCallback) => {
