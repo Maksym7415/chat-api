@@ -75,11 +75,9 @@ module.exports = function initSocket(io) {
         });
         successCallback(true, actionType);
       } else if (actionType === 'edit') {
-        const { message: msg, sendDate } = message;
+        const { message: msg } = message;
         await Message.update({
           message: msg,
-          sendDate,
-          sendDateMs: new Date(sendDate).getTime(),
         },
         {
           where: {

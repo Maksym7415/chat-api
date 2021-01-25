@@ -2,6 +2,8 @@ module.exports = [
   {
     id: 1,
     login: 'popovmaksim7415@gmail.com',
+    socketId: '23423423dfcxv',
+    activityStatus: 'offline',
     firstName: 'Maksim',
     lastName: 'Popov',
     tagName: 'maksim228',
@@ -12,6 +14,8 @@ module.exports = [
   {
     id: 2,
     login: 'pwoolam1@nhs.uk',
+    socketId: '23423423dfcxv',
+    activityStatus: 'offline',
     firstName: 'Petronia',
     lastName: 'Woolam',
     tagName: 'pwoolam1',
@@ -21,6 +25,8 @@ module.exports = [
   {
     id: 3,
     login: 'dreveland2@discuz.net',
+    socketId: '23423423dfcxv',
+    activityStatus: 'offline',
     firstName: 'Demetra',
     lastName: '',
     tagName: 'dreveland2',
@@ -30,6 +36,8 @@ module.exports = [
   {
     id: 4,
     login: 'lgodfroy3@google.de',
+    socketId: '23423423dfcxv',
+    activityStatus: 'offline',
     firstName: 'Lyman',
     lastName: 'Godfroy',
     tagName: '',
@@ -39,6 +47,8 @@ module.exports = [
   {
     id: 5,
     login: 'wvelasquez4@narod.ru',
+    socketId: '23423423dfcxv',
+    activityStatus: 'offline',
     firstName: 'Wilden',
     lastName: 'Velasquez',
     tagName: '',
@@ -48,6 +58,8 @@ module.exports = [
   {
     id: 6,
     login: 'mgager5@about.com',
+    socketId: '23423423dfcxv',
+    activityStatus: 'offline',
     firstName: 'Michal',
     lastName: 'Gager',
     tagName: '',
@@ -57,6 +69,8 @@ module.exports = [
   {
     id: 7,
     login: 'mtither6@rambler.ru',
+    socketId: '23423423dfcxv',
+    activityStatus: 'offline',
     firstName: 'Mauricio',
     lastName: '',
     tagName: 'mtither6',
@@ -66,6 +80,8 @@ module.exports = [
   {
     id: 8,
     login: 'aspavon7@oakley.com',
+    socketId: '23423423dfcxv',
+    activityStatus: 'offline',
     firstName: 'Aloisia',
     lastName: 'Spavon',
     tagName: '',
@@ -75,6 +91,8 @@ module.exports = [
   {
     id: 9,
     login: 'lbalden8@washingtonpost.com',
+    socketId: '23423423dfcxv',
+    activityStatus: 'offline',
     firstName: 'Luce',
     lastName: 'Balden',
     tagName: '',
@@ -84,6 +102,8 @@ module.exports = [
   {
     id: 10,
     login: 'csandeford9@archive.org',
+    socketId: '23423423dfcxv',
+    activityStatus: 'offline',
     firstName: 'Cris',
     lastName: '',
     tagName: 'csandeford9',
@@ -93,6 +113,8 @@ module.exports = [
   {
     id: 11,
     login: 'vit91112@gmail.com',
+    socketId: '23423423dfcxv',
+    activityStatus: 'offline',
     firstName: 'vit9',
     lastName: '',
     tagName: 'vit9',
@@ -103,6 +125,8 @@ module.exports = [
   {
     id: 12,
     login: 'kir221dol@gmail.com',
+    socketId: '23423423dfcxv',
+    activityStatus: 'offline',
     firstName: 'Kirill',
     lastName: 'Dolhopolov',
     tagName: 'x0r3k',
@@ -113,6 +137,8 @@ module.exports = [
   {
     id: 13,
     login: 'userForTestUpdateProfile@mail.com',
+    socketId: '23423423dfcxv',
+    activityStatus: 'offline',
     firstName: 'Update',
     lastName: 'Profile',
     tagName: 'Upfate',

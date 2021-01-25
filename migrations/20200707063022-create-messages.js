@@ -27,12 +27,12 @@ module.exports = {
       updateDate: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
-        allowNull: false,
+        allowNull: true,
       },
       updateDateMs: {
         type: Sequelize.BIGINT,
         defaultValue: new Date().getTime(),
-        allowNull: false,
+        allowNull: true,
       },
       sendDate: {
         type: Sequelize.DATE,

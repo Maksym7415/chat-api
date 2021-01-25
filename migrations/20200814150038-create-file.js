@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('File', {
@@ -6,23 +5,23 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       fileStorageName: {
         type: Sequelize.STRING(200),
-        allowNull: false
+        allowNull: false,
       },
       fileUserName: {
         type: Sequelize.STRING(200),
-        allowNull: false
+        allowNull: false,
       },
       size: {
         type: Sequelize.INTEGER,
-        allowNull: true
+        allowNull: true,
       },
       extension: {
         type: Sequelize.STRING(20),
-        allowNull: false
+        allowNull: false,
       },
       fkMessageId: {
         type: Sequelize.INTEGER,
@@ -30,12 +29,13 @@ module.exports = {
           model: {
             tableName: 'Message',
             key: 'id',
-          }
-        }
-      }
+          },
+        },
+        onDelete: 'CASCADE',
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('File');
-  }
+  },
 };

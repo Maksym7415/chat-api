@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('ChatMessage', {
@@ -6,11 +5,11 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       fkChatId: {
         type: Sequelize.INTEGER,
-        unique: "fkChatId_fkMessageId_unique",
+        unique: 'fkChatId_fkMessageId_unique',
         references: {
           model: {
             tableName: 'Conversation',
@@ -21,7 +20,7 @@ module.exports = {
       },
       fkMessageId: {
         type: Sequelize.INTEGER,
-        unique: "fkChatId_fkMessageId_unique",
+        unique: 'fkChatId_fkMessageId_unique',
         references: {
           model: {
             tableName: 'Message',
@@ -29,17 +28,18 @@ module.exports = {
           },
         },
         allowNull: false,
+        onDelete: 'CASCADE',
       },
-    },{
+    }, {
       uniqueKeys: {
         fkChatId_fkMessageId_unique: {
           customIndex: true,
-          fields: ['fkChatId', 'fkMessageId']
-        }
+          fields: ['fkChatId', 'fkMessageId'],
+        },
       },
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('ChatMessage');
-  }
+  },
 };

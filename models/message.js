@@ -17,6 +17,16 @@ module.exports = (sequelize, DataType) => {
       type: DataType.INTEGER,
       allowNull: false,
     },
+    updateDate: {
+      type: DataType.DATE,
+      defaultValue: DataType.NOW,
+      allowNull: true,
+    },
+    updateDateMs: {
+      type: DataType.BIGINT,
+      defaultValue: new Date().getTime(),
+      allowNull: true,
+    },
     sendDate: {
       type: DataType.DATE,
       defaultValue: DataType.NOW,
@@ -31,8 +41,8 @@ module.exports = (sequelize, DataType) => {
     freezeTableName: true,
   });
   messageTable.associate = (models) => {
-    messageTable.hasMany(models.File, { foreignKey: { name: 'fkMessageId', allowNull: false }, foreignKeyConstraint: true });
-    messageTable.hasMany(models.ChatMessage, { foreignKey: { name: 'fkMessageId', allowNull: false }, foreignKeyConstraint: true });
+    messageTable.hasMany(models.File, { foreignKey: { name: 'fkMessageId', allowNull: false }, foreignKeyConstraint: true, onDelete: 'cascade' });
+    messageTable.hasMany(models.ChatMessage, { foreignKey: { name: 'fkMessageId', allowNull: false }, foreignKeyConstraint: true, onDelete: 'cascade' });
     messageTable.belongsTo(models.User, { foreignKey: { name: 'fkSenderId', allowNull: false }, foreignKeyConstraint: true });
     messageTable.belongsToMany(models.Conversation, {
       foreignKey: { name: 'fkMessageId', allowNull: false }, otherKey: { name: 'fkChatId', allowNull: false }, foreignKeyConstraint: true, through: models.ChatMessage,
