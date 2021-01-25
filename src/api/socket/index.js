@@ -52,9 +52,9 @@ module.exports = function initSocket(io) {
         });
         successCallback(true, actionType);
       } else if (actionType === 'edit') {
-        const { text, sendDate } = message;
+        const { message: msg, sendDate } = message;
         await Message.update({
-          message: text,
+          message: msg,
           sendDate,
           sendDateMs: new Date(sendDate).getTime(),
         },
@@ -64,7 +64,7 @@ module.exports = function initSocket(io) {
           },
         });
         io.in(`chat-${conversationId}`).emit('message', {
-          message: { isEditing: true, message: text, id: messageId },
+          message: { isEditing: true, message: msg, id: messageId },
           conversationId,
           actionType,
         });
