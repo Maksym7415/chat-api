@@ -28,7 +28,8 @@ module.exports = function initSocket(io) {
 
     socket.on('message', async ({
       conversationId, message, userId, actionType, messageId,
-    }) => {
+    }, successCallback) => {
+      console.log(conversationId, message, userId, actionType, messageId)
       if (actionType === 'new') {
         const { sendDate, messageType, ...msg } = message;
         const user = await User.findOne({
@@ -37,7 +38,7 @@ module.exports = function initSocket(io) {
           },
         });
         const newMessage = await Message.create({
-          ...msg, sendDate, sendDateMs: new Date(sendDate).getTime(), isEditing: false,
+          ...msg, sendDate, sendDateMs: new Date(sendDate).getTime(), isEditing: false, fkSenderId: userId
         });
         io.in(`chat-${conversationId}`).emit('message', {
           message: {
@@ -46,6 +47,7 @@ module.exports = function initSocket(io) {
           conversationId,
           actionType,
         });
+        successCallback(true, actionType)
       } else if (actionType === 'edit') {
         const { text, sendDate } = message;
         await Message.update({
@@ -63,6 +65,7 @@ module.exports = function initSocket(io) {
           conversationId,
           actionType,
         });
+        successCallback(true, actionType)
       } else {
         await Message.destroy(
           {
@@ -76,6 +79,7 @@ module.exports = function initSocket(io) {
           conversationId,
           actionType,
         });
+        successCallback(true)
       }
     });
 
