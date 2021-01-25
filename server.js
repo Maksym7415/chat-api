@@ -12,7 +12,7 @@ const {
 
 const app = express();
 const httpServer = http.createServer(app);
-const sockcetServer = http.createServer();
+const socketServer = http.createServer();
 
 const apiPath = process.env.NODE_ENV === 'production' ? '/chat/api' : '/api';
 const uploadPath = process.env.NODE_ENV === 'production' ? '/chat' : '/';
@@ -38,5 +38,5 @@ app.use(errorHandling);
 module.exports = {
   app,
   httpServer,
-  sockcetServer,
+  socketServer,
 };

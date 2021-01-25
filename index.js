@@ -1,7 +1,7 @@
 const io = require('socket.io');
 const {
   httpServer,
-  sockcetServer,
+  socketServer,
 } = require('./server');
 const initSocket = require('./src/api/socket');
 
@@ -14,12 +14,12 @@ try {
   httpServer.listen(HTTP_PORT, async () => {
     console.log(`Listening on port ${HTTP_PORT}`);
   });
-  sockcetServer.listen(SOCKET_PORT, () => {
-    initSocket(io(sockcetServer, { path: '/socket', transports: ['websocket', 'polling'] }));
+  socketServer.listen(SOCKET_PORT, () => {
+    initSocket(io(socketServer, { path: '/socket', transports: ['websocket', 'polling'] }));
     console.log(`Listening on port ${SOCKET_PORT}`);
   });
 } catch (error) {
   console.log(error);
   httpServer.close();
-  sockcetServer.close();
+  socketServer.close();
 }
