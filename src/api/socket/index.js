@@ -45,7 +45,7 @@ module.exports = function initSocket(io) {
         });
         io.in(`chat-${conversationId}`).emit('message', {
           message: {
-            ...newMessage, Files: [], User: user, // change isEdit to isEditing
+            ...newMessage.dataValues, Files: [], User: user, // change isEdit to isEditing
           },
           conversationId,
           actionType,
