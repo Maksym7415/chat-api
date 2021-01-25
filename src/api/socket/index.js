@@ -12,18 +12,41 @@ module.exports = function initSocket(io) {
     console.log(socket.id);
 
     socket.on('handshake', async (userId) => {
-      const userChats = await Conversation.findAll({
-        include: {
-          model: User,
+      if (!userId) {
+        console.log('handshake fail');
+        return socket.emit('handshake', 400);
+      }
+      try {
+        const user = await User.findOne({
           where: {
             id: userId,
           },
-        },
-      });
-      userChats.forEach((room) => {
-        socket.join(`chat-${room.id}`);
-      });
-      console.log('join rooms');
+        });
+        if (!user) {
+          console.log('handshake fail');
+          return socket.emit('handshake', 400);
+        }
+        user.socketId = socket.id;
+        user.activityStatus = 'online';
+        await user.save();
+        const userChats = await Conversation.findAll({
+          include: {
+            model: User,
+            where: {
+              id: userId,
+            },
+          },
+        });
+        userChats.forEach((room) => {
+          socket.join(`chat-${room.id}`);
+        });
+        console.log('join rooms');
+        console.log('handshake success');
+        return socket.broadcast.emit('userConnected', userId);
+      } catch (error) {
+        console.log(error);
+        return socket.emit('handshake', 400);
+      }
     });
 
     socket.on('message', async ({
@@ -86,30 +109,82 @@ module.exports = function initSocket(io) {
       }
     });
 
-    socket.on('roomConnect', async (groupMembers, chatCreationTime, chatName, imageData, fileExtension, successCallback) => {
-      console.log(groupMembers, chatCreationTime, chatName, imageData, fileExtension, successCallback);
-      // const chat = await Conversation.create({
-      //   conversationType: chatType,
-      //   conversationCreationDate: createionTime,
-      //   conversationName: name,
-      // });
-      // const user = await User.findOne({
-      //   where: {
-      //     id: message.senderId,
-      //   },
-      // });
-      // for await (const user of users) {
-      //   ChatUser.create({
-      //     fkChatId: chat.id,
-      //     fkUserId: user,
-      //     fkPermissionId: 3,
-      //   });
-      // }
+    socket.on('roomConnect', async ({
+      chat: {
+        conversationName, conversationType, conversationAvatar, conversationCreationDate,
+      },
+      message,
+      userId,
+      chatMembers, // array of user id
+    }, successCallback) => {
+      try {
+        const { sendDate, messageType, ...msg } = message;
+        const users = [];
+        const newChat = await Conversation.create({
+          conversationName,
+          conversationType,
+          conversationAvatar,
+          conversationCreationDate,
+        });
+        for await (const id of [userId, ...chatMembers]) {
+          const user = await User.findOne({
+            where: {
+              id,
+            },
+          });
+          users.push(user);
+        }
+        for await (const id of [userId, ...chatMembers]) {
+          await ChatUser.create({
+            fkChatId: newChat.id,
+            fkUserId: id,
+            fkPermissionId: 3,
+          });
+        }
+        const newMessage = await Message.create({
+          ...msg, sendDate, sendDateMs: new Date(sendDate).getTime(), isEditing: false, fkSenderId: userId,
+        });
+        await ChatMessage.create({
+          fkMessageId: newMessage.id,
+          fkChatId: newChat.id,
+        });
+        for await (const user of users) {
+          io.to(user.socketId).emit('message', {
+            message: {
+              ...newMessage.dataValues, Files: [], User: users[0], // change isEdit to isEditing
+            },
+            conversationId: newChat.id,
+            actionType: 'new',
+          });
+        }
+      } catch (error) {
+        console.log(error);
+        successCallback(false);
+      }
+    });
 
-      // socket.join(`${chat.id}abc`);
-      // io.in(`${chat.id}abc`).emit('message', {
-      //   ...message, id: 454, Files: [], isEdit: false, User: user,
-      // }, chat.id);
+    socket.on('roomDisconnected', async ({ chatName, userId }) => {
+      socket.leave(chatName);
+      await ChatUser.destroy({
+        where: {
+          fkUserId: userId,
+        },
+      });
+      const usersCount = io.sockets.adapter.rooms.get('chatName').size;
+      io.in(chatName).emit('roomDisconnected', usersCount);
+    });
+
+    socket.on('disconnect', async () => {
+      const user = await User.findOne({
+        where: {
+          socketId: socket.id,
+        },
+      });
+      if (!user) return;
+      user.activityStatus = 'offline';
+      await user.save();
+      socket.broadcast.emit('userDisconnected', user.id);
+      console.log(`success ${user.userName}  disconnecting`);
     });
 
     // console.log('connection');

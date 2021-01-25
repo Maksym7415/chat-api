@@ -6,6 +6,10 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
+      socketId: {
+        type: Sequelize.STRING(50),
+        allowNull: false,
+      },
       login: {
         type: Sequelize.STRING(45),
         allowNull: false,
@@ -25,6 +29,10 @@ module.exports = {
       fullName: {
         type: Sequelize.STRING(45),
         allowNull: true,
+      },
+      activityStatus: {
+        type: Sequelize.STRING(15),
+        allowNull: false,
       },
       status: {
         type: Sequelize.STRING(45),

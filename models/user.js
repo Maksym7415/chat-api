@@ -5,6 +5,10 @@ module.exports = (sequelize, DataType) => {
       autoIncrement: true,
       primaryKey: true,
     },
+    socketId: {
+      type: DataType.STRING(50),
+      allowNull: false,
+    },
     login: {
       type: DataType.STRING(45),
       allowNull: false,
@@ -24,6 +28,10 @@ module.exports = (sequelize, DataType) => {
     fullName: {
       type: DataType.STRING(45),
       allowNull: true,
+    },
+    activityStatus: {
+      type: DataType.STRING(15),
+      allowNull: false,
     },
     status: {
       type: DataType.STRING(45),

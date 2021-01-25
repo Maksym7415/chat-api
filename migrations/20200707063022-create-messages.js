@@ -24,6 +24,16 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false,
       },
+      updateDate: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+        allowNull: false,
+      },
+      updateDateMs: {
+        type: Sequelize.BIGINT,
+        defaultValue: new Date().getTime(),
+        allowNull: false,
+      },
       sendDate: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
