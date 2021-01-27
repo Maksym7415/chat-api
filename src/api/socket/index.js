@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 const {
-  ChatMessage, Message, User, ChatUser, Conversation,
+  ChatMessage, Message, User, ChatUser, Conversation, File,
 } = require('../../../models');
 const chats = require('./chats.socket');
 const chatCreate = require('./chatCreate.socket');
@@ -52,8 +52,11 @@ module.exports = function initSocket(io) {
     socket.on('message', async ({
       conversationId, message, userId, actionType, messageId,
     }, successCallback) => {
+      let messageFile;
       if (actionType === 'new') {
-        const { sendDate, messageType, ...msg } = message;
+        const {
+          sendDate, messageType, meta, ...msg
+        } = message;
         const user = await User.findOne({
           where: {
             id: userId,
@@ -62,13 +65,22 @@ module.exports = function initSocket(io) {
         const newMessage = await Message.create({
           ...msg, sendDate, sendDateMs: new Date(sendDate).getTime(), isEditing: false, fkSenderId: userId,
         });
+        if (messageType === 'file') {
+          messageFile = await File.create({
+            fileStorageName: meta.storageName,
+            fileUserName: meta.storageName,
+            size: meta.size,
+            extension: meta.extension,
+            fkMessageId: newMessage.id,
+          });
+        }
         await ChatMessage.create({
           fkChatId: conversationId,
           fkMessageId: newMessage.id,
         });
         io.in(`chat-${conversationId}`).emit('message', {
           message: {
-            ...newMessage.dataValues, Files: [], User: user, // change isEdit to isEditing
+            ...newMessage.dataValues, Files: [{}], User: user, // change isEdit to isEditing
           },
           conversationId,
           actionType,
@@ -107,7 +119,7 @@ module.exports = function initSocket(io) {
       }
     });
 
-    socket.on('roomConnect', async ({
+    socket.on('roomConnect', async ({ //  chat creation
       chat: {
         conversationName, conversationType, conversationAvatar, conversationCreationDate,
       },
@@ -161,7 +173,7 @@ module.exports = function initSocket(io) {
       }
     });
 
-    socket.on('roomDisconnected', async ({ chatName, userId }) => {
+    socket.on('roomDisconnected', async ({ chatName, userId }) => { // chat leaving
       socket.leave(chatName);
       await ChatUser.destroy({
         where: {
