@@ -3,7 +3,7 @@ const router = require('express').Router();
 const multer = require('multer');
 const uuid = require('uuid');
 const {
-  addFiles,
+  addFiles, addMessageFiles,
 } = require('./files.controller');
 const authMiddleware = require('../middleware/auth');
 
@@ -20,5 +20,6 @@ const storage = multer.diskStorage({
 // router.use('/', express.static(path.join(__dirname, '../../../uploads')));
 const upload = multer({ storage });
 router.post('/upload', authMiddleware, upload.single('file'), addFiles);
+router.post('/upload-message-files', upload.array('file', 10), addMessageFiles);
 
 module.exports = router;

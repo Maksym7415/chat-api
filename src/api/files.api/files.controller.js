@@ -30,4 +30,18 @@ module.exports = {
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
     }
   },
+  addMessageFiles: async (req, res, next) => {
+    try {
+      const metaFiles = [];
+      req.files.forEach(({
+        path, destination, encoding, fieldname, ...meta
+      }) => {
+        const [filePath, extension] = meta.filename.split('.');
+        metaFiles.push({ ...meta, filePath, extension });
+      });
+      return res.status(200).json(metaFiles);
+    } catch (error) {
+      return next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
+    }
+  },
 };
