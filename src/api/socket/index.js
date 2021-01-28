@@ -65,11 +65,12 @@ module.exports = function initSocket(io) {
           const newMessage = await Message.create({
             ...msg, sendDate, sendDateMs: new Date(sendDate).getTime(), isEditing: false, fkSenderId: userId,
           });
-          if (messageType === 'file') {
+
+          if (messageType === 'File') {
             for (const file of meta) {
               const newFile =  await File.create({
-                fileStorageName: file.storageName,
-                fileUserName: file.storageName,
+                fileStorageName: file.filePath,
+                fileUserName: file.originalname,
                 size: file.size,
                 extension: file.extension,
                 fkMessageId: newMessage.id,
