@@ -49,10 +49,12 @@ module.exports = function initSocket(io) {
     });
 
     socket.on('message', async ({
-      conversationId, message, userId, actionType, messageId,
+      conversationId, message, userId, actionType, messageId, opponentId,
     }, statusCallBack) => {
       try {
         let messageFiles = [];
+        let newChat = {};
+        let opponentUser = {};
         if (actionType === 'new') {
           const {
             sendDate, messageType, meta, ...msg
@@ -78,11 +80,43 @@ module.exports = function initSocket(io) {
               messageFiles.push(newFile);
             }
           }
+          if (!conversationId) {
+            opponentUser = await User.findOne({
+              where: {
+                id: opponentId,
+              },
+            });
+            newChat = await Conversation.create({
+              conversationName: opponentUser.firstName,
+              conversationType: 'Chat',
+              conversationAvatar: null,
+              conversationCreationDate: sendDate,
+            });
+            for (const id of [user.id, opponentId]) {
+              await ChatUser.create({
+                fkUserId: id,
+                fkChatId: newChat.id,
+                fkPermissionId: 3,
+              });
+            }
+            await ChatMessage.create({
+              fkChatId: newChat.id,
+              fkMessageId: newMessage.id,
+            });
+            return io.to(user.socketId).to(opponentUser.socketId).emit('message', {
+              message: {
+                ...newMessage.dataValues, Files: messageFiles, User: user, // change isEdit to isEditing
+              },
+              conversationId: newChat.id,
+              actionType,
+            });
+          }
           await ChatMessage.create({
-            fkChatId: conversationId,
+            fkChatId: conversationId || newChat.id,
             fkMessageId: newMessage.id,
           });
-          io.in(`chat-${conversationId}`).emit('message', {
+          console.log(conversationId);
+          io.in(`chat-${conversationId || newChat.id}`).emit('message', {
             message: {
               ...newMessage.dataValues, Files: messageFiles, User: user, // change isEdit to isEditing
             },
@@ -137,23 +171,23 @@ module.exports = function initSocket(io) {
 
     socket.on('roomConnect', async ({ //  chat creation
       chat: {
-        conversationName, conversationType, conversationAvatar, conversationCreationDate,
+        chatName, conversationType, conversationAvatar, conversationCreationDate,
       },
       message,
       userId,
-      chatMembers, // array of user id
+      groupMembers, // array of user id
     }, successCallback) => {
       const users = [];
       try {
-        const { sendDate, messageType, ...msg } = message;
+        // const { sendDate, messageType, ...msg } = message;
 
         const newChat = await Conversation.create({
-          conversationName,
+          conversationName: chatName,
           conversationType,
           conversationAvatar,
           conversationCreationDate,
         });
-        for await (const id of [userId, ...chatMembers]) {
+        for await (const id of [userId, ...groupMembers]) {
           const user = await User.findOne({
             where: {
               id,
@@ -161,38 +195,44 @@ module.exports = function initSocket(io) {
           });
           users.push(user);
         }
-        for (const id of [userId, ...chatMembers]) {
+        for (const id of [userId, ...groupMembers]) {
           await ChatUser.create({
             fkChatId: newChat.id,
             fkUserId: id,
             fkPermissionId: 3,
           });
         }
-        const newMessage = await Message.create({
-          ...msg, sendDate, sendDateMs: new Date(sendDate).getTime(), isEditing: false, fkSenderId: userId,
-        });
-        await ChatMessage.create({
-          fkMessageId: newMessage.id,
-          fkChatId: newChat.id,
-        });
+        // successCallback(true);
+        // [userId, ...groupMembers].forEach(() => {
+        //   socket.join(`chat-${newChat.id}`);
+        // });
+        // io.to(`chat-${newChat.id}`).emit('roomConnect', true);
+
+        // const newMessage = await Message.create({
+        //   ...msg, sendDate, sendDateMs: new Date(sendDate).getTime(), isEditing: false, fkSenderId: userId,
+        // });
+        // await ChatMessage.create({
+        //   fkMessageId: newMessage.id,
+        //   fkChatId: newChat.id,
+        // });
         console.log('new chat was successfully created');
-        for await (const user of users) {
-          io.to(user.socketId).emit('message', {
-            message: {
-              ...newMessage.dataValues, Files: [], User: users[0], // change isEdit to isEditing
-            },
-            conversationId: newChat.id,
-            actionType: 'new',
-          });
+        for  (const user of users) {
+          console.log(user.socketId);
+          io.to(user.socketId).emit('roomConnect', { status: 'success', chatId: newChat.id });
         }
         console.log('messages was successfully sended');
+        successCallback(true);
       } catch (error) {
-        console.log(error, 'messages send fail');
-        io.to(users[0].socketId).emit('message', {
-          error,
-        });
+        console.log(error, 'group creation fail');
+        // io.to(users[0].socketId).emit('message', {
+        //   error,
+        // });
         successCallback(false);
       }
+    });
+
+    socket.on(('isRoomConnected'), (roomId) => {
+      socket.join(`chat-${roomId}`);
     });
 
     socket.on('roomDisconnected', async ({ chatName, userId }) => { // chat leaving
@@ -216,8 +256,9 @@ module.exports = function initSocket(io) {
       if (!user) return;
       user.activityStatus = 'offline';
       await user.save();
+      console.log(user);
       socket.broadcast.emit('userDisconnected', user.id);
-      console.log(`success disconnecting user - ${user.userName}`);
+      console.log(`success disconnecting user - ${user.firstName}`);
     });
   });
 };
