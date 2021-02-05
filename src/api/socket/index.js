@@ -87,8 +87,8 @@ module.exports = function initSocket(io) {
               },
             });
             newChat = await Conversation.create({
-              conversationName: opponentUser.firstName,
-              conversationType: 'Chat',
+              conversationName: null,
+              conversationType: 'Dialog',
               conversationAvatar: null,
               conversationCreationDate: sendDate,
             });

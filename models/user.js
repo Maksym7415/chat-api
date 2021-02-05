@@ -7,7 +7,7 @@ module.exports = (sequelize, DataType) => {
     },
     socketId: {
       type: DataType.STRING(50),
-      allowNull: false,
+      allowNull: true,
     },
     login: {
       type: DataType.STRING(45),
