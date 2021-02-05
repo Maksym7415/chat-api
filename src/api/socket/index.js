@@ -165,22 +165,19 @@ module.exports = function initSocket(io) {
       }
     });
 
-    socket.on('typing', ({ chatId, userName }) => {
-      io.in(`chat-${chatId}`).emit('typing', { chatId, userName });
+    socket.on('typing', (user, conversationId) => {
+      io.in(`chat-${conversationId}`).emit('typing', { conversationId, user });
     });
 
     socket.on('roomConnect', async ({ //  chat creation
       chat: {
         chatName, conversationType, conversationAvatar, conversationCreationDate,
       },
-      message,
       userId,
       groupMembers, // array of user id
     }, successCallback) => {
       const users = [];
       try {
-        // const { sendDate, messageType, ...msg } = message;
-
         const newChat = await Conversation.create({
           conversationName: chatName,
           conversationType,
@@ -202,31 +199,14 @@ module.exports = function initSocket(io) {
             fkPermissionId: 3,
           });
         }
-        // successCallback(true);
-        // [userId, ...groupMembers].forEach(() => {
-        //   socket.join(`chat-${newChat.id}`);
-        // });
-        // io.to(`chat-${newChat.id}`).emit('roomConnect', true);
-
-        // const newMessage = await Message.create({
-        //   ...msg, sendDate, sendDateMs: new Date(sendDate).getTime(), isEditing: false, fkSenderId: userId,
-        // });
-        // await ChatMessage.create({
-        //   fkMessageId: newMessage.id,
-        //   fkChatId: newChat.id,
-        // });
         console.log('new chat was successfully created');
         for  (const user of users) {
-          console.log(user.socketId);
           io.to(user.socketId).emit('roomConnect', { status: 'success', chatId: newChat.id });
         }
         console.log('messages was successfully sended');
         successCallback(true);
       } catch (error) {
         console.log(error, 'group creation fail');
-        // io.to(users[0].socketId).emit('message', {
-        //   error,
-        // });
         successCallback(false);
       }
     });
