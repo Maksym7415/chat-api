@@ -38,7 +38,6 @@ module.exports = {
         // left join chatuser on chatuser.fkChatId = conversation.id left join user on chatuser.fkUserId = user.id
         // where user.id = 1 and (sendDate in
         // (select max(sendDate) from message, chatmessage where message.id = fkMessageId group by chatmessage.fkChatId) or sendDate is null) group by chatmessage.fkChatId;
-
         const userConversations = await Conversation.findAll({
           group: ['id'],
           attributes: [['id', 'conversationId'], [sequelize.fn('ifnull', sequelize.col('conversationName'), sequelize.literal(`(select max(User.fullName) from User, ChatUser where User.id = fkUserId and fkChatId = Conversation.id and User.id != ${userId})`)), 'conversationName'], 'conversationAvatar', 'conversationType', 'conversationCreationDate'],
@@ -152,6 +151,32 @@ module.exports = {
     } catch (e) {
       // console.log('GET OPPENENTS', { e });
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
+    }
+  },
+
+  getConversationById: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const { type } = req.query;
+
+      const chat = await Conversation.findOne({
+        where: {
+          id,
+          conversationType: type,
+        },
+        include: {
+          model: User,
+          attributes: ['firstName', 'userUpdateTime', 'activityStatus'],
+          through: {
+            model: ChatUser,
+            attributes: [],
+          },
+        },
+      });
+      return res.status(200).json(chat || []);
+    } catch (error) {
+      console.log(error);
+      return next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
     }
   },
 };

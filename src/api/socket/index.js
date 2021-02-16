@@ -103,7 +103,26 @@ module.exports = function initSocket(io) {
               fkChatId: newChat.id,
               fkMessageId: newMessage.id,
             });
-            return io.to(user.socketId).to(opponentUser.socketId).emit('message', {
+            io.to(opponentUser.socketId).emit('message', {
+              message: {
+                ...newMessage.dataValues, Files: messageFiles, User: user, // change isEdit to isEditing
+              },
+              conversationId: newChat.id,
+              conversationInfo: {
+                messageId: newMessage.id,
+                fkSenderId: opponentUser.id,
+                message: newMessage.message,
+                messageType,
+                sendDate,
+                conversationId: newChat.id,
+                conversationAvatar: newChat.conversationAvatar,
+                conversationType: 'Dialog',
+                conversationName: opponentUser.firstName,
+                conversationCreationDate: sendDate,
+              },
+              actionType,
+            });
+            return io.to(user.socketId).emit('message', {
               message: {
                 ...newMessage.dataValues, Files: messageFiles, User: user, // change isEdit to isEditing
               },
@@ -115,7 +134,7 @@ module.exports = function initSocket(io) {
             fkChatId: conversationId || newChat.id,
             fkMessageId: newMessage.id,
           });
-          console.log(conversationId);
+
           io.in(`chat-${conversationId || newChat.id}`).emit('message', {
             message: {
               ...newMessage.dataValues, Files: messageFiles, User: user, // change isEdit to isEditing
@@ -212,6 +231,7 @@ module.exports = function initSocket(io) {
     });
 
     socket.on(('isRoomConnected'), (roomId) => {
+      console.log('isRoomConnected', roomId, socket.id);
       socket.join(`chat-${roomId}`);
     });
 
