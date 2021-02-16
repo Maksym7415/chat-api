@@ -127,6 +127,18 @@ module.exports = function initSocket(io) {
                 ...newMessage.dataValues, Files: messageFiles, User: user, // change isEdit to isEditing
               },
               conversationId: newChat.id,
+              conversationInfo: {
+                messageId: newMessage.id,
+                fkSenderId: opponentUser.id,
+                message: newMessage.message,
+                messageType,
+                sendDate,
+                conversationId: newChat.id,
+                conversationAvatar: newChat.conversationAvatar,
+                conversationType: 'Dialog',
+                conversationName: opponentUser.firstName,
+                conversationCreationDate: sendDate,
+              },
               actionType,
             });
           }

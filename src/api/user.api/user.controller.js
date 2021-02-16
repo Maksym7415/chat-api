@@ -79,7 +79,7 @@ module.exports = {
     }
   },
 
-  setMainUserPhoto: async ({ token, params, query }, res) => {
+  setMainUserPhoto: async ({ token, params, query }, res, next) => {
     try {
       const user = await User.findOne({
         where: {
@@ -106,20 +106,20 @@ module.exports = {
       });
       return res.status(200).json({ message: 'success' });
     } catch (e) {
-      console.log({ e }); // нужно дописать ))
+      next(createError(formErrorObject(MAIN_ERROR_CODES.SYSTEM_ERROR)));
     }
   },
 
-  getUserAvatars: async ({ token }, res) => {
+  getUserAvatars: async ({ params }, res, next) => {
     try {
       const avatars = await Avatar.findAll({
         where: {
-          fkUserId: token.userId,
+          fkUserId: params.id,
         },
       });
       const { userAvatar, id } = await User.findOne({
         where: {
-          id: token.userId,
+          id: params.id,
         },
       });
       if (!userAvatar) return res.status(200).json([]); // !!!!
@@ -129,7 +129,7 @@ module.exports = {
         }, ...avatars],
       );
     } catch (e) {
-      console.log({ e }); // нужно дописать ))
+      next(createError(formErrorObject(MAIN_ERROR_CODES.SYSTEM_ERROR)));
     }
   },
   signNotification: async (req, res) => {

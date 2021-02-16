@@ -166,7 +166,7 @@ module.exports = {
         },
         include: {
           model: User,
-          attributes: ['firstName', 'userUpdateTime', 'activityStatus'],
+          attributes: ['firstName', 'userUpdateTime', 'activityStatus', 'id'],
           through: {
             model: ChatUser,
             attributes: [],
