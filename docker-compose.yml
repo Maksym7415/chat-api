@@ -1,0 +1,43 @@
+version: '3.4'
+services:
+
+  mysql:
+    image: mysql:latest
+    command: mysqld --sql_mode=""
+    volumes:
+      - ./db_data:/var/lib/mysql
+    ports:
+      - "3380:3306"
+    environment:
+      - MYSQL_DATABASE=messenger
+      - MYSQL_PASSWORD=0000
+      - MYSQL_ROOT_PASSWORD=0000
+      - MYSQL_ALLOW_EMPTY_PASSWORD="yes"
+    networks:
+      - chat_net
+
+  server:
+    build:
+      context: ./
+    container_name: chat-api
+    restart: on-failure
+    command: bash -c "npm run start"
+    ports:
+      - "8081:8081"
+      - "5050:5050"
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+    volumes:
+      - ./uploads:/usr/src/app/uploads
+    networks:
+      - chat_net
+
+networks:
+  chat_net:
+
+
+volumes:
+  db_data:
