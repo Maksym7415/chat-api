@@ -8,6 +8,7 @@
     "start": "./node_modules/.bin/nodemon index.js",
     "start_production": "env NODE_ENV=production node index.js",
     "start_test": "npm run test-dev && npm run start",
+    "start:docker": "docker-compose up",
     "start_manual": "sequelize db:drop && sequelize db:create && npm run db:migrate && npm run db:seed:all && npm run start",
     "start_manual_docker": "sequelize db:drop && sequelize db:create && npm run db:migrate && npm run db:seed:all && npm run start",
     "lint": "eslint ./src",
