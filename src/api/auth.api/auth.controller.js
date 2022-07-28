@@ -33,11 +33,11 @@ module.exports = {
       const [isUser] = await User.update({ verificationCode }, {
         where: { login },
       });
-      console.log(isUser);
+
       if (isUser) {
         try {
-          await handleSendEmail(login, `${verificationCode}`);
-          return res.json('send you your verification code');
+          // await handleSendEmail(login, `${verificationCode}`);
+          return res.json({ verificationCode });
         } catch (error) {
           console.log(error);
           next(createError(formErrorObject(MAIN_ERROR_CODES.BAD_REQUEST, 'Verification code was not transfered')));

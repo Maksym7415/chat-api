@@ -9,6 +9,7 @@
     "start_production": "env NODE_ENV=production node index.js",
     "start_test": "npm run test-dev && npm run start",
     "start_manual": "sequelize db:drop && sequelize db:create && npm run db:migrate && npm run db:seed:all && npm run start",
+    "start_manual_docker": "sequelize db:drop && sequelize db:create && npm run db:migrate && npm run db:seed:all && npm run start",
     "lint": "eslint ./src",
     "test-dev": "env NODE_ENV=test jest --runInBand --detectOpenHandles",
     "db:migrate": "./node_modules/.bin/sequelize db:migrate",
@@ -25,7 +26,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.27.2",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "crypto-js": "^4.0.0",

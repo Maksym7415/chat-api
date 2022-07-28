@@ -3,8 +3,31 @@
     "username": "root",
     "password": "0000",
     "database": "messenger",
-    "host": "127.0.0.1",
+    "host": "localhost",
     "dialect": "mysql",
+    "pool": {
+      "max": 20,
+      "min": 0,
+      "acquire": 60000,
+      "idle": 10000
+    },
+    "define": {
+      "timestamps": false
+    }
+  },
+  "docker": {
+    "username": "root",
+    "password": "0000",
+    "database": "messenger",
+    "host": "mysql",
+    "dialect": "mysql",
+    "logging": false,
+    "pool": {
+      "max": 20,
+      "min": 0,
+      "acquire": 60000,
+      "idle": 10000
+    },
     "define": {
       "timestamps": false
     }
@@ -25,6 +48,7 @@
     "database": "messenger",
     "host": "users.c7by2wbwicok.us-east-2.rds.amazonaws.com",
     "dialect": "mysql",
+    "logging": false,
     "define": {
       "timestamps": false
     }

@@ -13,6 +13,4 @@ RUN npm install
 
 # Bundle app source
 COPY . .
-
-EXPOSE 8081
-CMD [ "npm", "run", "start", "npm", "db:migrate" ]
+ENV NODE_ENV=docker
