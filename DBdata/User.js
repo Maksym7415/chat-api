@@ -8,6 +8,7 @@ module.exports = [
     fullName: 'Maksim Popov',
     status: 'Available',
     verificationCode: '12345',
+    lang: 'en',
   },
   {
     id: 2,
@@ -17,6 +18,7 @@ module.exports = [
     tagName: 'pwoolam1',
     fullName: 'Petronia Woolam',
     status: 'Available',
+    lang: 'en',
   },
   {
     id: 3,
@@ -26,6 +28,7 @@ module.exports = [
     tagName: 'dreveland2',
     fullName: 'Demetra',
     status: 'Not Available',
+    lang: 'en',
   },
   {
     id: 4,
@@ -35,6 +38,7 @@ module.exports = [
     tagName: '',
     fullName: 'Lyman Godfroy',
     status: 'Blocked',
+    lang: 'en',
   },
   {
     id: 5,
@@ -44,6 +48,7 @@ module.exports = [
     tagName: '',
     fullName: 'Wilden Velasquez',
     status: 'Available',
+    lang: 'en',
   },
   {
     id: 6,
@@ -53,6 +58,7 @@ module.exports = [
     tagName: '',
     fullName: 'Michal Gager',
     status: 'Available',
+    lang: 'en',
   },
   {
     id: 7,
@@ -62,6 +68,7 @@ module.exports = [
     tagName: 'mtither6',
     fullName: 'Mauricio',
     status: 'Available',
+    lang: 'en',
   },
   {
     id: 8,
@@ -71,6 +78,7 @@ module.exports = [
     tagName: '',
     fullName: 'Aloisia Spavon',
     status: 'Available',
+    lang: 'en',
   },
   {
     id: 9,
@@ -80,6 +88,7 @@ module.exports = [
     tagName: '',
     fullName: 'Luce Balden',
     status: 'Blocked',
+    lang: 'en',
   },
   {
     id: 10,
@@ -89,6 +98,7 @@ module.exports = [
     tagName: 'csandeford9',
     fullName: 'Cris',
     status: 'Available',
+    lang: 'en',
   },
   {
     id: 11,
@@ -99,6 +109,7 @@ module.exports = [
     fullName: 'vit9',
     status: 'Available',
     verificationCode: '12345',
+    lang: 'en',
   },
   {
     id: 12,
@@ -109,6 +120,7 @@ module.exports = [
     fullName: 'Kirill Dolhopolov',
     status: 'Available',
     verificationCode: '12345',
+    lang: 'en',
   },
   {
     id: 13,
@@ -119,5 +131,6 @@ module.exports = [
     fullName: 'Update Profile',
     status: 'Available',
     verificationCode: '12345',
+    lang: 'en',
   },
 ];

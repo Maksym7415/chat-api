@@ -63,6 +63,7 @@ module.exports = (io, socket) => socket.on('chats', async ({
       await Message.update({
         message: message.message,
         sendDate: message.sendDate,
+        isEdit: true,
       }, {
         where: {
           id: messageId,
@@ -75,7 +76,7 @@ module.exports = (io, socket) => socket.on('chats', async ({
         sendDate: message.sendDate,
         messageType: message.messageType,
         fkSenderId: message.fkSenderId,
-        isEditing: true,
+        isEdit,
       });
       await ChatMessage.create({
         fkChatId: conversationId,

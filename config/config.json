@@ -4,6 +4,7 @@
     "password": "0000",
     "database": "messenger",
     "host": "localhost",
+    "port": 3380,
     "dialect": "mysql",
     "pool": {
       "max": 20,
@@ -13,7 +14,8 @@
     },
     "define": {
       "timestamps": false
-    }
+    },
+    "logging": false
   },
   "docker": {
     "username": "root",

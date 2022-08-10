@@ -16,7 +16,7 @@ module.exports = (io, socket) => socket.on('files', async ({
         sendDate: message.sendDate,
         messageType: message.messageType,
         fkSenderId: message.fkSenderId,
-        isEditing: message.isEditing,
+        isEdit: message.isEdit,
       });
       await ChatMessage.create({
         fkChatId: conversationId,

@@ -20,7 +20,7 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      isEditing: {
+      isEdit: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
       },

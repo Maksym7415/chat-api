@@ -57,7 +57,7 @@ module.exports = {
             },
             {
               model: Message,
-              attributes: ['id', 'message', 'sendDate'],
+              attributes: ['id', 'message', 'sendDate', 'isEdit'],
               required: false,
               where: {
                 sendDate: {

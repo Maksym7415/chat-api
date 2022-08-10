@@ -5,7 +5,7 @@ const jwtSecret = require('../../../config/jwtConfig').jwt.secret;
 module.exports = async (req, res, next) => {
   const authHeader = req.get('Authorization');
   const browserIndenfication = req.get('User-Agent');
-  if (!authHeader) return res.status(400).json({ code: 400, message: 'Header is not recognized' });
+  if (!authHeader) return res.status(401).json({ code: 401, message: 'Header is not recognized' });
 
   const token = authHeader.replace('Bearer ', '');
   try {
@@ -20,12 +20,12 @@ module.exports = async (req, res, next) => {
     if (isSession) {
       req.token = payload;
     } else {
-      res.status(400).json({ code: 400, message: 'System does not recognized tis token' });
+      res.status(401).json({ code: 401, message: 'System does not recognized this token' });
       return;
     }
   } catch (e) {
     if (e instanceof jwt.JsonWebTokenError) {
-      res.status(400).json({ code: 400, message: 'Time of token is expired' });
+      res.status(401).json({ code: 401, message: 'Time of token is expired' });
     }
   }
   next();

@@ -1,0 +1,1759 @@
+---
+swagger: "2.0"
+info:
+  version: 0.1.3
+  title: Chat api
+  description: Chat api endpoints description
+tags:
+  - name: Authorization
+    description: API for user authorization and registration
+  - name: User
+    description: API for handling user information
+consumes:
+  - application/json
+produces:
+  - application/json
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  # AUTH ENDPOINTS
+  # SIGN UP
+  "/auth/sign-up":
+    post:
+      tags:
+        - Authorization
+      summary: Registration in system
+      consumes:
+        - application/json
+      description: Add new user to the system
+      parameters:
+        - in: body
+          description: email, password and app link
+          schema:
+            "$ref": "#/definitions/userRegister"
+          required: "true"
+      produces:
+        - application/json
+      responses:
+        "201":
+          "$ref": "#/responses/Success201ResponseDefinition"
+        "400":
+          description: Bad request
+          schema:
+            properties:
+              message:
+                type: string
+                example: Error message
+              code:
+                type: number
+                example:
+                  - 100
+                  - 101
+                  - 102
+        "500":
+          "$ref": "#/responses/Error500"
+  # SIGN IN
+  "/auth/sign-in":
+    post:
+      tags:
+        - Authorization
+      summary: Enter in account
+      consumes:
+        - application/json
+      description: Login in account
+      parameters:
+        - in: body
+          description: email and password
+          schema:
+            "$ref": "#/definitions/userLogin"
+          required: "true"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Success login
+          schema:
+            properties:
+              accessToken:
+                type: string
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+              refreshToken:
+                type: string
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        "400":
+          description: Bad request
+          schema:
+            properties:
+              message:
+                type: string
+                example: Error message
+              code:
+                type: number
+                example:
+                  - 100
+                  - 120
+                  - 121
+        "403":
+          "$ref": "#/responses/Error403UserBlocked"
+        "500":
+          "$ref": "#/responses/Error500"
+  # VERIFY ACCOUNT
+  "/auth/verify-account":
+    get:
+      tags:
+        - Authorization
+      summary: Enter in account
+      consumes:
+        - application/json
+      description: Login in account
+      parameters:
+        - in: query
+          description: unique code for verification
+          name: verificationCode
+          schema:
+            type: string
+            example: 12345
+          required: "true"
+      produces:
+        - application/json
+      responses:
+        "204":
+          "$ref": "#/responses/Success204ResponseDefinition"
+        "400":
+          description: Bad request
+          schema:
+            properties:
+              message:
+                type: string
+                example: Error message
+              code:
+                type: number
+                example:
+                  - 100
+                  - 104
+        "500":
+          "$ref": "#/responses/Error500"
+  # REFRESH TOKEN
+  "/auth/refresh-token":
+    post:
+      tags:
+        - Authorization
+      summary: Refresh token request
+      consumes:
+        - application/json
+      description: Get new access and refresh tokens
+      parameters:
+        - in: body
+          description: refresh token
+          schema:
+            "$ref": "#/definitions/refreshToken"
+          required: "true"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Success login
+          schema:
+            properties:
+              accessToken:
+                type: string
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+              refreshToken:
+                type: string
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        "400":
+          description: Bad request
+          schema:
+            properties:
+              message:
+                type: string
+                example: Error message
+              code:
+                type: number
+                example:
+                  - 100
+                  - 104
+                  - 120
+                  - 121
+        "403":
+          "$ref": "#/responses/Error403UserBlocked"
+        "500":
+          "$ref": "#/responses/Error500"
+  # USER ENDPOINTS
+  # GET USER DATA
+  "/getUserProfileData":
+    get:
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Authorization
+          in: headers
+          description: jwt access token
+          schema:
+            type: string
+            example: kd30494tijfdkgj045.04t93kldfjdjtg;llDFSLDKFLKKjfld;aslgja
+          required: "true"
+      summary: Get user info
+      description: Returns user profile info
+      produces:
+        - application/json
+      responses:
+        "200":
+          "$ref": "#/responses/getUserProfileData"
+        "400":
+          "$ref": "#/responses/Error400BadRequestHeader"
+        "401":
+          "$ref": "#/responses/Error401Unauthorized"
+        "403":
+          "$ref": "#/responses/Error403UserBlocked"
+        "500":
+          "$ref": "#/responses/Error500"
+
+  # UPDATE USER DATA
+  "/updateProfile":
+    put:
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Authorization
+          in: headers
+          description: jwt access token
+          schema:
+            type: string
+            example: kd30494tijfdkgj045.04t93kldfjdjtg;llDFSLDKFLKKjfld;aslgja
+          required: "true"
+        - in: body
+          description: email, password and app link
+          schema:
+            "$ref": "#/definitions/updateUserProfile"
+          required: "true"
+      summary: Get user info
+      description: Returns user profile info
+      produces:
+        - application/json
+      responses:
+        "204":
+          "$ref": "#/responses/Success204ResponseDefinition"
+        "400":
+          "$ref": "#/responses/Error400BadRequestHeader"
+        "401":
+          "$ref": "#/responses/Error401Unauthorized"
+        "403":
+          "$ref": "#/responses/Error403UserBlocked"
+        "500":
+          "$ref": "#/responses/Error500"
+
+  # FILE
+  # UPLOAD AVATAR
+  "/upload/avatar":
+    post:
+      tags:
+        - Files
+      security:
+        - bearerAuth: []
+      summary: Upload avatar
+      description: Upload user avatar
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: Authorization
+          in: headers
+          description: jwt access token
+          schema:
+            type: string
+            example: kd30494tijfdkgj045.04t93kldfjdjtg;llDFSLDKFLKKjfld;aslgja
+          required: "true"
+        - in: formData
+          description: "File type image"
+          name: file
+          type: file
+          required: "true"
+      responses:
+        "201":
+          "$ref": "#/responses/Success201ResponseDefinition"
+        "400":
+          description: Bad request
+          schema:
+            properties:
+              message:
+                type: string
+                example: Error message
+              code:
+                type: number
+                example:
+                  - 100
+                  - 101
+                  - 103
+        "401":
+          "$ref": "#/responses/Error401Unauthorized"
+        "403":
+          "$ref": "#/responses/Error403UserBlocked"
+        "500":
+          "$ref": "#/responses/Error500"
+
+# SHCEMAS DEFINITIONS
+definitions:
+  # AUTHORIZATION
+  # USER REGISTER
+  userRegister:
+    required:
+      - encryptedData
+      - deviceId
+    properties:
+      encryptedData:
+        type: string
+        description: encrypted JSON.stringify({email, password})
+        password: minLength = 6, maxLength = 50
+      deviceId:
+        type: string
+        example: A1dffgk
+  # RESET PASSWORD
+  resetPassword:
+    required:
+      - email
+    properties:
+      email:
+        type: string
+        format: email
+        maxLength: 255
+  # USER LOGIN
+  userLogin:
+    required:
+      - encryptedData
+      - deviceId
+    properties:
+      encryptedData:
+        type: string
+        description: encrypted JSON.stringify({email, password})
+        password: minLength = 6, maxLength = 50
+      deviceId:
+        type: string
+        example: A1dffgk
+  # REFRESH TOKEN
+  refreshToken:
+    required:
+      - refreshToken
+    properties:
+      refreshToken:
+        type: string
+        maxLength: 255
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+  # UPDATE PASSWORD
+  updatePassordResetFlow:
+    required:
+      - deviceId
+      - encryptedData
+    properties:
+      deviceId:
+        type: string
+        example: 1sa4s56
+      encryptedData:
+        type: string
+        description: encrypted JSON.stringify({verificationCode, password})
+        password: minLength = 6, maxLength = 50
+  # USER
+  # UPDATE USER PROFILE
+  updateUserProfile:
+    properties:
+      firstName:
+        type: string
+        example: David
+      lastName:
+        type: string
+        example: Cohen
+      tagName:
+        type: string
+        example: david
+      lang:
+        type: string
+        example: ua
+
+  # UPDATE USER PASSWORD
+  updatePassword:
+    required:
+      - encryptedData
+      - deviceId
+    properties:
+      deviceId:
+        type: string
+        example: 1sa4s56
+      encryptedData:
+        type: string
+        description: encrypted JSON.stringify({oldPassword, newPassword})
+        password: minLength = 6, maxLength = 50
+
+  # FILES
+  # UPLOAD
+  uploadFile:
+    required:
+      - file
+    properties:
+      file:
+        type: file
+        name: file
+
+# RESPONSES SCHEMAS
+responses:
+  # MAIN RESPONSES
+  Success201ResponseDefinition:
+    description: Created
+  Success204ResponseDefinition:
+    description: Successfull operation
+  Error400BadRequestHeader:
+    description: Bad request
+    schema:
+      properties:
+        message:
+          type: string
+          example: Error message
+        code:
+          type: number
+          example: 101
+  Error401Unauthorized:
+    description: Unauthorized
+    schema:
+      properties:
+        message:
+          type: string
+          example: Error message
+        code:
+          type: number
+          example: 401
+  Error403Forbidden:
+    description: Forbidden
+    schema:
+      properties:
+        message:
+          type: string
+          example: Error message
+        code:
+          type: number
+          example: 403
+  Error403UserBlocked:
+    description: Forbidden
+    schema:
+      properties:
+        message:
+          type: string
+          example: User blocked
+        code:
+          type: number
+          example: 120
+  Error404NotFound:
+    description: Not found
+    schema:
+      properties:
+        message:
+          type: string
+          example: Error message
+        code:
+          type: number
+          example: 404
+  Error500:
+    description: Server error
+    schema:
+      properties:
+        message:
+          type: string
+          example: Error message
+        code:
+          type: number
+          example: 500
+  Error503:
+    description: Server error
+    schema:
+      properties:
+        message:
+          type: string
+          example: Error message
+        code:
+          type: number
+          example: 503
+  # USER RESPONSES
+  getUserProfileData:
+    description: Returns object with user profile info
+    schema:
+      properties:
+        id:
+          type: number
+          example: 1
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Dow
+        fullName:
+          type: string
+          example: John Dow
+        lang:
+          type: string
+          example: en
+        login:
+          type: string
+          format: email
+        tagName:
+          type: string
+          example: john
+        userAvatar:
+          type: string
+          example: "image.png"
+        userLastTimeOnline:
+          type: string
+          example: "10.10.2002"
+        Roles:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+                example: some description
+              id:
+                type: number
+                example: 1
+              name:
+                type: string
+                example: Client
+  getUserSearchSettings:
+    description: Returns object with intolerances, diets and meal types
+    schema:
+      type: object
+      properties:
+        intolerances:
+          type: array
+          items:
+            type: object
+            example:
+              id: 1
+              name: Dairy
+              isUsers: true
+        diets:
+          type: array
+          items:
+            type: object
+            example:
+              id: 1
+              name: vegan
+              isUsers: true
+        mealTypes:
+          type: array
+          items:
+            type: object
+            example:
+              id: 1
+              name: Dairy
+  # MEALS RESPONSES
+  getRecipes:
+    description: Array of recipes
+    schema:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              vegetarian:
+                type: boolean
+                example: false
+              vegan:
+                type: boolean
+                example: false
+              glutenFree:
+                type: boolean
+                example: false
+              dairyFree:
+                type: boolean
+                example: false
+              veryHealthy:
+                type: boolean
+                example: false
+              cheap:
+                type: boolean
+                example: false
+              veryPopular:
+                type: boolean
+                example: false
+              sustainable:
+                type: boolean
+                example: false
+              weightWatcherSmartPoints:
+                type: number
+                example: 10
+              gaps:
+                type: string
+                example: GAPS_FULL
+              lowFodmap:
+                type: boolean
+                example: true
+              aggregateLikes:
+                type: number
+                example: 49
+              spoonacularScore:
+                type: number
+                example: 49
+              healthScore:
+                type: number
+                example: 50
+              creditsText:
+                type: string
+                example: Skinny Taste
+              sourceName:
+                type: string
+                example: Skinny Taste
+              pricePerServing:
+                type: number
+                example: 456
+              id:
+                type: number
+                example: 12
+              title:
+                type: string
+                example: Steamed Asparagus With Poached Eggs
+              readyInMinutes:
+                type: number
+                example: 50
+              servings:
+                type: number
+                example: 1
+              sourceUrl:
+                type: string
+                example: http://www.skinnytaste.com/2010/11/steamed-asparagus-with-poached-eggs.html
+              image:
+                type: string
+                example: https://spoonacular.com/recipeImages/37643-312x231.jpg
+              imageType:
+                type: string
+                example: jpg
+              nutrition:
+                type: object
+                properties:
+                  nutrients:
+                    type: array
+                    items:
+                      type: object
+                      example:
+                        title: Calories
+                        amount: 505.2
+                        unit: cal
+                        percentOfDailyNeeds: 25.26
+                  properties:
+                    type: array
+                    items:
+                      type: object
+                      example:
+                        title: Glycemic Index
+                        amount: 59
+                        unit: g
+                  ingredients:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: asparagus
+                        amount:
+                          type: number
+                          example: 3
+                        unit:
+                          type: string
+                          example: bunches
+                        nutrients:
+                          type: object
+                          example:
+                            name: Alcohol
+                            amount: 0
+                            unit: g
+                        caloricBreakdown:
+                          type: object
+                          example:
+                            percentProtein: 35.6
+                            percentFat: 37.47
+                            percentCarbs: 26.93
+                        weightPerServing:
+                          type: object
+                          example:
+                            amount: 1111
+                            unit: g
+              summary:
+                type: string
+                example: Steamed Asparagus With Poached
+              cuisines:
+                type: array
+                items:
+                  type: string
+              dishTypes:
+                type: array
+                items:
+                  type: string
+                  example:
+                    - lunch
+                    - main course
+                    - dinner
+              diets:
+                type: array
+                items:
+                  type: string
+                  example:
+                    - gluten free
+                    - primal
+              occasions:
+                type: array
+                items:
+                  type: string
+        offset:
+          type: number
+          example: 10
+        totalResults:
+          type: number
+          example: 1320
+  # GET RECIPES BY INGREDIENTS RESPONSE
+  getRecipesByIngredients:
+    description: Array of recipes found by ingredients
+    schema:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              vegetarian:
+                type: boolean
+                example: false
+              vegan:
+                type: boolean
+                example: false
+              glutenFree:
+                type: boolean
+                example: false
+              dairyFree:
+                type: boolean
+                example: false
+              veryHealthy:
+                type: boolean
+                example: false
+              cheap:
+                type: boolean
+                example: false
+              veryPopular:
+                type: boolean
+                example: false
+              sustainable:
+                type: boolean
+                example: false
+              weightWatcherSmartPoints:
+                type: number
+                example: 10
+              gaps:
+                type: string
+                example: GAPS_FULL
+              lowFodmap:
+                type: boolean
+                example: true
+              preparationMinutes:
+                type: number
+                example: 15
+              cookingMinutes:
+                type: number
+                example: 15
+              aggregateLikes:
+                type: number
+                example: 144
+              spoonacularScore:
+                type: number
+                example: 49
+              healthScore:
+                type: number
+                example: 50
+              creditsText:
+                type: string
+                example: Skinny Taste
+              sourceName:
+                type: string
+                example: Skinny Taste
+              pricePerServing:
+                type: number
+                example: 456
+              id:
+                type: number
+                example: 12
+              title:
+                type: string
+                example: Steamed Asparagus With Poached Eggs
+              readyInMinutes:
+                type: number
+                example: 50
+              servings:
+                type: number
+                example: 12
+              sourceUrl:
+                type: string
+                example: http://www.skinnytaste.com/2010/11/steamed-asparagus-with-poached-eggs.html
+              image:
+                type: string
+                example: https://spoonacular.com/recipeImages/37643-312x231.jpg
+              imageType:
+                type: string
+                example: jpg
+              nutrition:
+                type: object
+                properties:
+                  nutrients:
+                    type: array
+                    items:
+                      "$ref": "#/definitions/nutrition_nutrients"
+                  properties:
+                    type: array
+                    items:
+                      "$ref": "#/definitions/nutrition_properties"
+                  flavanoids:
+                    type: array
+                    items:
+                      "$ref": "#/definitions/nutrition_flavanoids"
+                  ingredients:
+                    type: array
+                    items:
+                      "$ref": "#/definitions/nutrition_ingredients"
+                  caloricBreakdown:
+                    "$ref": "#/definitions/nutrition_caloricBreakdown"
+                  weightPerServing:
+                    "$ref": "#/definitions/nutrition_weightPerServing"
+              summary:
+                type: string
+                example: Steamed Asparagus With Poached
+              cuisines:
+                type: array
+                items:
+                  type: string
+              dishTypes:
+                type: array
+                items:
+                  type: string
+                  example: side dish
+              diets:
+                type: array
+                items:
+                  type: string
+                  example: lacto ovo vegetarian
+              occasions:
+                type: array
+                items:
+                  type: string
+              winePairing:
+                type: object
+                properties:
+                  pairedWines:
+                    type: array
+                    items:
+                      type: string
+                  pairingText:
+                    type: string
+                  productMatches:
+                    type: array
+                    items:
+                      type: string
+              analyzedInstructions:
+                type: array
+                items:
+                  "$ref": "#/definitions/analyzedInstructions"
+              originalId:
+                type: number
+                example: 10058
+  getRecipeInfo:
+    description: Recipe onfo object
+    schema:
+      type: object
+      properties:
+        vegetarian:
+          type: boolean
+          example: false
+        vegan:
+          type: boolean
+          example: false
+        glutenFree:
+          type: boolean
+          example: false
+        dairyFree:
+          type: boolean
+          example: false
+        veryHealthy:
+          type: boolean
+          example: false
+        cheap:
+          type: boolean
+          example: false
+        veryPopular:
+          type: boolean
+          example: false
+        sustainable:
+          type: boolean
+          example: false
+        weightWatcherSmartPoints:
+          type: number
+          example: 10
+        gaps:
+          type: string
+          example: GAPS_FULL
+        lowFodmap:
+          type: boolean
+          example: true
+        aggregateLikes:
+          type: number
+          example: 49
+        spoonacularScore:
+          type: number
+          example: 49
+        healthScore:
+          type: number
+          example: 50
+        creditsText:
+          type: string
+          example: Skinny Taste
+        sourceName:
+          type: string
+          example: Skinny Taste
+        pricePerServing:
+          type: number
+          example: 456
+        id:
+          type: number
+          example: 12
+        title:
+          type: string
+          example: Steamed Asparagus With Poached Eggs
+        readyInMinutes:
+          type: number
+          example: 50
+        servings:
+          type: number
+          example: 1
+        sourceUrl:
+          type: string
+          example: http://www.skinnytaste.com/2010/11/steamed-asparagus-with-poached-eggs.html
+        image:
+          type: string
+          example: https://spoonacular.com/recipeImages/37643-312x231.jpg
+        imageType:
+          type: string
+          example: jpg
+        nutrition:
+          type: object
+          properties:
+            nutrients:
+              type: array
+              items:
+                "$ref": "#/definitions/nutrition_nutrients"
+            properties:
+              type: array
+              items:
+                "$ref": "#/definitions/nutrition_properties"
+            flavanoids:
+              type: array
+              items:
+                "$ref": "#/definitions/nutrition_flavanoids"
+            ingredients:
+              type: array
+              items:
+                "$ref": "#/definitions/nutrition_ingredients"
+            caloricBreakdown:
+              "$ref": "#/definitions/nutrition_caloricBreakdown"
+            weightPerServing:
+              "$ref": "#/definitions/nutrition_weightPerServing"
+        summary:
+          type: string
+          example: Steamed Asparagus With Poached
+        cuisines:
+          type: array
+          items:
+            type: string
+        dishTypes:
+          type: array
+          items:
+            type: string
+            example:
+              - lunch
+              - main course
+              - dinner
+        diets:
+          type: array
+          items:
+            type: string
+            example:
+              - gluten free
+              - primal
+        occasions:
+          type: array
+          items:
+            type: string
+        instruction:
+          type: string
+          example: some instruction
+  cookedMeal:
+    description: Returns array of meals
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          dairyFree:
+            type: boolean
+            example: true
+          veryPopular:
+            type: boolean
+            example: true
+          vegetarian:
+            type: boolean
+            example: true
+          vegan:
+            type: boolean
+            example: true
+          glutenFree:
+            type: boolean
+            example: true
+          id:
+            type: number
+            example: 1
+          fkDailyConsumptionsId:
+            type: number
+            example: 1
+          fkRecipeId:
+            type: number
+            example: 1
+          image:
+            type: string
+            example: https://spoonacular.com/recipeImages/37643-312x231.jpg
+          servings:
+            type: number
+            example: 2
+          recipeServings:
+            type: number
+            example: 2
+          name:
+            type: string
+            example: "Pasta"
+          creationTime:
+            type: string
+            format: yyyy-mm-dd hh:mm
+            example: 2020-11-30 00:30
+          nutrients:
+            type: array
+            items:
+              type: object
+              example:
+                unit: cal
+                title: Calories
+                amount: 484.43
+                percentOfDailyNeeds: 24.22
+          ingredients:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: avocado
+                unit:
+                  type: string
+                  example: servings
+                amount:
+                  type: number
+                  example: 1
+                image:
+                  type: string
+                  example: egg.png
+                nutrients:
+                  type: object
+                  example:
+                    name: Fat
+                    unit: g
+                    amount: 0.22
+          weightPerServing:
+            type: object
+            example:
+              amount: 1111
+              unit: g
+          instructions:
+            type: string
+            example: some instruction
+          status:
+            type: boolean
+            example: false
+  recipeItem:
+    description: Returns object with recipes and health score for each recipe
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          vegetarian:
+            type: boolean
+            example: false
+          vegan:
+            type: boolean
+            example: false
+          glutenFree:
+            type: boolean
+            example: false
+          dairyFree:
+            type: boolean
+            example: false
+          veryHealthy:
+            type: boolean
+            example: false
+          cheap:
+            type: boolean
+            example: false
+          veryPopular:
+            type: boolean
+            example: false
+          sustainable:
+            type: boolean
+            example: false
+          weightWatcherSmartPoints:
+            type: number
+            example: 10
+          gaps:
+            type: string
+            example: GAPS_FULL
+          lowFodmap:
+            type: boolean
+            example: true
+          aggregateLikes:
+            type: number
+            example: 49
+          spoonacularScore:
+            type: number
+            example: 49
+          healthScore:
+            type: number
+            example: 50
+          creditsText:
+            type: string
+            example: Skinny Taste
+          sourceName:
+            type: string
+            example: Skinny Taste
+          pricePerServing:
+            type: number
+            example: 456
+          id:
+            type: number
+            example: 12
+          title:
+            type: string
+            example: Steamed Asparagus With Poached Eggs
+          readyInMinutes:
+            type: number
+            example: 50
+          servings:
+            type: number
+            example: 1
+          sourceUrl:
+            type: string
+            example: http://www.skinnytaste.com/2010/11/steamed-asparagus-with-poached-eggs.html
+          image:
+            type: string
+            example: https://spoonacular.com/recipeImages/37643-312x231.jpg
+          imageType:
+            type: string
+            example: jpg
+          nutrition:
+            type: object
+            properties:
+              nutrients:
+                type: array
+                items:
+                  "$ref": "#/definitions/nutrition_nutrients"
+          summary:
+            type: string
+            example: Steamed Asparagus With Poached
+          cuisines:
+            type: array
+            items:
+              type: string
+          dishTypes:
+            type: array
+            items:
+              type: string
+              example:
+                - lunch
+                - main course
+                - dinner
+          diets:
+            type: array
+            items:
+              type: string
+              example:
+                - gluten free
+                - primal
+          occasions:
+            type: array
+            items:
+              type: string
+          analyzedInstructions:
+            type: array
+            items:
+              type: string
+  # RESTAURANTS
+  dishItem:
+    description: Returns array of recipes objects and health score for each recipe
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          vegetarian:
+            type: boolean
+            example: false
+          vegan:
+            type: boolean
+            example: false
+          glutenFree:
+            type: boolean
+            example: false
+          dairyFree:
+            type: boolean
+            example: false
+          healthScore:
+            type: number
+            example: 50
+          id:
+            type: number
+            example: 12
+          title:
+            type: string
+            example: Steamed Asparagus With Poached Eggs
+          image:
+            type: string
+            example: https://spoonacular.com/recipeImages/37643-312x231.jpg
+          imageType:
+            type: string
+            example: jpg
+          nutrition:
+            type: object
+            properties:
+              nutrients:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Calories:
+                      type: string
+                      example: 500
+  restaurantsList:
+    description: Array of restaurants
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: number
+            example: 1
+          name:
+            type: string
+            example: POMO Restorante
+          country:
+            type: string
+            example: Estonia
+          city:
+            type: string
+            example: Tallin
+          address:
+            type: string
+            example: Pärnu mnt 3, 10143 Tallinn
+          coordinates:
+            type: object
+            properties:
+              lat:
+                type: number
+                example: 59.43553519999999
+              lng:
+                type: number
+                example: 24.7497517
+          is_partner:
+            type: boolean
+            example: true
+  menusList:
+    description: Array of menus
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: number
+            example: 1
+          fk_restaurant_id:
+            type: number
+            example: 1
+          name:
+            type: string
+            example: POMO Restorante
+          price:
+            type: string
+            example: 5.5
+          currency:
+            type: string
+            example: EUR
+          description:
+            type: string
+            example: san marzano DOP / oregano / garlic / olive oil
+          category:
+            type: string
+            example: PIZZA
+          vegan:
+            type: boolean
+            example: true
+          vegetarian:
+            type: boolean
+            example: false
+          dairy_free:
+            type: boolean
+            example: true
+          gluten_free:
+            type: boolean
+            example: false
+          nutrition:
+            type: object
+            properties:
+              nutrients:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      example: Calories
+                    unit:
+                      type: string
+                      example: kcal
+                    amount:
+                      type: number
+                      example: 343
+  # SNACKS
+  getPopularSnacks:
+    description: Array of popular snacks
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: number
+            example: 1
+          image:
+            type: string
+            example: example.jpg
+          name:
+            type: string
+            example: apple
+          spoonacularId:
+            type: number
+            example: 3435
+          standartUnit:
+            type: string
+            example: piece
+          standartAmount:
+            type: number
+            example: 1
+          standartWeight:
+            type: number
+            example: 110
+          isPopular:
+            type: boolean
+            example: true
+          original:
+            type: string
+            example: apples
+          originalName:
+            type: string
+            example: apples
+          amount:
+            type: number
+            example: 1
+          unit:
+            type: string
+            example: piece
+          unitShort:
+            type: string
+            example: piece
+          unitLong:
+            type: string
+            example: piece
+          possibleUnits:
+            type: array
+            items:
+              type: string
+              example: [g, kg, piece]
+          nutrition:
+            type: object
+            properties:
+              nutrients:
+                type: array
+                items:
+                  type: object
+                  example:
+                    title: Calories
+                    name: Calories
+                    amount: 505.2
+                    unit: cal
+  searchSnacks:
+    description: object with results
+    schema:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+                example: 1
+              image:
+                type: string
+                example: example.jpg
+              name:
+                type: string
+                example: apple
+              spoonacularId:
+                type: number
+                example: 3435
+              standartUnit:
+                type: string
+                example: piece
+              standartAmount:
+                type: number
+                example: 1
+              standartWeight:
+                type: number
+                example: 110
+              isPopular:
+                type: boolean
+                example: true
+              original:
+                type: string
+                example: apples
+              originalName:
+                type: string
+                example: apples
+              amount:
+                type: number
+                example: 1
+              unit:
+                type: string
+                example: piece
+              unitShort:
+                type: string
+                example: piece
+              unitLong:
+                type: string
+                example: piece
+              possibleUnits:
+                type: array
+                items:
+                  type: string
+                  example: [g, kg, piece]
+              nutrition:
+                type: object
+                properties:
+                  nutrients:
+                    type: array
+                    items:
+                      type: object
+                      example:
+                        title: Calories
+                        name: Calories
+                        amount: 505.2
+                        unit: cal
+        offset:
+          type: number
+          example: 0
+        totalResults:
+          type: number
+          example: 10
+  # ADMIN
+  getNutrientsData:
+    description: Array of nutrients
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: number
+            example: 1
+          name:
+            type: string
+            example: Calories
+          synonims:
+            type: string
+            example: some synonims
+          shortage:
+            type: number
+            example: 5
+          overage:
+            type: number
+            example: 20
+          minCorrection:
+            type: number
+            example: 0
+          maxCorrection:
+            type: number
+            example: 1
+          unit:
+            type: string
+            example: kcal
+          defaultValue:
+            type: number
+            example: 2000
+  getLogs:
+    description: Returns text from log file
+    schema:
+      type: text
+      example: DATE 2020-12-01 13:38...
+  # RECIPE API RESPONSES
+  getOwnRecipe:
+    description: Returns object with recipe
+    schema:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        title:
+          type: string
+          example: Steamed Asparagus With Poached Eggs
+        servings:
+          type: number
+          example: 1
+        instruction:
+          type: string
+          example: Steamed Asparagus With Poached Eggs
+        image:
+          type: string
+          example: imagename.jpg
+        nutrition:
+          type: object
+          properties:
+            nutrients:
+              type: array
+              items:
+                type: object
+                example:
+                  title: Calories
+                  amount: 505.2
+                  unit: cal
+                  percentOfDailyNeeds: 25.26
+            ingredients:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: asparagus
+                  amount:
+                    type: number
+                    example: 3
+                  image:
+                    type: string
+                    example: imagename.jpg
+                  unit:
+                    type: string
+                    example: bunches
+                  nutrition:
+                    type: object
+                    properties:
+                      nutrients:
+                        type: object
+                        example:
+                          name: Alcohol
+                          amount: 0
+                          unit: g
+                      weightPerServing:
+                        type: object
+                        properties:
+                          unit:
+                            type: string
+                            example: g
+                          amount:
+                            type: number
+                            example: 33
+  getAllOwnRecipes:
+    description: Returns array of own recipes
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: number
+            example: 1
+          title:
+            type: string
+            example: Steamed Asparagus With Poached Eggs
+          fkUserId:
+            type: number
+            example: 1
+          recipe:
+            type: object
+            properties:
+              title:
+                type: string
+                example: Steamed Asparagus With Poached Eggs
+              servings:
+                type: number
+                example: 1
+              instruction:
+                type: string
+                example: Steamed Asparagus With Poached Eggs
+              image:
+                type: string
+                example: egg.png
+              nutrition:
+                type: object
+                properties:
+                  nutrients:
+                    type: array
+                    items:
+                      type: object
+                      example:
+                        title: Calories
+                        amount: 505.2
+                        unit: cal
+                        percentOfDailyNeeds: 25.26
+                  ingredients:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: asparagus
+                        amount:
+                          type: number
+                          example: 3
+                        image:
+                          type: string
+                          example: imagename.jpg
+                        unit:
+                          type: string
+                          example: bunches
+                        nutrition:
+                          type: object
+                          properties:
+                            nutrients:
+                              type: object
+                              example:
+                                name: Alcohol
+                                amount: 0
+                                unit: g
+                            weightPerServing:
+                              type: object
+                              properties:
+                                unit:
+                                  type: string
+                                  example: g
+                                amount:
+                                  type: number
+                                  example: 33
+  myFoodStocks:
+    description: Returns list of shopping list/fridge items
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: number
+            example: 10016051
+          amount:
+            type: number
+            example: 7.5
+          unit:
+            type: number
+            enum: ["gramm", "piece"]
+          name:
+            type: string
+            example: "canned cannellini beans"
+          image:
+            type: string
+            example: "coconut-milk.png"
+  searchIngredients:
+    description: Returns list of ingedients found by name
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: number
+            example: 9040
+          name:
+            type: string
+            example: "banana"
+          image:
+            type: string
+            example: "bananas.jpg"
+          aisle:
+            type: string
+            example: "Produce"
+          possibleUnits:
+            type: array
+            items:
+              type: string
+              example: extra small
+
+  # MAIN API RESPONSES
+  getActivitiesList:
+    description: Returns list of existed activities
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: number
+            example: 1
+          name:
+            type: string
+            example: BMR
+          value:
+            type: number
+            example: 1.4
+  getTermsOfUse:
+    description: Returns terms of use, privacy policy and about health score
+    schema:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            TermsOfUse:
+              type: string
+              example: EAT BEAT Terms...
+            HealthScore:
+              type: string
+              example: Health Score is an integral...
+            PrivacyPolicy:
+              type: string
+              example: GENERAL TERMS...
+            link:
+              type: string
+              example: eat-beat.com
+            aboutApp:
+              type: string
+              example: Some text about eat beat app

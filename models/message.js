@@ -9,7 +9,7 @@ module.exports = (sequelize, DataType) => {
       type: DataType.TEXT,
       allowNull: false,
     },
-    isEditing: {
+    isEdit: {
       type: DataType.BOOLEAN,
       allowNull: false,
     },

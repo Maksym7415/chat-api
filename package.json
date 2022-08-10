@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./node_modules/.bin/nodemon index.js",
+    "start": "./node_modules/.bin/nodemon yaml,js index.js",
     "start_production": "env NODE_ENV=production node index.js",
     "start_test": "npm run test-dev && npm run start",
     "start:docker": "docker-compose up",
@@ -47,9 +47,11 @@
     "sequelize": "^6.3.0",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
+    "swagger-ui-express": "^4.5.0",
     "uuid": "^8.3.0",
     "uuidv1": "^1.6.14",
-    "web-push": "^3.4.4"
+    "web-push": "^3.4.4",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "eslint": "^7.2.0",

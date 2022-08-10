@@ -46,6 +46,7 @@ module.exports = {
       }
       next(createError(formErrorObject(MAIN_ERROR_CODES.NOT_EXISTS, 'you need to registrate your account')));
     } catch (error) {
+      console.log(error);
       next(createError(formErrorObject(MAIN_ERROR_CODES.UNHANDLED_ERROR)));
     }
   },

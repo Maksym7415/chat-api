@@ -50,6 +50,11 @@ module.exports = (sequelize, DataType) => {
       type: DataType.DATE,
       allowNull: true,
     },
+    lang: {
+      type: DataType.STRING(10),
+      allowNull: false,
+      defaultValue: 'en',
+    },
   }, {
     freezeTableName: true,
     timestamps: false,

@@ -59,21 +59,23 @@ module.exports = {
   },
 
   updateUserProfile: async ({
-    token, body: { firstName, lastName, tagName },
+    token, body: {
+      firstName, lastName, tagName, lang,
+    },
   }, res, next) => {
-    console.log('FIRSTNAME', firstName);
-    if (!firstName && !lastName && !tagName) return next(createError(formErrorObject(MAIN_ERROR_CODES.VALIDATION)));
+    if (!firstName && !lastName && !tagName && !lang) return next(createError(formErrorObject(MAIN_ERROR_CODES.VALIDATION)));
     try {
       await User.update({
         firstName,
         lastName,
         tagName,
+        lang,
       }, {
         where: {
           id: token.userId,
         },
       });
-      return res.status(200).json({ message: 'success' });
+      return res.status(204).send();
     } catch (error) {
       next(createError(formErrorObject(MAIN_ERROR_CODES.SYSTEM_ERROR)));
     }
