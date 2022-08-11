@@ -64,10 +64,17 @@ module.exports = {
                   [Op.in]: sequelize.literal('(select max(sendDate) from Message, ChatMessage where Message.id = fkMessageId group by ChatMessage.fkChatId)'),
                 },
               },
-              include: {
-                model: User,
-                attributes: ['id', 'firstName', 'lastName', 'fullName', 'tagName', 'status'],
-              },
+              include: [
+                {
+                  model: User,
+                  attributes: ['id', 'firstName', 'lastName', 'fullName', 'tagName', 'status'],
+                },
+                {
+                  model: User,
+                  as: "forwardedUser",
+                  attributes: ['id', 'firstName', 'lastName', 'fullName', 'tagName', 'status'],
+                },
+              ],
               through: {
                 model: ChatMessage,
                 attributes: [],

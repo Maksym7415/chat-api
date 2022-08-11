@@ -21,7 +21,7 @@ services:
       context: ./
     container_name: chat-api
     restart: on-failure
-    command: bash -c "npm run start"
+    command: bash -c "npm run start_manual"
     ports:
       - "8081:8081"
       - "5050:5050"

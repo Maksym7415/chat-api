@@ -17,6 +17,10 @@ module.exports = (sequelize, DataType) => {
       type: DataType.INTEGER,
       allowNull: false,
     },
+    fkForwardedFromId: {
+      type: DataType.INTEGER,
+      allowNull: true,
+    },
     sendDate: {
       type: DataType.DATE,
       defaultValue: DataType.NOW,
@@ -34,6 +38,7 @@ module.exports = (sequelize, DataType) => {
     messageTable.hasMany(models.File, { foreignKey: { name: 'fkMessageId', allowNull: false }, foreignKeyConstraint: true });
     messageTable.hasMany(models.ChatMessage, { foreignKey: { name: 'fkMessageId', allowNull: false }, foreignKeyConstraint: true });
     messageTable.belongsTo(models.User, { foreignKey: { name: 'fkSenderId', allowNull: false }, foreignKeyConstraint: true });
+    messageTable.belongsTo(models.User, { as: 'forwardedUser', foreignKey: { name: 'fkForwardedFromId', allowNull: true }, foreignKeyConstraint: true });
     messageTable.belongsToMany(models.Conversation, {
       foreignKey: { name: 'fkMessageId', allowNull: false }, otherKey: { name: 'fkChatId', allowNull: false }, foreignKeyConstraint: true, through: models.ChatMessage,
     });

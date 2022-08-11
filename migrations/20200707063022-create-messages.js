@@ -16,6 +16,16 @@ module.exports = {
         },
         allowNull: false,
       },
+      fkForwardedFromId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'User',
+            key: 'id',
+          },
+        },
+        allowNull: true,
+      },
       message: {
         type: Sequelize.TEXT,
         allowNull: false,

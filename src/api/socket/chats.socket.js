@@ -6,13 +6,14 @@ const getSubscriptionsFromDatabase = require('../../helpers/notification_methods
 const triggerPushMsg = require('../../helpers/notification_methods/triggerPushMessages');
 
 module.exports = (io, socket) => socket.on('chats', async ({
-  conversationId, message, userId, opponentId, messageId, isDeleteMessage,
+  conversationId, message, userId, opponentId, messageId, isDeleteMessage, forwardedFromId,
 }, successCallback) => { // successCallback to inform client about sucessfull sending of message
   let isEdit = false;
   console.log('MESSAGE', message);
 
   let newMessage = {};
   let user = {};
+  let forwardedFrom = null;
 
   try {
     if (isDeleteMessage) {
@@ -53,13 +54,6 @@ module.exports = (io, socket) => socket.on('chats', async ({
       return io.emit(`userIdNewChat${opponentId}`, { ...newMessage, User: user }, newConversationId);
     }
     if (messageId) {
-      // await sequelize.query(`update messenger.message
-      // set
-      //   message = ${message.message},
-      //   sendDate = ${message.sendDate}
-      //   where id in
-      //     (select fkMessageId from messenger.chatmessage
-      //     where fkChatId = ${conversationId} and fkMessageId=${messageId})`);
       await Message.update({
         message: message.message,
         sendDate: message.sendDate,
@@ -71,11 +65,21 @@ module.exports = (io, socket) => socket.on('chats', async ({
       });
       isEdit = true;
     } else {
+
+      if (forwardedFromId) {
+        forwardedFrom = await User.findOne({
+          where: {
+            id: forwardedFromId,
+          },
+        });
+      }
+
       newMessage = await Message.create({
         message: message.message,
         sendDate: message.sendDate,
         messageType: message.messageType,
         fkSenderId: message.fkSenderId,
+        fkForwardedFromId: forwardedFrom?.id || null,
         isEdit,
       });
       await ChatMessage.create({
@@ -84,7 +88,7 @@ module.exports = (io, socket) => socket.on('chats', async ({
       });
     }
     io.emit(`userIdChat${conversationId}`, {
-      ...message, id: newMessage.id || messageId, Files: [], User: user, isEdit,
+      ...message, id: newMessage.id || messageId, Files: [], User: user, forwardedUser: forwardedFrom, isEdit,
     });
     successCallback(true);
     try {

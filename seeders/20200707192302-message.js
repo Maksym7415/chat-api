@@ -1,5 +1,3 @@
-'use strict';
-
 const data = require('../DBdata/Message');
 
 module.exports = {
@@ -9,11 +7,11 @@ module.exports = {
     //   fkSenderId: 1,
     //   file: 'file'
     // }]
-    
-    await queryInterface.bulkInsert('message', data, {})
+
+    await queryInterface.bulkInsert('message', data, {});
   },
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('message', null, {});
-  }
+  },
 };
