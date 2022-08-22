@@ -140,6 +140,11 @@ module.exports = {
             {
               model: User,
             },
+            {
+              model: User,
+              as: "forwardedUser",
+              attributes: ['id', 'firstName', 'lastName', 'fullName', 'tagName', 'status'],
+            },
             ],
           });
           // res.json({ data: conversationHistory, pagination: { allItems: 500, currentPage: 1 } });
