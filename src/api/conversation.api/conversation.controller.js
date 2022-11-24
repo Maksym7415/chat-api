@@ -119,7 +119,31 @@ module.exports = {
           // (select message.id as 'm_id', user.id as 'u_id', sendDate from message, user where message.fkSenderId = user.id order by sendDate desc limit 10)
           // as Message_Limit
           // order by sendDate asc;
-
+          const allChatMessagesCount = await Message.count({
+            order: [
+              ['sendDate', 'DESC'],
+            ],
+            include: [
+              {
+                model: Conversation,
+                attributes: [],
+                where: {
+                  id: conversationId,
+                },
+              },
+              {
+                model: File,
+              },
+              {
+                model: User,
+              },
+              {
+                model: User,
+                as: "forwardedUser",
+                attributes: ['id', 'firstName', 'lastName', 'fullName', 'tagName', 'status'],
+              },
+            ],
+          });
           const conversationHistory = await Message.findAll({
             limit: 15,
             offset: +offset,
@@ -148,7 +172,7 @@ module.exports = {
             ],
           });
           // res.json({ data: conversationHistory, pagination: { allItems: 500, currentPage: 1 } });
-          res.json({ data: conversationHistory.reverse(), pagination: { allItems: 500, currentPage: +offset } });
+          res.json({ data: conversationHistory.reverse(), pagination: { allItems: allChatMessagesCount, currentPage: +offset } });
         }
       }
     } catch (error) {
