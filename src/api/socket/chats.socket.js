@@ -1,5 +1,5 @@
 const {
-  ChatMessage, Message, User, File,
+  ChatMessage, Message, User, File, Conversation
 } = require('../../../models');
 const addChat = require('./addNewChatFunction');
 const getSubscriptionsFromDatabase = require('../../helpers/notification_methods/getSubscriptionsFromDatabase');
@@ -33,8 +33,20 @@ module.exports = (io, socket) => socket.on('chats', async ({
           id: messageId,
         },
       });
+      const chatWhereMessageWasDeleted = await Conversation.findOne({ 
+        where: { id: conversationId }, 
+        include: {
+          model: Message, 
+          attributes: ['id', 'message', 'sendDate', 'isEdit'],
+          required: false
+        } 
+      });
+
+      const messages = chatWhereMessageWasDeleted.Messages;
+      const lastMessage = messages[messages.length - 1];
+
       io.emit('deleteMessage', {
-        conversationId, messageId,
+        conversationId, messageId, lastMessage
       });
     }
     if (!message) return successCallback(false);

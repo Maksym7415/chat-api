@@ -7,6 +7,8 @@ const {
   updateUserProfile,
   getUserProfileById,
   signNotification,
+  deleteUserAvatar,
+  checkEmails,
 } = require('./user.controller');
 
 router.get('/getUserProfileData/', authMiddleware, getUserProfileData);
@@ -15,5 +17,7 @@ router.put('/setMainPhoto/:photoId', authMiddleware, setMainUserPhoto);
 router.get('/getAvatars', authMiddleware, getUserAvatars);
 router.put('/updateProfile', authMiddleware, updateUserProfile);
 router.post('/save-subscription/:id', signNotification);
+router.delete('/delete-avatar/:id', authMiddleware, deleteUserAvatar);
+router.post('/check-emails', checkEmails);
 
 module.exports = router;

@@ -54,10 +54,8 @@ module.exports = {
   checkVerificationCode: async (req, res, next) => {
     try {
       const { verificationCode, login } = req.body;
-      console.log(214324);
       // const browserIndenfication = req.get('User-Agent'); // Тут версия браузера
       const isUser = await User.findOne({ where: { login, verificationCode } });
-
       if (isUser) {
         const tokens = await tokenHelper(login, 'user', 'crome', isUser.id, isUser.firstName);
         return res.json(tokens);

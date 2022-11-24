@@ -70,6 +70,7 @@ module.exports = {
         lastName,
         tagName,
         lang,
+        fullName: `${firstName} ${lastName}`,
       }, {
         where: {
           id: token.userId,
@@ -152,4 +153,34 @@ module.exports = {
       });
     }
   },
+
+  deleteUserAvatar: async ({ params, token }, res, next) => {
+    try {
+      if (params.id) {
+        await Avatar.destroy({ where: { id: params.id } });
+      } else {
+        await User.update({
+          userAvatar: '',
+        }, {
+          where: {
+            id: token.userId,
+          },
+        });
+      }
+      return res.status(204);
+    } catch (error) {
+      next(createError(formErrorObject(MAIN_ERROR_CODES.SYSTEM_ERROR)));
+    }
+  },
+
+  checkEmails: async ({ body }, res, next) => {
+    try {
+      const result = await Promise.allSettled(body.emails.map((email) => User.findOne({ where: { login: email } })));
+      console.log(result);
+      return res.status(200).json(result.filter((item) => item.value).map((item) => item.value));
+    } catch (error) {
+      next(createError(formErrorObject(MAIN_ERROR_CODES.SYSTEM_ERROR)));
+    }
+  },
+
 };

@@ -50,7 +50,6 @@ const addChat = async (message, chatType, chatUsers, chatName, imageData, fileEx
         fkMessageId: newMessage.id,
       });
     }
-
     return { newConversationId: newChat.id, newMessage: newMessage.dataValues };
   } catch (e) {
     console.log({ e });
