@@ -65,17 +65,19 @@ module.exports = {
   }, res, next) => {
     if (!firstName && !lastName && !tagName && !lang) return next(createError(formErrorObject(MAIN_ERROR_CODES.VALIDATION)));
     try {
+      const user = await User.findOne({ where: { id: token.userId } });
       await User.update({
-        firstName,
-        lastName,
-        tagName,
-        lang,
-        fullName: `${firstName} ${lastName}`,
+        firstName: firstName || user.fileName,
+        lastName: lastName || user.lastName,
+        tagName: tagName || user.tagName,
+        lang: lang || user.lang,
+        fullName: `${firstName || user.firstName} ${lastName || user.lastName}`,
       }, {
         where: {
           id: token.userId,
         },
       });
+      //
       return res.status(204).send();
     } catch (error) {
       next(createError(formErrorObject(MAIN_ERROR_CODES.SYSTEM_ERROR)));

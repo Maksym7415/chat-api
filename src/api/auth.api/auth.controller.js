@@ -13,7 +13,7 @@ module.exports = {
       const isUser = await User.findOne({ where: { login } });
       if (!isUser) {
         const user = await User.create({
-          firstName, lastName, login, status: 'free',
+          firstName, lastName, login, status: 'free', fullName: `${firstName} ${lastName}`,
 
         });
         res.json({ email: user.login });
