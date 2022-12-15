@@ -17,22 +17,24 @@ module.exports = (io, socket) => socket.on('chats', async ({
 
   try {
     if (isDeleteMessage) {
-      await ChatMessage.destroy({
-        where: {
-          fkChatId: conversationId,
-          fkMessageId: messageId,
-        },
-      });
-      await File.destroy({
-        where: {
-          fkMessageId: messageId,
-        },
-      });
-      await Message.destroy({
-        where: {
-          id: messageId,
-        },
-      });
+      for (msgId of messageId) {
+        await ChatMessage.destroy({
+          where: {
+            fkChatId: conversationId,
+            fkMessageId: msgId,
+          },
+        });
+        await File.destroy({
+          where: {
+            fkMessageId: msgId,
+          },
+        });
+        await Message.destroy({
+          where: {
+            id: msgId,
+          },
+        });
+      }
       const chatWhereMessageWasDeleted = await Conversation.findOne({ 
         where: { id: conversationId }, 
         include: {

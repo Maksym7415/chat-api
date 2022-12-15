@@ -6,7 +6,7 @@ const {
 const { Op } = Sequelize;
 
 module.exports = {
-  getAllContact: async ({ token, query: { searchRequest } }, res) => {
+  getAllContact: async ({ token, query: { searchRequest, offset, limit = 20 } }, res) => {
     try {
       if (!searchRequest) {
         const allContacts = await User.findAll(({
@@ -15,6 +15,8 @@ module.exports = {
               [Op.not]: token.userId,
             },
           },
+          limit,
+          offset,
         }));
         return res.json({ response: allContacts });
       }
@@ -27,8 +29,10 @@ module.exports = {
             [Op.not]: token.userId,
           },
         },
+        limit,
+        offset,
       });
-      return res.json({ response: contacts });
+      return res.json({ response: contacts, offset, limit });
     } catch (e) {
       console.log({ e });
     }
