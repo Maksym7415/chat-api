@@ -18,7 +18,7 @@ module.exports = {
           limit,
           offset,
         }));
-        return res.json({ response: allContacts });
+        return res.json({ response: allContacts, offset, limit });
       }
       const contacts = await User.findAll({
         where: {
